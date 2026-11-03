@@ -3,52 +3,81 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#f3f1e9" />
-  <meta name="description" content="一本持续更新的个人开放档案。关于经历、作品、好奇心，以及一个人的更多可能。" />
-  <title>个人开放档案 · In the making</title>
+  <meta name="theme-color" content="#1e1916" />
+  <meta name="description" content="一本持续连载的个人漫画档案。关于经历、作品、成就和一个人的更多侧面。" />
+  <title>个人漫画档案 · 连载中</title>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="/src/style.css" />
   <link rel="stylesheet" href="/src/polish.css" />
+  <link rel="stylesheet" href="/src/comic.css" />
 </head>
 <body>
   <a class="skip-link" href="#main">跳到主要内容</a>
+  <div class="scroll-signal" aria-hidden="true"><span id="scroll-progress"></span></div>
   <header class="site-header">
-    <a class="brand" href="#home" aria-label="个人开放档案，返回首页"><span class="brand-symbol" aria-hidden="true">a.</span><span>个人开放档案<span class="brand-en">A PERSONAL INDEX</span></span></a>
-    <nav class="desktop-nav" aria-label="主要导航"><a href="#about">关于我</a><a href="#archive">经历与作品</a><a href="#facets">我的切面</a></nav>
-    <a class="header-cta" href="#contact">打个招呼 <span data-icon="arrow-right-up-linear" aria-hidden="true"></span></a>
+    <a class="brand" href="#home" aria-label="个人漫画档案，返回封面"><span class="brand-symbol" aria-hidden="true">!</span><span>个人漫画档案<span class="brand-en">THE PERSONAL COMIC</span></span></a>
+    <nav class="desktop-nav" aria-label="主要导航"><a href="#about">01 起源</a><a href="#archive">02 足迹</a><a href="#facets">03 装备</a></nav>
+    <a class="header-cta" href="#contact">联系编辑部 <span data-icon="arrow-right-up-linear" aria-hidden="true"></span></a>
     <button class="menu-toggle" aria-expanded="false" aria-controls="mobile-nav"><span data-icon="hamburger-menu-linear" aria-hidden="true"></span><span class="sr-only">展开导航</span></button>
   </header>
-  <nav id="mobile-nav" class="mobile-nav" aria-label="移动导航" hidden><a href="#about">关于我</a><a href="#archive">经历与作品</a><a href="#facets">我的切面</a><a href="#contact">打个招呼</a></nav>
+  <nav id="mobile-nav" class="mobile-nav" aria-label="移动导航" hidden><a href="#about">01 起源</a><a href="#archive">02 足迹</a><a href="#facets">03 装备</a><a href="#contact">联系编辑部</a></nav>
   <main id="main">
     <section id="home" class="hero page-wrap">
-      <div class="hero-meta"><span><i class="status-dot"></i> 持续生长，保持好奇</span><span>PERSONAL ARCHIVE — VOL. 01</span></div>
+      <div class="hero-meta"><span><i class="status-dot"></i> 第一版 · 正在连载</span><span>PERSONAL COMIC — ISSUE 00</span></div>
       <div class="hero-grid">
         <div class="hero-copy">
-          <h1><span class="hero-line">一个人，</span><span class="hero-line">不止<span class="serif-accent">一种</span>可能<span class="red-dot">.</span></span></h1>
+          <h1><span class="hero-line">人生这本书，</span><span class="hero-line">还在<span class="serif-accent">连载</span><span class="red-dot">!</span></span></h1>
           <p class="hero-intro" id="hero-intro">你好，欢迎来到我的进行时。<br>这里收集我的经历、作品，和一些不太好归类的热爱。</p>
-          <a href="#archive" class="solid-button">翻开我的档案 <span data-icon="arrow-right-down-linear" aria-hidden="true"></span></a>
-          <div class="hero-footnote"><span class="tiny-line"></span> 没有标准答案，只有不断展开的自己。</div>
+          <a href="#archive" class="solid-button">翻开第 02 页 <span data-icon="arrow-right-down-linear" aria-hidden="true"></span></a>
+          <div class="hero-footnote"><span class="tiny-line"></span> 真实履历待你填入，故事先从这里开场。</div>
         </div>
         <div class="index-scene" aria-label="互动档案目录">
-          <span class="scene-caption">SOME THINGS THAT MAKE ME, ME.</span>
+          <span class="scene-caption">THE ORIGIN ISSUE / FIRST PRINTING</span>
           <div class="index-stack">
-            <a class="index-sheet sheet-back" href="#facets"><span class="sheet-tab">好奇心 / CURIOSITY</span><span class="back-word">What if?</span></a>
-            <a class="index-sheet sheet-mid" href="#archive"><span class="sheet-tab">经历与作品 / SELECTED WORK</span><span class="mid-word">做过的事，<br>都算数。</span><span class="sheet-arrow" data-icon="arrow-right-up-linear" aria-hidden="true"></span></a>
-            <a class="index-sheet sheet-front" href="#about"><div class="sheet-top"><span>个人档案</span><span>OPEN FILE</span></div><div class="cover-title">始终<br>未完待续<span class="cover-period">.</span></div><div class="cover-signature">In the<br><em>making.</em></div><div class="sheet-bottom"><span>关于我，以及我的更多面</span><span data-icon="arrow-right-up-linear" aria-hidden="true"></span></div></a>
+            <a class="index-sheet sheet-back" href="#facets"><span class="sheet-tab">03 / 装备清单</span><span class="back-word">LEVEL UP!</span></a>
+            <a class="index-sheet sheet-mid" href="#archive"><span class="sheet-tab">02 / 一路闯关</span><span class="mid-word">每一步，<br>都有回响。</span><span class="sheet-arrow" data-icon="arrow-right-up-linear" aria-hidden="true"></span></a>
+            <a class="index-sheet sheet-front" href="#about"><div class="sheet-top"><span>PERSONAL COMIC</span><span>ISSUE #01</span></div><div class="cover-title">人生<br>仍在连载<span class="cover-period">!</span></div><div class="cover-signature" id="cover-name">等你写下名字</div><div class="sheet-bottom"><span>起源故事 · 真实经历待补完</span><span data-icon="arrow-right-up-linear" aria-hidden="true"></span></div></a>
           </div>
-          <div class="scene-bottom"><span class="cross-mark" aria-hidden="true">+</span><span>从任意一页，开始认识我</span><span class="edition">EST. NOW</span></div>
+          <div class="scene-bottom"><span class="cross-mark" aria-hidden="true">!</span><span>一个人，许多章节</span><span class="edition">FIRST PRINTING</span></div>
         </div>
       </div>
-      <div class="hero-bottom"><a href="#about"><span data-icon="arrow-down-linear" aria-hidden="true"></span> 往下，还有很多面</a><span>SCROLL TO DISCOVER</span><button class="text-button editor-trigger"><span data-icon="pen-new-square-linear" aria-hidden="true"></span> 编辑我的档案</button></div>
+      <div class="hero-bottom"><a href="#about"><span data-icon="arrow-down-linear" aria-hidden="true"></span> 向下，翻开第一页</a><span>SCROLL TO CRACK THE SPINE</span><button class="text-button editor-trigger"><span data-icon="pen-new-square-linear" aria-hidden="true"></span> 编辑我的档案</button></div>
+    </section>
+
+    <section class="reel-section" aria-labelledby="reel-title">
+      <div class="reel-pin page-wrap">
+        <div class="reel-stage">
+          <div class="reel-stage-top"><span>DOUBLE-PAGE SPREAD / READ IN ANY DIRECTION</span><span>TURN THE PAGE <i aria-hidden="true">!</i></span></div>
+          <div class="reel-layout">
+            <div class="reel-copy">
+              <span class="reel-kicker"><i class="status-dot"></i> INTERLUDE / 纸页之间</span>
+              <h2 id="reel-title"><span class="reel-title-line">每一页，</span><span class="reel-title-line">都是新章节<span class="reel-period">!</span></span></h2>
+              <p>经历不是一串冷冰冰的条目。<br>翻开它们，看看我是怎么走到这里。</p>
+              <a class="reel-link" href="#archive">继续读这段故事 <span data-icon="arrow-right-down-linear" aria-hidden="true"></span></a>
+            </div>
+            <div class="reel-art" aria-hidden="true">
+              <div class="reel-ring reel-ring-outer"><span>PROJECTS · MILESTONES · MOMENTS ·</span></div>
+              <div class="reel-card reel-card-back"><span>CHAPTER 03 / SKILLS</span><strong>装备<br>检查！</strong><i>POWER-UP</i></div>
+              <div class="reel-card reel-card-mid"><span>CHAPTER 02 / ARCHIVE</span><strong>继续<br>闯关！</strong><i>NO SHORTCUTS</i></div>
+              <div class="reel-card reel-card-front"><span>PERSONAL<br>COMIC</span><strong>!</strong><i>ISSUE 01 / ORIGIN</i></div>
+              <span class="reel-orbit-label orbit-label-a">P / 项目</span>
+              <span class="reel-orbit-label orbit-label-b">A / 成就</span>
+              <span class="reel-orbit-label orbit-label-c">E / 经历</span>
+              <span class="reel-cross">!</span>
+            </div>
+          </div>
+          <div class="reel-stage-bottom"><span>THE STORY IS STILL BEING DRAWN</span><span>TURN →</span></div>
+        </div>
+      </div>
     </section>
 
     <section id="about" class="about-section page-wrap section-space">
-      <div class="section-side"><span class="section-name">关于我</span><span class="section-en">THE PERSON BEHIND THE PAGES</span></div>
+      <div class="section-side"><span class="section-name">第 01 期 / 起源故事</span><span class="section-en">ORIGIN ISSUE · WHO IS THIS PERSON?</span></div>
       <div class="about-content"><h2 class="word-reveal">标签是入口，<br><span class="muted">故事才是我。</span></h2><p id="profile-bio" class="large-copy">比起用一个标签概括自己，我更想让你看看：我做过什么，正在琢磨什么，以及那些让我眼睛发亮的小事。</p><div class="profile-strip"><div><span class="field-label">你可以叫我</span><strong id="profile-name">等你写下名字</strong></div><div><span class="field-label">此刻的身份</span><strong id="profile-role">一个持续探索的人</strong></div><div><span class="field-label">这份档案</span><strong id="profile-state">正在等待你的故事</strong></div></div><p class="demo-note" id="demo-note"><span data-icon="info-circle-linear" aria-hidden="true"></span> 当前为内容示意。真实经历、作品和联系方式，等你来补全。</p></div>
     </section>
 
     <section id="archive" class="archive-section page-wrap section-space">
-      <div class="section-heading"><h2 class="word-reveal">一些足迹。<br><span class="serif">Things I've put into the world.</span></h2><p>大事、小事，认真做过的事。<br>每一个条目，都是认识我的另一条线索。</p></div>
+      <div class="section-heading"><h2 class="word-reveal"><span class="issue-kicker">第 02 期 / 一路闯关</span>一些足迹。<br><span class="serif">Every step leaves a panel.</span></h2><p>项目、成就、经历和随想。<br>每一格，记录一个真实发生的章节。</p></div>
       <div class="archive-tools"><div class="filter-group" role="group" aria-label="按档案类别筛选"><button class="filter active" data-filter="all" aria-pressed="true">全部 <span data-count="all">04</span></button><button class="filter" data-filter="project" aria-pressed="false">项目作品</button><button class="filter" data-filter="achievement" aria-pressed="false">成就荣誉</button><button class="filter" data-filter="experience" aria-pressed="false">成长经历</button><button class="filter" data-filter="note" aria-pressed="false">随想记录</button></div><label class="archive-search"><span data-icon="magnifer-linear" aria-hidden="true"></span><input type="search" id="archive-search" placeholder="寻找一条线索" aria-label="搜索档案" maxlength="80" /></label></div>
       <p class="sr-only" id="filter-status" aria-live="polite"></p>
       <div class="archive-list" id="archive-list">
@@ -60,13 +89,13 @@
       <div class="archive-bottom"><span id="archive-total">04 条内容示意 · 真实故事待写入</span><span>THE COLLECTION IS ALWAYS GROWING.</span></div>
     </section>
 
-    <section id="facets" class="facets-section section-space"><div class="page-wrap"><div class="facets-heading"><h2 class="word-reveal">我的更多面<span class="red-dot">.</span></h2><p>能力是做事的方法，热爱是出发的理由。<br>有些特点，藏在简历之外。</p></div><div class="facets-layout"><div class="facet-tabs" role="tablist" aria-label="探索个人特点"><button role="tab" id="tab-skills" aria-controls="facet-panel" aria-selected="true" data-facet="skills"><span>拿手的事</span><span class="tab-english">CAPABILITIES</span><span data-icon="arrow-right-up-linear" aria-hidden="true"></span></button><button role="tab" id="tab-traits" aria-controls="facet-panel" aria-selected="false" tabindex="-1" data-facet="traits"><span>我的底色</span><span class="tab-english">CHARACTER</span><span data-icon="arrow-right-up-linear" aria-hidden="true"></span></button><button role="tab" id="tab-interests" aria-controls="facet-panel" aria-selected="false" tabindex="-1" data-facet="interests"><span>眼睛发亮时</span><span class="tab-english">OFF THE CLOCK</span><span data-icon="arrow-right-up-linear" aria-hidden="true"></span></button></div><div id="facet-panel" role="tabpanel" aria-labelledby="tab-skills" tabindex="0"><div class="facet-panel-top"><span id="facet-caption">能力 / 待你填入</span><span class="facet-symbol" aria-hidden="true">a.</span></div><h3 id="facet-title">不只“会什么”，<br>也在乎“怎么做”。</h3><p id="facet-description">这里留给你的专业技能、擅长的方法，以及你愿意投入时间打磨的事情。</p><div class="facet-tags" id="facet-tags"><span>专业技能</span><span>解决问题的方法</span><span>持续学习的领域</span></div><span class="facet-note" id="facet-note">分类示意，等待你的真实内容</span></div></div></div></section>
+    <section id="facets" class="facets-section section-space"><div class="page-wrap"><div class="facets-heading"><h2 class="word-reveal"><span class="issue-kicker">第 03 期 / 装备检查</span>我的更多面<span class="red-dot">!</span></h2><p>能力是做事的方法，热爱是出发的理由。<br>有些特点，藏在简历之外。</p></div><div class="facets-layout"><div class="facet-tabs" role="tablist" aria-label="探索个人特点"><button role="tab" id="tab-skills" aria-controls="facet-panel" aria-selected="true" data-facet="skills"><span>拿手的事</span><span class="tab-english">CAPABILITIES</span><span data-icon="arrow-right-up-linear" aria-hidden="true"></span></button><button role="tab" id="tab-traits" aria-controls="facet-panel" aria-selected="false" tabindex="-1" data-facet="traits"><span>我的底色</span><span class="tab-english">CHARACTER</span><span data-icon="arrow-right-up-linear" aria-hidden="true"></span></button><button role="tab" id="tab-interests" aria-controls="facet-panel" aria-selected="false" tabindex="-1" data-facet="interests"><span>眼睛发亮时</span><span class="tab-english">OFF THE CLOCK</span><span data-icon="arrow-right-up-linear" aria-hidden="true"></span></button></div><div id="facet-panel" role="tabpanel" aria-labelledby="tab-skills" tabindex="0"><div class="facet-panel-top"><span id="facet-caption">能力 / 待你填入</span><span class="facet-symbol" aria-hidden="true">!</span></div><h3 id="facet-title">不只“会什么”，<br>也在乎“怎么做”。</h3><p id="facet-description">这里留给你的专业技能、擅长的方法，以及你愿意投入时间打磨的事情。</p><div class="facet-tags" id="facet-tags"><span>专业技能</span><span>解决问题的方法</span><span>持续学习的领域</span></div><span class="facet-note" id="facet-note">分类示意，等待你的真实内容</span></div></div></div></section>
 
     <section class="serendipity-section page-wrap section-space" aria-labelledby="random-heading"><div class="random-copy"><h2 id="random-heading" class="word-reveal">换个入口，<br>偶然认识我。</h2><p>不知道先看哪一页？<br>把选择交给一点点偶然。</p><button id="random-button" class="outline-button"><span data-icon="shuffle-linear" aria-hidden="true"></span> 抽一条档案线索 <span data-icon="arrow-right-linear" aria-hidden="true"></span></button></div><div class="random-result" id="random-result" aria-live="polite"><span class="ticket-label">A LITTLE SERENDIPITY</span><div class="ticket-content"><span class="ticket-category" id="ticket-category">下一页，可能有惊喜</span><p id="ticket-title">有些相识，<br><em>从偶然开始。</em></p><a id="ticket-link" href="#archive">去档案里看看 <span data-icon="arrow-right-up-linear" aria-hidden="true"></span></a></div><div class="ticket-footer"><span>KEEP YOUR CURIOSITY.</span><span class="barcode" aria-hidden="true"></span></div></div></section>
 
     <section id="contact" class="contact-section"><div class="page-wrap"><div class="contact-top"><span><i class="status-dot"></i> 每次对话，都可能是一个新的开始</span><a href="#home">回到顶部 <span data-icon="arrow-up-linear" aria-hidden="true"></span></a></div><h2 class="word-reveal">很高兴，<br>在这里<span class="contact-serif">遇见你。</span></h2><div class="contact-bottom"><p id="contact-message">如果你也有一个有趣的想法，<br>或者，只是想说声你好。</p><a class="contact-link" id="contact-link" href="#contact-info">留一个联络入口 <span data-icon="arrow-right-up-linear" aria-hidden="true"></span></a></div><div id="contact-info" class="contact-info"><span data-icon="letter-linear" aria-hidden="true"></span><p id="contact-info-text">联系方式将在你补充资料后显示。现在，可以先把这个网站收进收藏夹。</p></div></div></section>
   </main>
-  <footer class="site-footer page-wrap"><a class="footer-brand" href="#home">a.<span>个人开放档案</span></a><p>生活没有终稿。这份档案也是。</p><span>MADE TO KEEP GROWING · <span id="footer-year">2026</span></span></footer>
+  <footer class="site-footer page-wrap"><a class="footer-brand" href="#home">!<span>个人漫画档案</span></a><p>待续。请翻至下一期。</p><span>TO BE CONTINUED · <span id="footer-year">2026</span></span></footer>
 
   <aside id="editor" class="editor" aria-labelledby="editor-title" hidden><div class="editor-header"><h2 id="editor-title">让这份档案，属于你。</h2><button id="close-editor" class="icon-button" aria-label="关闭编辑面板"><span data-icon="close-circle-linear" aria-hidden="true"></span></button></div><p class="editor-description">先补充基本信息，也可以导入完整档案。修改保存在当前浏览器；导出文件可用于备份和发布。</p><form id="profile-form"><label>你的名字<input name="name" maxlength="40" required autocomplete="name" /></label><label>身份或一句话介绍<input name="role" maxlength="80" required /></label><label>首页欢迎语<textarea name="intro" rows="3" maxlength="240" required></textarea></label><label>关于我<textarea name="bio" rows="4" maxlength="1000" required></textarea></label><label>联系邮箱（选填）<input name="email" type="email" maxlength="150" autocomplete="email" /></label><button type="submit" class="solid-button">保存并预览 <span data-icon="check-circle-linear" aria-hidden="true"></span></button></form><div class="editor-files"><h3>整理好资料后，一次导入。</h3><p>支持本站格式的 JSON 文件。项目、成就、经历和特长会自动归类。文件只在本地读取。</p><label class="outline-button file-label"><span data-icon="upload-linear" aria-hidden="true"></span> 导入资料 JSON<input id="import-file" type="file" accept=".json,application/json" /></label><button id="export-profile" class="outline-button"><span data-icon="download-linear" aria-hidden="true"></span> 导出当前档案</button><a href="./profile-template.json" download class="text-button">下载完整资料模板 <span data-icon="arrow-right-down-linear" aria-hidden="true"></span></a><button id="reset-profile" class="text-button reset-profile">清除本地修改</button><p id="reset-confirm" hidden>确定恢复内容示意吗？请先导出需要保留的资料。<button id="confirm-reset" class="text-button">确定清除</button><button id="cancel-reset" class="text-button">取消</button></p></div><p id="editor-status" role="status" class="editor-status"></p></aside>
   <div id="editor-backdrop" class="editor-backdrop" hidden></div>

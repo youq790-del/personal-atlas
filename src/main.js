@@ -18,6 +18,8 @@ let toastTimer;
 let editorOpener;
 let lenis;
 let rafCallback;
+let progressTrigger;
+const sectionTriggers = [];
 const motion = gsap.matchMedia();
 const lifecycle = new AbortController();
 const listen = (el, event, handler, options = {}) => el.addEventListener(event, handler, { ...options, signal: lifecycle.signal });
@@ -152,12 +154,13 @@ function renderFacet(key) {
 }
 function renderProfile() {
   $('#profile-name').textContent = profile.name;
+  $('#cover-name').textContent = profile.name;
   $('#profile-role').textContent = profile.role;
   $('#hero-intro').textContent = profile.intro;
   $('#profile-bio').textContent = profile.bio;
   $('#profile-state').textContent = profile.isDemo ? '正在等待你的故事' : '持续更新的个人档案';
   $('#demo-note').hidden = !profile.isDemo;
-  document.title = profile.isDemo ? '个人开放档案 · In the making' : `${profile.name} · 个人开放档案`;
+  document.title = profile.isDemo ? '个人漫画档案 · 连载中' : `${profile.name} · 个人漫画档案`;
   const contact = $('#contact-link');
   contact.replaceChildren(document.createTextNode(profile.email ? '给我写封信' : '留一个联络入口'),icon('arrow-right-up-linear'));
   contact.href = profile.email ? `mailto:${encodeURIComponent(profile.email).replace('%40','@')}` : '#contact-info';
@@ -174,6 +177,30 @@ hydrateIcons();
 try { const saved = localStorage.getItem(storageKey); if (saved) profile = validateProfile(JSON.parse(saved)); } catch { announce('本地档案未能读取，已显示初始版本。你可以重新导入备份。'); }
 renderProfile();
 $('#footer-year').textContent = String(new Date().getFullYear());
+const progressBar = $('#scroll-progress');
+const navigationLinks = $$('.desktop-nav a, #mobile-nav a');
+function setCurrentSection(sectionId) {
+  navigationLinks.forEach(link => {
+    if (link.hash === `#${sectionId}`) link.setAttribute('aria-current', 'location');
+    else link.removeAttribute('aria-current');
+  });
+}
+progressTrigger = ScrollTrigger.create({
+  trigger: document.documentElement,
+  start: 0,
+  end: 'max',
+  onUpdate: self => gsap.set(progressBar, { scaleX: self.progress })
+});
+['about', 'archive', 'facets', 'contact'].forEach(sectionId => {
+  sectionTriggers.push(ScrollTrigger.create({
+    trigger: `#${sectionId}`,
+    start: 'top 45%',
+    end: 'bottom 45%',
+    onEnter: () => setCurrentSection(sectionId),
+    onEnterBack: () => setCurrentSection(sectionId),
+    onLeaveBack: () => { if (sectionId === 'about') setCurrentSection(''); }
+  }));
+});
 const filterButtons = $$('.filter');
 filterButtons.forEach(button => listen(button,'click',() => {
   activeFilter=button.dataset.filter;
@@ -267,23 +294,114 @@ motion.add('(prefers-reduced-motion: no-preference)',()=>{
   rafCallback=(time)=>{if(!document.hidden)lenis?.raf(time*1000);};
   gsap.ticker.add(rafCallback);gsap.ticker.lagSmoothing(0);
   const intro=gsap.timeline({defaults:{ease:'expo.out',duration:1}});
-  intro.from('.hero-line',{y:24,opacity:.55,stagger:.1},0).from('.hero-intro',{y:12,opacity:.5},.15).from('.index-stack',{y:28,rotation:-3,opacity:.65},.1).from('.hero-copy>.solid-button',{y:9,opacity:.7},.3);
-  $$('.word-reveal').forEach(heading=>{
-    // One unsplit accessible name; decorative word spans are hidden from AT.
-    heading.setAttribute('aria-label',heading.textContent.trim());
-    const walker=document.createTreeWalker(heading,NodeFilter.SHOW_TEXT);const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);
-    nodes.forEach(text=>{if(!text.textContent.trim())return;const fragment=document.createDocumentFragment();text.textContent.split(/(\s+)/).forEach(word=>{const span=node('span','reveal-word',word);span.style.display=/^\s+$/.test(word)?'inline':'inline-block';span.setAttribute('aria-hidden','true');fragment.append(span);});text.replaceWith(fragment);});
-    gsap.from($$('.reveal-word',heading),{y:18,opacity:.5,stagger:.055,duration:.85,ease:'expo.out',scrollTrigger:{trigger:heading,start:'top 88%',once:true}});
+  intro.from('.hero-line',{y:24,stagger:.1},0).from('.hero-intro',{y:12},.15).from('.index-stack',{y:28,rotation:-3},.1).from('.hero-copy>.solid-button',{y:9},.3);
+  const reelMotion = gsap.matchMedia();
+  reelMotion.add('(min-width: 761px)', () => {
+    gsap.timeline({
+      defaults: { ease: 'none' },
+      scrollTrigger: {
+        trigger: '.reel-section',
+        start: 'top top+=94px',
+        end: '+=155%',
+        pin: '.reel-pin',
+        scrub: .8,
+        invalidateOnRefresh: true
+      }
+    })
+      .from('.reel-stage', { scale: .84, borderRadius: 18, y: 34 }, 0)
+      .from('.reel-title-line', { yPercent: 115, stagger: .12, clipPath: 'inset(0 0 100% 0)' }, .08)
+      .from('.reel-kicker, .reel-copy>p, .reel-link', { y: 22, stagger: .08, opacity: 0 }, .24)
+      .from('.reel-art', { scale: .68, rotation: 8, x: 48 }, .08)
+      .from('.reel-card-back', { x: 34, y: 30, rotation: 18 }, .14)
+      .from('.reel-card-mid', { x: 22, y: 16, rotation: 10 }, .2)
+      .from('.reel-card-front', { x: 12, y: 8, rotation: -6 }, .26)
+      .to('.reel-ring-outer', { rotation: 34 }, .12)
+      .to('.reel-orbit-label', { y: -12, stagger: .04 }, .2);
   });
-  gsap.from('.profile-strip>div',{y:12,opacity:.6,stagger:.12,duration:.8,ease:'expo.out',scrollTrigger:{trigger:'.profile-strip',start:'top 90%',once:true}});
-  gsap.from('.facet-tabs button',{x:-12,opacity:.65,stagger:.1,duration:.8,ease:'expo.out',scrollTrigger:{trigger:'.facets-layout',start:'top 85%',once:true}});
+  const aboutHeading = $('#about .word-reveal');
+  aboutHeading.setAttribute('aria-label', aboutHeading.textContent.trim().replace(/\s+/g, ' '));
+  const walker = document.createTreeWalker(aboutHeading, NodeFilter.SHOW_TEXT);
+  const textNodes = [];
+  while (walker.nextNode()) textNodes.push(walker.currentNode);
+  textNodes.forEach(text => {
+    if (!text.textContent.trim()) return;
+    const fragment = document.createDocumentFragment();
+    text.textContent.split(/(\s+)/).forEach(word => {
+      const span = node('span', 'reveal-word', word);
+      span.style.display = /^\s+$/.test(word) ? 'inline' : 'inline-block';
+      span.setAttribute('aria-hidden', 'true');
+      fragment.append(span);
+    });
+    text.replaceWith(fragment);
+  });
+  gsap.from($$('.reveal-word', aboutHeading), {
+    y: 20, stagger: .075, duration: .9, ease: 'expo.out',
+    scrollTrigger: { trigger: aboutHeading, start: 'top 86%', once: true }
+  });
+  gsap.from('#archive .section-heading h2', {
+    clipPath: 'inset(0 0 100% 0)', y: 18, duration: 1.05, ease: 'expo.out',
+    scrollTrigger: { trigger: '#archive .section-heading', start: 'top 78%', once: true }
+  });
+  gsap.from('.archive-item', {
+    y: 20, stagger: .09, duration: .8, ease: 'expo.out',
+    scrollTrigger: { trigger: '#archive-list', start: 'top 82%', once: true }
+  });
+  gsap.from('#facets .facets-heading h2', {
+    clipPath: 'inset(0 100% 0 0)', x: -14, duration: .95, ease: 'expo.out',
+    scrollTrigger: { trigger: '#facets .facets-heading', start: 'top 82%', once: true }
+  });
+  gsap.from('.facet-tabs button', {
+    x: -16, stagger: .11, duration: .75, ease: 'expo.out',
+    scrollTrigger: { trigger: '.facets-layout', start: 'top 82%', once: true }
+  });
+  gsap.from('#facet-panel', {
+    y: 24, rotation: .7, duration: .9, ease: 'expo.out',
+    transformOrigin: 'top left', scrollTrigger: { trigger: '#facet-panel', start: 'top 86%', once: true }
+  });
+  gsap.from('#random-heading', {
+    x: -20, duration: .8, ease: 'expo.out',
+    scrollTrigger: { trigger: '.serendipity-section', start: 'top 78%', once: true }
+  });
+  gsap.from('#random-result', {
+    y: 34, rotation: -2.5, duration: 1, ease: 'expo.out',
+    transformOrigin: 'left bottom', scrollTrigger: { trigger: '#random-result', start: 'top 82%', once: true }
+  });
+  const contactIntro = gsap.timeline({
+    defaults: { ease: 'expo.out' },
+    scrollTrigger: { trigger: '#contact', start: 'top 72%', once: true }
+  });
+  contactIntro.from('#contact h2', { clipPath: 'inset(0 0 100% 0)', y: 22, duration: 1.05 })
+    .from('.contact-bottom p, .contact-link', { y: 14, stagger: .13, duration: .7 }, '-=.38');
+
+  const pressableSelector = 'button:not(:disabled), summary, .solid-button, .outline-button, .header-cta, .contact-link';
+  const motionListeners = new AbortController();
+  let pressedTarget;
+  const releaseTarget = () => {
+    if (!pressedTarget) return;
+    gsap.to(pressedTarget, { scale: 1, duration: .52, ease: 'elastic.out(1,.48)', overwrite: 'auto' });
+    pressedTarget = undefined;
+  };
+  document.addEventListener('pointerdown', event => {
+    pressedTarget = event.target.closest(pressableSelector);
+    if (pressedTarget) gsap.to(pressedTarget, { scale: .975, duration: .12, ease: 'power2.out', overwrite: 'auto' });
+  }, { signal: motionListeners.signal });
+  document.addEventListener('pointerup', releaseTarget, { signal: motionListeners.signal });
+  document.addEventListener('pointercancel', releaseTarget, { signal: motionListeners.signal });
+  document.addEventListener('keydown', event => {
+    if (event.repeat || !['Enter', ' '].includes(event.key)) return;
+    const target = event.target.closest?.(pressableSelector);
+    if (!target) return;
+    pressedTarget = target;
+    gsap.to(target, { scale: .975, duration: .12, ease: 'power2.out', overwrite: 'auto' });
+  }, { signal: motionListeners.signal });
+  document.addEventListener('keyup', releaseTarget, { signal: motionListeners.signal });
   const visibility=()=>{if(document.hidden)lenis?.stop();else if(editor.hidden){lenis?.start();ScrollTrigger.refresh();}};
   document.addEventListener('visibilitychange',visibility);
   const blur=()=>lenis?.stop(),focus=()=>{if(editor.hidden)lenis?.start();};
   window.addEventListener('blur',blur);window.addEventListener('focus',focus);
-  return()=>{document.removeEventListener('visibilitychange',visibility);window.removeEventListener('blur',blur);window.removeEventListener('focus',focus);gsap.ticker.remove(rafCallback);lenis?.off('scroll',ScrollTrigger.update);lenis?.destroy();lenis=undefined;};
+  return()=>{reelMotion.revert();motionListeners.abort();document.removeEventListener('visibilitychange',visibility);window.removeEventListener('blur',blur);window.removeEventListener('focus',focus);gsap.ticker.remove(rafCallback);lenis?.off('scroll',ScrollTrigger.update);lenis?.destroy();lenis=undefined;};
 });
 document.fonts.ready.then(refreshLayout);
 listen(window,'load',refreshLayout);
-listen(window,'pagehide',()=>{motion.revert();lifecycle.abort();clearTimeout(toastTimer);gsap.killTweensOf('#random-result');});
+listen(window,'pagehide',()=>{motion.revert();progressTrigger?.kill();sectionTriggers.forEach(trigger=>trigger.kill());lifecycle.abort();clearTimeout(toastTimer);gsap.killTweensOf('#random-result');});
 listen(window,'pageshow',event=>{if(event.persisted)location.reload();});
