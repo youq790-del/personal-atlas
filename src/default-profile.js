@@ -1,7 +1,11 @@
 export const defaultProfile = {
-  version: 1, isDemo: true, name: '等你写下名字', role: '一个持续探索的人',
+  version: 1,
+  isDemo: true,
+  name: '等你写下名字',
+  role: '一个持续探索的人',
   intro: '你好，欢迎来到我的进行时。\n这里收集我的经历、作品，和一些不太好归类的热爱。',
-  bio: '比起用一个标签概括自己，我更想让你看看：我做过什么，正在琢磨什么，以及那些让我眼睛发亮的小事。', email: '',
+  bio: '比起用一个标签概括自己，我更想让你看看：我做过什么，正在琢磨什么，以及那些让我眼睛发亮的小事。',
+  email: '',
   entries: [
     { id:'project-1',category:'project',title:'把一个想法，做成看得见的作品',description:'记录问题、过程，以及最后的那个“做到了”。',detail:'这里将展示你的真实项目：为什么开始、负责了什么、如何解决问题，以及最终成果。可补充作品链接与过程记录。',label:'从想法到实现',tags:['等待你的真实作品'],url:'' },
     { id:'achievement-1',category:'achievement',title:'那些值得记住的里程碑',description:'荣誉背后，是一段只有自己知道的路。',detail:'这里留给你想分享的奖项、证书和突破。你可以补充名称、时间、颁发机构及证明材料，不必只记录“大成就”。',label:'记录高光时刻',tags:['等待你的真实成就'],url:'' },
