@@ -63,3 +63,29 @@ test('facet content comparison tolerates key order but never discards extra user
   assert.deepEqual(shown.facets.skills,baseProfile.facets.skills);
   assert.deepEqual(shown.facets.traits,profile.facets.traits);
 });
+
+
+test('the latest published copy migrates while its independently edited fields survive', () => {
+  const profile = {
+    ...structuredClone(baseProfile), name:'yo7', isDemo:true,
+    role:'写理工科笔记，也做 Blender。',
+    intro:'物理、代码，偶尔跑题。',
+    bio:'公众号里写学习笔记和日常。Blender 里试试材质、节点和动画。',
+    facets:{
+      skills:{caption:'在学',title:'学习笔记',description:'物理、C++，还有材料与力学。',tags:['C++ 学习','物理','概率论','材料与工程力学']},
+      interests:{caption:'Blender',title:'做过的练习',description:'材质、几何节点和风格化渲染。',tags:['Blender 练习','几何节点','材质','风格化渲染']},
+      traits:{caption:'公众号',title:'学习日记',description:'会写实验，也写打球和追剧。',tags:['学习记录','实验观察','日常碎念']},
+    },
+  };
+  const before=structuredClone(profile);
+  const shown=profileIdentity(profile);
+  for(const field of ['role','intro','bio','facets']) assert.deepEqual(shown[field],baseProfile[field]);
+  assert.deepEqual(profile,before);
+  profile.intro='我补充的一句话';
+  profile.facets.interests.description='新的渲染练习已经做好了';
+  const edited=profileIdentity(profile);
+  assert.equal(edited.intro,profile.intro);
+  assert.deepEqual(edited.facets.interests,profile.facets.interests);
+  assert.equal(edited.role,baseProfile.role);
+  assert.deepEqual(edited.facets.skills,baseProfile.facets.skills);
+});

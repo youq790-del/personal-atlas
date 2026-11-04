@@ -10,14 +10,15 @@ import { works, workAsset, type PortfolioWork, type WorkId } from './portfolio';
 
 type Props = {work?:PortfolioWork;reading:boolean;collection?:WeChatCollection;reduced:boolean;onClose:()=>void;onWork:(id:WorkId)=>void};
 export function WorkStage({work,reading,collection,reduced,onClose,onWork}:Props) {
-  const stage=useRef<HTMLDivElement>(null),closeButton=useRef<HTMLButtonElement>(null),media=useRef<HTMLDivElement>(null);
+  const stage=useRef<HTMLDivElement>(null),media=useRef<HTMLDivElement>(null);
   const [zoom,setZoom]=useState(false),[failed,setFailed]=useState(false),[playing,setPlaying]=useState(false);
   const video=useRef<HTMLVideoElement>(null);
   const active=work?.id||(reading?'writing':'');
   const previousFocus=useRef<HTMLElement|null>(null);
   useEffect(()=>{
     previousFocus.current=document.activeElement as HTMLElement|null;
-    closeButton.current?.focus({preventScroll:true});
+    // The opening Enter may still be held; focus content, not the close action.
+    stage.current?.focus({preventScroll:true});
     const frame=requestAnimationFrame(()=>{
       if(stage.current?.closest('.fallback-skills'))window.scrollTo({top:window.scrollY+stage.current.getBoundingClientRect().top-100,behavior:'instant'});
     });
@@ -35,7 +36,8 @@ export function WorkStage({work,reading,collection,reduced,onClose,onWork}:Props
   useGSAP(()=>{
     if(reduced)return;
     gsap.fromTo('.work-stage-content',{opacity:.4,clipPath:'inset(14% 16% 12% 16%)',y:26},{opacity:1,clipPath:'inset(0% 0% 0% 0%)',y:0,duration:.72,ease:'expo.out',clearProps:'all'});
-    gsap.fromTo('.work-stage-caption > *',{y:18,opacity:0},{y:0,opacity:1,duration:.5,stagger:.045,delay:.16,ease:'expo.out',clearProps:'all'});
+    const captions=stage.current?.querySelectorAll('.work-stage-caption > *');
+    if(captions?.length)gsap.fromTo(captions,{y:18,opacity:0},{y:0,opacity:1,duration:.5,stagger:.045,delay:.16,ease:'expo.out',clearProps:'all'});
   },{scope:stage,dependencies:[active,reduced],revertOnUpdate:true});
   const move=(e:React.PointerEvent<HTMLDivElement>)=>{
     if(reduced||e.pointerType!=='mouse'||!media.current)return;
@@ -51,9 +53,9 @@ export function WorkStage({work,reading,collection,reduced,onClose,onWork}:Props
     else{try{await video.current.play();setPlaying(true);}catch{setPlaying(false);}}
   };
   const index=works.findIndex(item=>item.id===work?.id);
-  return <div ref={stage} className={`work-stage ${reading?'work-stage-reading':''} ${zoom?'work-stage-zoom':''}`} style={{'--work-color':work?.color||'#8ba885'} as CSSProperties} role="region" aria-label={reading?'公众号作品':`${work?.title}作品展厅`}>
+  return <div ref={stage} tabIndex={-1} className={`work-stage ${reading?'work-stage-reading':''} ${zoom?'work-stage-zoom':''}`} style={{'--work-color':work?.color||'#8ba885'} as CSSProperties} role="region" aria-label={reading?'公众号作品':`${work?.title}作品展厅`}>
     <div className="work-stage-content">
-      <div className="work-stage-toolbar"><button ref={closeButton} className="work-back" onClick={()=>{if(zoom)setZoom(false);else onClose();}}><Icon name="arrow-up-linear" size={18}/><span>{zoom?'返回作品':'返回键盘'}</span><kbd>Esc</kbd></button>{work&&<span className="work-medium">Blender study</span>}</div>
+      <div className="work-stage-toolbar"><button className="work-back" onClick={()=>{if(zoom)setZoom(false);else onClose();}}><Icon name="arrow-up-linear" size={18}/><span>{zoom?'返回作品':'返回键盘'}</span><kbd>Esc</kbd></button>{work&&<span className="work-medium">Blender study</span>}</div>
       {reading?<div className="work-reading-scroll" data-lenis-prevent><WeChatShelf collection={collection} reduced={reduced}/></div>:work&&<>
         <div ref={media} className={`work-media ${zoom?'is-magnified':''} ${failed?'media-failed':''}`} onPointerMove={move} onPointerLeave={reset}>
           <ElasticFrame variant={index} disabled={reduced||zoom} className="work-art-frame" preserveContent>

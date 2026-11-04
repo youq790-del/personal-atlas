@@ -34,6 +34,8 @@
  .kinetic-app .hero-section{min-height:750px;padding-top:115px}.kinetic-app .hero-copy{width:100%}.kinetic-app .hero-copy h1{font-size:clamp(78px,23vw,122px)}.kinetic-app .hero-copy h1.single-name{font-size:clamp(66px,19vw,108px)}.kinetic-app .hero-role{font-size:11px;margin-top:23px}.kinetic-app .hero-actions{margin-top:12px}.kinetic-app .profile-note{margin-top:9px}
  .kinetic-app .hero-caption{display:none}.kinetic-app .hero-bottom{bottom:23px}.kinetic-app .hero-utilities{flex-direction:row;gap:20px}.kinetic-app .hero-utilities button{min-height:44px}.kinetic-app .hero-utilities button:last-child{display:none}
  .kinetic-app .skills-heading h2{font-size:90px}.kinetic-app .skill-readout strong{font-size:20px}.kinetic-app .skill-controls{gap:24px}.kinetic-app .skills-stage-inner{padding-bottom:38px}
+ .kinetic-app .skills-section:not(.fallback-skills) .skills-stage-inner{justify-content:flex-start}
+ .kinetic-app .skills-section:not(.fallback-skills) .skill-readout{margin-top:auto;margin-bottom:24px}
  .kinetic-app .story-intro{grid-template-columns:1fr;gap:26px;margin-bottom:55px}.kinetic-app .story-intro h2{font-size:23vw;margin:0}.story-orbit{height:190px;width:70%;margin-left:auto}.story-orbit .story-context{right:0;font-size:10px}.kinetic-app .experience-section{padding-top:75px;padding-bottom:60px}
  .kinetic-app .experience-row summary{min-height:122px;padding:24px 0;gap:10px}.kinetic-app .experience-row h3{font-size:31px}.kinetic-app .experience-category{font-size:9px}
  .kinetic-app .projects-section .section-title h2{font-size:82px}.kinetic-app .projects-section>.elastic-line{left:24px;width:calc(100% - 48px)}.kinetic-app .project-caption h3{font-size:22px}

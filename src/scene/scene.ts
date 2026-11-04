@@ -1,5 +1,6 @@
 // Adapted from Naresh Khatri / 3d-portfolio (MIT). See licenses/Naresh-Khatri-MIT.txt.
 import headingMetrics from "./heading-metrics.json";
+import { resolveShortcuts } from "./input";
 import { addCounterModel, type CounterModel } from "./counter-model";
 import { createKeyWell } from "./key-well";
 import {
@@ -102,14 +103,14 @@ export function createKeyboardScene(skills: readonly KeyboardSkill[], columns = 
   // Resting case + keycaps span y=0 through keyY + keyTop. Text and cat are excluded.
   const keyboardCenterY = (KIT.keyY + KIT.keyTop) / 2;
   const layout = group("Keyboard layout", spinId, [0, -keyboardCenterY * fit, 0], [fit, fit, fit]);
-  const caseMaterial = material("Case", { color: "#171819", roughness: 0.64 });
+  const caseMaterial = material("Case", { color: "#ecebe2", roughness: 1 });
   const counterId = group("Left side counter", layout);
   doc.nodes[counterId].visible = false;
   const outerX = innerX + KIT.halfW - KIT.cutX;
   const outerZ = innerZ + KIT.halfD - KIT.cutZ;
   const counter = addCounterModel(doc, counterId, [-outerX - 0.003, 0.36, -0.3]);
   const well = createKeyWell(outerX, outerZ, (cols - 1) * KIT.pitch + 1, (rows - 1) * KIT.pitch + 1);
-  const plateMaterial = material("Recessed switch plate", { color: "#101213", roughness: 0.82 });
+  const plateMaterial = material("Recessed switch plate", { color: "#171632", roughness: 1 });
   const caseTargets: string[] = [];
   for (const [name, geometry, materialId, x] of [
     ["Case left edge", well.edge, caseMaterial, 0],
@@ -155,6 +156,7 @@ export function createKeyboardScene(skills: readonly KeyboardSkill[], columns = 
   };
   const defaultLabelId = label("Explore my world", "Hover, tap, or press a key");
   doc.nodes[defaultLabelId].visible = true;
+  const printedShortcuts = resolveShortcuts(skills, cols);
   const keys = skills.map((skill, index): KeyboardKey => {
     // separate groups let placement, motion, and presses compose
     const slot = group(`Slot ${skill.name}`, layout, [
@@ -162,22 +164,24 @@ export function createKeyboardScene(skills: readonly KeyboardSkill[], columns = 
       (Math.floor(index / cols) - (rows - 1) / 2) * KIT.pitch,
     ]);
     const motionId = group(`Motion ${skill.name}`, slot);
-    const capColor = skill.keyboardColor ?? skill.color;
+    const printPalette = ['#f4dd22', '#ebeae2', '#ec4c92', '#a2a4e4', '#373ac0', '#ebeae2', '#ebeae2', '#373ac0', '#ebeae2', '#f4dd22', '#ec4c92', '#ebeae2', '#ec4c92', '#ebeae2', '#373ac0', '#ebeae2', '#f4dd22', '#a2a4e4'];
+    const capColor = skill.keyboardColor ?? printPalette[index % printPalette.length];
     const color = /^#[0-9a-f]{3}$/i.test(capColor)
       ? `#${capColor.slice(1).split("").map((c) => c + c).join("")}` : capColor;
-    const materialId = material(`Key ${skill.name}`, { color, roughness: 0.34, clearcoat: 0.12, clearcoatRoughness: 0.38 });
+    const materialId = material(`Key ${skill.name}`, { color, roughness: 1, clearcoat: 0, clearcoatRoughness: 1 });
     const nodeId = model(skill.name, "0", materialId, motionId);
     {
       const iconId = newId("as");
       const keyText=skill.label.slice(0,4).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-      const textIcon=`data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256"><text x="128" y="155" fill="white" font-family="sans-serif" font-size="${keyText.length>2?46:72}" font-weight="bold" text-anchor="middle">${keyText}</text></svg>`)}`;
+      const ink = capColor === '#373ac0' ? '#faf7ea' : '#171632';
+      const textIcon=`data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256"><text x="128" y="150" fill="${ink}" font-family="sans-serif" font-size="${keyText.length>2?45:66}" font-weight="900" text-anchor="middle">${keyText}</text><path d="M52 188H204" stroke="${ink}" stroke-width="4"/><text x="198" y="222" fill="${ink}" font-family="sans-serif" font-size="22" font-weight="800" text-anchor="end">${printedShortcuts[index]?.replace(/^(Key|Digit)/,'')||''}</text></svg>`)}`;
       doc.assets[iconId] = { id: iconId, kind: "texture", name: skill.icon || textIcon, hash: `icon-${skill.name}`, size: 0 };
       const logoMaterial = material(`Logo ${skill.name}`, {
         color: "#ffffff", roughness: 0.6, transparent: true,
         maps: { map: iconId, normalMap: null, roughnessMap: null },
       });
       add({ id: newId("nd"), name: `Logo ${skill.name}`, type: "mesh", materialId: logoMaterial,
-        geometry: { kind: "plane", params: { width: 0.52, height: 0.52 } },
+        geometry: { kind: "plane", params: { width: 0.74, height: 0.74 } },
         transform: { ...transform([0, KIT.logoY, 0]), rotation: [-Math.PI / 2, 0, 0] },
         visible: true, castShadow: false, receiveShadow: true, children: [] }, nodeId);
     }

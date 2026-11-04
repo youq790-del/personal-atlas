@@ -1,6 +1,7 @@
 // Adapted from Naresh Khatri's MIT portfolio. See licenses/Naresh-Khatri-MIT.txt.
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ChibiScene, type ChibiSceneApi, type ScenePointerEvent } from '@chibi3d/runtime';
+import { type ChibiSceneApi, type ScenePointerEvent } from '@chibi3d/runtime';
+import { ComicScene } from './ComicScene';
 import { DefaultLoadingManager } from 'three';
 import { createKeyboardScene, resolveKeyboardAsset, type KeyboardKey } from './scene';
 import { createKeyboardMotion, isReadingSection, type KeyboardSection } from './motion';
@@ -11,7 +12,7 @@ import { createCounterMotion } from './counter-motion';
 import { asset, type Skill } from '../data';
 
 DefaultLoadingManager.setURLModifier(url => url.startsWith('/fonts/') ? asset(url) : url);
-const SceneCanvas = memo(ChibiScene);
+const SceneCanvas = memo(ComicScene);
 const style = { position:'fixed' as const,inset:0,width:'100vw',height:'100dvh' };
 type Props = { skills:Skill[]; sound:boolean; playful:boolean; petSignal:number; rotationSignal:number; focusKey?:string|null; onReady:(ready:boolean)=>void; onSelect:(skill:Skill|null)=>void; onSection:(section:KeyboardSection)=>void; onOpen:(skill:Skill)=>void };
 export default function KeyboardScene({skills,sound,playful,petSignal,rotationSignal,focusKey=null,onReady,onSelect,onSection,onOpen}:Props) {
@@ -136,6 +137,13 @@ export default function KeyboardScene({skills,sound,playful,petSignal,rotationSi
     }
     if(event.type==='pointerCancel')input.release(source);
   },[input,scene,play,syncSelection]);
+  const exportPoster=async()=>{
+    const blob=await api.current?.screenshot({type:'image/png',transparent:true});
+    if(!blob)return;
+    const url=URL.createObjectURL(blob),link=document.createElement('a');
+    link.href=url;link.download='yo7-comic-keyboard.png';link.click();
+    window.setTimeout(()=>URL.revokeObjectURL(url),1000);
+  };
   if(failed)return null;
-  return <SceneCanvas document={scene.document} environment={environment} resolveAsset={resolveKeyboardAsset} api={api} style={style} dpr={dpr} transparent orbit={false} orthographic pointerTargets={scene.pointerTargets} onPointerEvent={onPointerEvent} onLoad={()=>{setReady(true);callbacks.current.onReady(true);}} onError={(error)=>{console.warn('Keyboard unavailable',error);setFailed(true);callbacks.current.onReady(false);}} onEvent={event=>{if(event.type==='contextLost'){setFailed(true);callbacks.current.onReady(false);}}} />;
+  return <><SceneCanvas document={scene.document} environment={environment} resolveAsset={resolveKeyboardAsset} api={api} style={style} dpr={dpr} transparent orbit={false} orthographic pointerTargets={scene.pointerTargets} onPointerEvent={onPointerEvent} onLoad={()=>{setReady(true);callbacks.current.onReady(true);}} onError={(error)=>{console.warn('Keyboard unavailable',error);setFailed(true);callbacks.current.onReady(false);}} onEvent={event=>{if(event.type==='contextLost'){setFailed(true);callbacks.current.onReady(false);}}} />{import.meta.env.DEV&&new URLSearchParams(location.search).has('keyboard-capture')&&<button type="button" onClick={exportPoster} disabled={!ready} style={{position:'fixed',bottom:20,left:20,zIndex:99999,padding:'16px 24px',background:'#f4dd22',color:'#171632',border:'3px solid #171632',pointerEvents:'auto'}}>导出透明键盘 PNG</button>}</>;
 }

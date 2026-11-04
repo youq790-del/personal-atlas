@@ -15,22 +15,22 @@ type Props = {
 };
 const perspectives = [
   {
-    label: '在学', word: '为什么？',
-    description: '公式之外，也想知道为什么要这么写。',
+    label: '在学', word: '学习笔记',
+    description: '物理、C++、材料力学。学到哪，就写到哪。',
     quote: '为什么能量往往与某个物理量的平方有关？',
     article: '波', articleId: 'writing-a06', action: '看笔记',
     main: 'grass' as WorkId, second: 'liquid' as WorkId,
   },
   {
-    label: 'Blender', word: '试试。',
-    description: '调材质、接节点，也做点动画。',
-    quote: '但又为什么非得是类似于马鞍面的弯曲呢',
-    article: 'breaking bad', articleId: 'writing-a04', action: '看实验记录',
+    label: 'Blender', word: 'Blender 练习',
+    description: '草地、玻璃、云，还有一些动画。',
+    quote: '', article: '', articleId: '', action: '打开玻璃练习',
+    actionWork: 'liquid' as WorkId,
     main: 'liquid' as WorkId, second: 'grass' as WorkId,
   },
   {
-    label: '日常', word: '下课了。',
-    description: '打球、追剧，还有课间的太阳。',
+    label: '日常', word: '课外',
+    description: '打羽毛球，也看剧。偶尔写进笔记末尾。',
     quote: '终于找到早7来打羽毛球的搭子了呀',
     article: '波', articleId: 'writing-a06', action: '看日记',
     main: 'grass' as WorkId, second: 'liquid' as WorkId,
@@ -141,8 +141,8 @@ export function PersonalPortrait({ reduced, onOpenWork, onReadArticle }: Props) 
 
   return <div ref={root} className={`personal-portrait portrait-view-${active}${reduced ? ' portrait-is-still' : ''}`}>
     <div className="portrait-heading">
-      <h2>最近。</h2>
-      <p>学习笔记，<br/>Blender 练习。</p>
+      <h2>关于我。</h2>
+      <p>理工科在读。<br/>写笔记，也学着做图。</p>
     </div>
     <div className="portrait-perspectives" role="tablist" aria-label="认识 yo7 的三个侧面">{perspectives.map((item, index) => <button
       key={item.label} ref={element => { tabButtons.current[index] = element; }} type="button" role="tab"
@@ -161,8 +161,8 @@ export function PersonalPortrait({ reduced, onOpenWork, onReadArticle }: Props) 
       <div className="portrait-view-copy" key={active}>
         <h3>{perspective.word}</h3>
         <p>{perspective.description}</p>
-        <blockquote><p>{perspective.quote}</p><cite>——《{perspective.article}》</cite></blockquote>
-        <button className="portrait-reading-link" type="button" onClick={() => onReadArticle(perspective.articleId)}>{perspective.action}<Icon name="arrow-right-up-linear" size={18}/></button>
+        {perspective.quote && <blockquote><p>{perspective.quote}</p><cite>——《{perspective.article}》</cite></blockquote>}
+        <button className="portrait-reading-link" type="button" onClick={() => perspective.actionWork ? onOpenWork(perspective.actionWork) : onReadArticle(perspective.articleId)}>{perspective.action}<Icon name="arrow-right-up-linear" size={18}/></button>
       </div>
       <svg ref={wave} className="portrait-wave" viewBox="0 0 640 200" aria-hidden="true">{Array.from({ length: 5 }, (_, index) => <path key={index} d={wavePath(index)}/>)}</svg>
       <div className="portrait-secondary-float">

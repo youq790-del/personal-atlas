@@ -14,13 +14,13 @@ export const baseProfile: Profile = {
   ...defaultProfile,
   wechat: defaultWeChatCollection,
   name: 'yo7',
-  role: '写理工科笔记，也做 Blender。',
-  intro: '物理、代码，偶尔跑题。',
-  bio: '公众号里写学习笔记和日常。Blender 里试试材质、节点和动画。',
+  role: '理工科在读。',
+  intro: '这里放我的学习笔记和 Blender 练习。',
+  bio: '我叫 yo7，读理工科。学习笔记主要写物理、C++ 和材料力学。也做一些 Blender 练习，偶尔在公众号里聊打球和看过的剧。',
   facets: {
-    skills: {caption:'在学',title:'学习笔记',description:'物理、C++，还有材料与力学。',tags:['C++ 学习','物理','概率论','材料与工程力学']},
-    interests: {caption:'Blender',title:'做过的练习',description:'材质、几何节点和风格化渲染。',tags:['Blender 练习','几何节点','材质','风格化渲染']},
-    traits: {caption:'公众号',title:'学习日记',description:'会写实验，也写打球和追剧。',tags:['学习记录','实验观察','日常碎念']},
+    skills: {caption:'在学',title:'学习笔记',description:'最近在学物理、C++、概率论和材料力学。',tags:['C++ 学习','物理','概率论','材料与工程力学']},
+    interests: {caption:'Blender',title:'做过的练习',description:'做了些草地、玻璃、云和动画练习。',tags:['Blender 练习','几何节点','材质','风格化渲染']},
+    traits: {caption:'公众号',title:'学习日记',description:'公众号里也有打球、看剧和日常的事。',tags:['学习记录','实验观察','日常碎念']},
   },
 };
 
@@ -38,9 +38,9 @@ export function isTemplateEntry(entry: Entry): boolean {
 }
 
 export type ProfileIdentity = Pick<Profile, 'name' | 'role' | 'intro' | 'bio' | 'facets'>;
-// Exact defaults from the previous public release. Only unchanged fields receive
+// Exact defaults from previous public releases. Only unchanged fields receive
 // the current display copy; saved profiles and independently edited facets stay intact.
-const previousYo7Identity = {
+const previousYo7Identities = [{
   role: '理工科写作者，也做视觉实验。',
   intro: '把没想明白的事写下来，把想象做成看得见的东西。',
   bio: '我在「yo7的堂吉诃德」记录理工科学习、实验观察和日常里冒出来的问题，也用 Blender 做材质、几何节点与风格化练习。',
@@ -49,17 +49,26 @@ const previousYo7Identity = {
     interests: {caption:'正在做',title:'让想象有一个形状。',description:'用 Blender 做材质、几何节点与风格化练习，试着让草地起风，让玻璃接住光。',tags:['Blender 练习','几何节点','材质','风格化渲染']},
     traits: {caption:'写下来的',title:'从一件小事继续追问。',description:'一张弯曲的滤纸、一阵风、早上七点的羽毛球：学习和日常的片段，都写进「yo7的堂吉诃德」。',tags:['学习记录','实验观察','日常碎念']},
   },
-};
+}, {
+  role: '写理工科笔记，也做 Blender。',
+  intro: '物理、代码，偶尔跑题。',
+  bio: '公众号里写学习笔记和日常。Blender 里试试材质、节点和动画。',
+  facets: {
+    skills: {caption:'在学',title:'学习笔记',description:'物理、C++，还有材料与力学。',tags:['C++ 学习','物理','概率论','材料与工程力学']},
+    interests: {caption:'Blender',title:'做过的练习',description:'材质、几何节点和风格化渲染。',tags:['Blender 练习','几何节点','材质','风格化渲染']},
+    traits: {caption:'公众号',title:'学习日记',description:'会写实验，也写打球和追剧。',tags:['学习记录','实验观察','日常碎念']},
+  },
+}];
 export function profileIdentity(profile: Profile): ProfileIdentity {
   const identity: ProfileIdentity = {name:profile.name,role:profile.role,intro:profile.intro,bio:profile.bio,facets:profile.facets};
   if (!profile.isDemo) return identity;
   if (profile.name === 'yo7') {
     for (const field of ['role', 'intro', 'bio'] as const) {
-      if (profile[field] === previousYo7Identity[field]) identity[field] = baseProfile[field];
+      if (previousYo7Identities.some(previous => profile[field] === previous[field])) identity[field] = baseProfile[field];
     }
     identity.facets = {...profile.facets};
     for (const field of ['skills', 'traits', 'interests'] as const) {
-      if (sameContent(profile.facets[field], previousYo7Identity.facets[field])) identity.facets[field] = baseProfile.facets[field];
+      if (previousYo7Identities.some(previous => sameContent(profile.facets[field], previous.facets[field]))) identity.facets[field] = baseProfile.facets[field];
     }
     return identity;
   }

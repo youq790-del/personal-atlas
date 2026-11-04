@@ -6,7 +6,7 @@ import type { ChibiSceneApi, Vec3 } from "@chibi3d/runtime";
 import type { KeyboardScene } from "./scene";
 
 export type KeyboardSection = "hero" | "skills" | "experience" | "projects" | "contact";
-export const isReadingSection = (section: KeyboardSection) => section === "experience" || section === "projects";
+export const isReadingSection = (section: KeyboardSection): boolean => section === "experience" || section === "projects" || section === "contact";
 const SCROLL_SECTIONS = [
   { id: "skills", threshold: 0.5 },
   { id: "experience", threshold: 0.32 },
