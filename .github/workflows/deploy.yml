@@ -24,7 +24,7 @@ jobs:
           node-version: 22
           cache: npm
       - name: Install and build
-        run: npm ci && npm run build
+        run: npm ci && npm run typecheck && npm test && npm run build
       - name: Upload the site
         uses: actions/upload-pages-artifact@v3
         with:

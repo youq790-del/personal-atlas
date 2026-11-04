@@ -1,0 +1,111 @@
+.brand-mark {
+  display: block;
+  width: 34px;
+  height: 34px;
+  overflow: visible;
+  flex: 0 0 auto;
+  color: inherit;
+}
+
+.brand-mark__half {
+  transform-origin: 32px 32px;
+  transition: transform 360ms cubic-bezier(.2,.7,.2,1);
+}
+
+.brand-mark__point {
+  transform-origin: 32px 32px;
+  transition: transform 360ms cubic-bezier(.2,.7,.2,1);
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  a:hover > .brand-mark .brand-mark__half--left,
+  button:hover > .brand-mark .brand-mark__half--left {
+    transform: translateX(-2px) rotate(-5deg);
+  }
+
+  a:hover > .brand-mark .brand-mark__half--right,
+  button:hover > .brand-mark .brand-mark__half--right {
+    transform: translateX(2px) rotate(5deg);
+  }
+
+  a:hover > .brand-mark .brand-mark__point,
+  button:hover > .brand-mark .brand-mark__point {
+    transform: scale(.8);
+  }
+}
+
+.opening-sequence {
+  position: fixed;
+  inset: 0;
+  z-index: 210;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  pointer-events: none;
+  color: var(--ink, #f8fafc);
+  isolation: isolate;
+}
+
+.opening-sequence__curtain {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: calc(50% + 1px);
+  background: var(--bg, #030712);
+  will-change: transform;
+}
+
+.opening-sequence__curtain--top { top: 0; }
+.opening-sequence__curtain--bottom { bottom: 0; }
+
+.opening-sequence__identity {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 29px;
+  margin-top: -12px;
+  will-change: transform, opacity;
+}
+
+.opening-sequence__mark { width: 76px; height: 76px; }
+
+.opening-sequence .brand-mark__half,
+.opening-sequence .brand-mark__point { transition: none; }
+
+.opening-sequence__label {
+  font-size: 9px;
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: .32em;
+  text-indent: .32em;
+}
+
+.opening-sequence__skip {
+  position: absolute;
+  right: clamp(20px, 4vw, 60px);
+  bottom: max(25px, env(safe-area-inset-bottom));
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  min-height: 44px;
+  padding: 10px 0 10px 14px;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-size: 11px;
+  letter-spacing: .03em;
+  pointer-events: auto;
+}
+
+.opening-sequence__skip svg { flex-shrink: 0; }
+.opening-sequence__skip:focus-visible { outline: 1px solid currentColor; outline-offset: 6px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-mark__half,
+  .brand-mark__point { transition: none; transform: none; }
+  .opening-sequence { display: none; }
+}

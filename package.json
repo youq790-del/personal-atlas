@@ -6,18 +6,35 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "vite build",
-    "preview": "vite preview --host 127.0.0.1"
+    "preview": "vite preview --host 127.0.0.1",
+    "typecheck": "tsc --noEmit",
+    "realtime": "node server/realtime.mjs",
+    "test": "node --experimental-strip-types --test tests/*.test.mjs"
   },
   "dependencies": {
+    "@chibi3d/runtime": "^0.5.0",
     "@fontsource-variable/manrope": "^5.2.8",
     "@fontsource-variable/newsreader": "^5.2.8",
     "@fontsource-variable/noto-sans-sc": "^5.2.8",
+    "@fontsource-variable/space-grotesk": "^5.3.0",
+    "@fontsource-variable/unbounded": "^5.3.0",
+    "@gsap/react": "^2.1.2",
     "@iconify-json/solar": "^1.2.5",
+    "@react-three/fiber": "^9.8.1",
     "gsap": "^3.14.2",
     "lenis": "^1.3.15",
-    "three": "^0.187.0"
+    "motion": "^14.9.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "three": "^0.185.1",
+    "ws": "^8.22.1"
   },
   "devDependencies": {
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@types/three": "^0.185.0",
+    "@vitejs/plugin-react": "^5.2.0",
+    "typescript": "^7.0.2",
     "vite": "^7.2.2"
   }
 }

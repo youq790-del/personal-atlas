@@ -1,0 +1,13 @@
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import '@fontsource-variable/unbounded';
+import '@fontsource-variable/space-grotesk';
+import '@fontsource-variable/noto-sans-sc';
+import 'lenis/dist/lenis.css';
+import './space.css';
+import './intro.css';
+import './refinement.css';
+import './kinetic.css';
+import './work-stage.css';
+import App from './App';
+createRoot(document.getElementById('root')!).render(<App />);

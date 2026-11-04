@@ -1,0 +1,590 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-03T15:28:29.870475+00:00",
+  "title": "Design System: Personal Atlas",
+  "extensions": {
+    "colorMeta": {
+      "space-bg": {
+        "role": "neutral",
+        "displayName": "深空底色",
+        "tonalRamp": [
+          "oklch(15% 0.0051 246.6)",
+          "oklch(26% 0.0082 246.6)",
+          "oklch(38% 0.0104 246.6)",
+          "oklch(49% 0.0112 246.6)",
+          "oklch(61% 0.0106 246.6)",
+          "oklch(72% 0.0086 246.6)",
+          "oklch(84% 0.0054 246.6)",
+          "oklch(95% 0.0018 246.6)"
+        ]
+      },
+      "space-surface": {
+        "role": "neutral",
+        "displayName": "深空表面",
+        "tonalRamp": [
+          "oklch(15% 0.0141 265.2)",
+          "oklch(26% 0.0227 265.2)",
+          "oklch(38% 0.0290 265.2)",
+          "oklch(49% 0.0312 265.2)",
+          "oklch(61% 0.0293 265.2)",
+          "oklch(72% 0.0240 265.2)",
+          "oklch(84% 0.0150 265.2)",
+          "oklch(95% 0.0049 265.2)"
+        ]
+      },
+      "space-solid": {
+        "role": "neutral",
+        "displayName": "深空实底",
+        "tonalRamp": [
+          "oklch(15% 0.0147 266.6)",
+          "oklch(26% 0.0237 266.6)",
+          "oklch(38% 0.0302 266.6)",
+          "oklch(49% 0.0324 266.6)",
+          "oklch(61% 0.0305 266.6)",
+          "oklch(72% 0.0250 266.6)",
+          "oklch(84% 0.0156 266.6)",
+          "oklch(95% 0.0051 266.6)"
+        ]
+      },
+      "space-ink": {
+        "role": "neutral",
+        "displayName": "雾白文字",
+        "tonalRamp": [
+          "oklch(15% 0.0015 247.9)",
+          "oklch(26% 0.0025 247.9)",
+          "oklch(38% 0.0032 247.9)",
+          "oklch(49% 0.0034 247.9)",
+          "oklch(61% 0.0032 247.9)",
+          "oklch(72% 0.0026 247.9)",
+          "oklch(84% 0.0016 247.9)",
+          "oklch(95% 0.0005 247.9)"
+        ]
+      },
+      "space-muted": {
+        "role": "neutral",
+        "displayName": "灰蓝辅助文字",
+        "tonalRamp": [
+          "oklch(15% 0.0112 264.4)",
+          "oklch(26% 0.0180 264.4)",
+          "oklch(38% 0.0230 264.4)",
+          "oklch(49% 0.0247 264.4)",
+          "oklch(61% 0.0233 264.4)",
+          "oklch(72% 0.0191 264.4)",
+          "oklch(84% 0.0119 264.4)",
+          "oklch(95% 0.0039 264.4)"
+        ]
+      },
+      "space-line": {
+        "role": "neutral",
+        "displayName": "深空分隔线",
+        "tonalRamp": [
+          "oklch(15% 0.0151 262.9)",
+          "oklch(26% 0.0242 262.9)",
+          "oklch(38% 0.0309 262.9)",
+          "oklch(49% 0.0332 262.9)",
+          "oklch(61% 0.0313 262.9)",
+          "oklch(72% 0.0256 262.9)",
+          "oklch(84% 0.0160 262.9)",
+          "oklch(95% 0.0052 262.9)"
+        ]
+      },
+      "space-button-ink": {
+        "role": "neutral",
+        "displayName": "按钮墨蓝",
+        "tonalRamp": [
+          "oklch(15% 0.0144 264.7)",
+          "oklch(26% 0.0232 264.7)",
+          "oklch(38% 0.0295 264.7)",
+          "oklch(49% 0.0317 264.7)",
+          "oklch(61% 0.0299 264.7)",
+          "oklch(72% 0.0245 264.7)",
+          "oklch(84% 0.0153 264.7)",
+          "oklch(95% 0.0050 264.7)"
+        ]
+      },
+      "space-field": {
+        "role": "neutral",
+        "displayName": "深空字段",
+        "tonalRamp": [
+          "oklch(15% 0.0073 264.2)",
+          "oklch(26% 0.0117 264.2)",
+          "oklch(38% 0.0150 264.2)",
+          "oklch(49% 0.0161 264.2)",
+          "oklch(61% 0.0151 264.2)",
+          "oklch(72% 0.0124 264.2)",
+          "oklch(84% 0.0078 264.2)",
+          "oklch(95% 0.0025 264.2)"
+        ]
+      },
+      "daylight-bg": {
+        "role": "neutral",
+        "displayName": "日光底色",
+        "tonalRamp": [
+          "oklch(15% 0.0031 145.5)",
+          "oklch(26% 0.0049 145.5)",
+          "oklch(38% 0.0063 145.5)",
+          "oklch(49% 0.0068 145.5)",
+          "oklch(61% 0.0064 145.5)",
+          "oklch(72% 0.0052 145.5)",
+          "oklch(84% 0.0033 145.5)",
+          "oklch(95% 0.0011 145.5)"
+        ]
+      },
+      "daylight-surface": {
+        "role": "neutral",
+        "displayName": "日光半透明表面",
+        "tonalRamp": [
+          "oklch(15% 0.0000 89.9)",
+          "oklch(26% 0.0000 89.9)",
+          "oklch(38% 0.0000 89.9)",
+          "oklch(49% 0.0000 89.9)",
+          "oklch(61% 0.0000 89.9)",
+          "oklch(72% 0.0000 89.9)",
+          "oklch(84% 0.0000 89.9)",
+          "oklch(95% 0.0000 89.9)"
+        ]
+      },
+      "daylight-solid": {
+        "role": "neutral",
+        "displayName": "日光实底",
+        "tonalRamp": [
+          "oklch(15% 0.0000 89.9)",
+          "oklch(26% 0.0000 89.9)",
+          "oklch(38% 0.0000 89.9)",
+          "oklch(49% 0.0000 89.9)",
+          "oklch(61% 0.0000 89.9)",
+          "oklch(72% 0.0000 89.9)",
+          "oklch(84% 0.0000 89.9)",
+          "oklch(95% 0.0000 89.9)"
+        ]
+      },
+      "daylight-ink": {
+        "role": "neutral",
+        "displayName": "日光墨蓝文字",
+        "tonalRamp": [
+          "oklch(15% 0.0144 264.7)",
+          "oklch(26% 0.0232 264.7)",
+          "oklch(38% 0.0295 264.7)",
+          "oklch(49% 0.0317 264.7)",
+          "oklch(61% 0.0299 264.7)",
+          "oklch(72% 0.0245 264.7)",
+          "oklch(84% 0.0153 264.7)",
+          "oklch(95% 0.0050 264.7)"
+        ]
+      },
+      "daylight-muted": {
+        "role": "neutral",
+        "displayName": "日光辅助文字",
+        "tonalRamp": [
+          "oklch(15% 0.0167 261.6)",
+          "oklch(26% 0.0268 261.6)",
+          "oklch(38% 0.0342 261.6)",
+          "oklch(49% 0.0367 261.6)",
+          "oklch(61% 0.0346 261.6)",
+          "oklch(72% 0.0283 261.6)",
+          "oklch(84% 0.0177 261.6)",
+          "oklch(95% 0.0057 261.6)"
+        ]
+      },
+      "daylight-line": {
+        "role": "neutral",
+        "displayName": "日光分隔线",
+        "tonalRamp": [
+          "oklch(15% 0.0064 258.3)",
+          "oklch(26% 0.0103 258.3)",
+          "oklch(38% 0.0131 258.3)",
+          "oklch(49% 0.0141 258.3)",
+          "oklch(61% 0.0132 258.3)",
+          "oklch(72% 0.0108 258.3)",
+          "oklch(84% 0.0068 258.3)",
+          "oklch(95% 0.0022 258.3)"
+        ]
+      },
+      "daylight-field": {
+        "role": "neutral",
+        "displayName": "日光字段",
+        "tonalRamp": [
+          "oklch(15% 0.0036 253.9)",
+          "oklch(26% 0.0058 253.9)",
+          "oklch(38% 0.0074 253.9)",
+          "oklch(49% 0.0080 253.9)",
+          "oklch(61% 0.0075 253.9)",
+          "oklch(72% 0.0062 253.9)",
+          "oklch(84% 0.0038 253.9)",
+          "oklch(95% 0.0012 253.9)"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "阅读纸面",
+        "tonalRamp": [
+          "oklch(15% 0.0041 134.9)",
+          "oklch(26% 0.0066 134.9)",
+          "oklch(38% 0.0084 134.9)",
+          "oklch(49% 0.0091 134.9)",
+          "oklch(61% 0.0085 134.9)",
+          "oklch(72% 0.0070 134.9)",
+          "oklch(84% 0.0044 134.9)",
+          "oklch(95% 0.0014 134.9)"
+        ]
+      },
+      "paper-ink": {
+        "role": "neutral",
+        "displayName": "阅读墨色",
+        "tonalRamp": [
+          "oklch(15% 0.0070 174.6)",
+          "oklch(26% 0.0112 174.6)",
+          "oklch(38% 0.0143 174.6)",
+          "oklch(49% 0.0154 174.6)",
+          "oklch(61% 0.0145 174.6)",
+          "oklch(72% 0.0119 174.6)",
+          "oklch(84% 0.0074 174.6)",
+          "oklch(95% 0.0024 174.6)"
+        ]
+      },
+      "paper-muted": {
+        "role": "neutral",
+        "displayName": "阅读辅助文字",
+        "tonalRamp": [
+          "oklch(15% 0.0085 166.1)",
+          "oklch(26% 0.0136 166.1)",
+          "oklch(38% 0.0174 166.1)",
+          "oklch(49% 0.0187 166.1)",
+          "oklch(61% 0.0176 166.1)",
+          "oklch(72% 0.0144 166.1)",
+          "oklch(84% 0.0090 166.1)",
+          "oklch(95% 0.0029 166.1)"
+        ]
+      },
+      "paper-line": {
+        "role": "neutral",
+        "displayName": "阅读分隔线",
+        "tonalRamp": [
+          "oklch(15% 0.0086 150.5)",
+          "oklch(26% 0.0139 150.5)",
+          "oklch(38% 0.0177 150.5)",
+          "oklch(49% 0.0190 150.5)",
+          "oklch(61% 0.0179 150.5)",
+          "oklch(72% 0.0147 150.5)",
+          "oklch(84% 0.0092 150.5)",
+          "oklch(95% 0.0030 150.5)"
+        ]
+      },
+      "paper-field": {
+        "role": "neutral",
+        "displayName": "阅读字段",
+        "tonalRamp": [
+          "oklch(15% 0.0073 139.4)",
+          "oklch(26% 0.0117 139.4)",
+          "oklch(38% 0.0149 139.4)",
+          "oklch(49% 0.0160 139.4)",
+          "oklch(61% 0.0151 139.4)",
+          "oklch(72% 0.0123 139.4)",
+          "oklch(84% 0.0077 139.4)",
+          "oklch(95% 0.0025 139.4)"
+        ]
+      },
+      "focus-cyan": {
+        "role": "primary",
+        "displayName": "焦点青",
+        "tonalRamp": [
+          "oklch(15% 0.0476 212.5)",
+          "oklch(26% 0.0765 212.5)",
+          "oklch(38% 0.0976 212.5)",
+          "oklch(49% 0.1049 212.5)",
+          "oklch(61% 0.0987 212.5)",
+          "oklch(72% 0.0809 212.5)",
+          "oklch(84% 0.0506 212.5)",
+          "oklch(95% 0.0164 212.5)"
+        ]
+      },
+      "key-orange": {
+        "role": "secondary",
+        "displayName": "键帽橙",
+        "tonalRamp": [
+          "oklch(15% 0.0681 61.8)",
+          "oklch(26% 0.1093 61.8)",
+          "oklch(38% 0.1395 61.8)",
+          "oklch(49% 0.1499 61.8)",
+          "oklch(61% 0.1411 61.8)",
+          "oklch(72% 0.1156 61.8)",
+          "oklch(84% 0.0723 61.8)",
+          "oklch(95% 0.0235 61.8)"
+        ]
+      },
+      "key-blue": {
+        "role": "secondary",
+        "displayName": "键帽蓝",
+        "tonalRamp": [
+          "oklch(15% 0.0635 253.3)",
+          "oklch(26% 0.1020 253.3)",
+          "oklch(38% 0.1301 253.3)",
+          "oklch(49% 0.1398 253.3)",
+          "oklch(61% 0.1316 253.3)",
+          "oklch(72% 0.1078 253.3)",
+          "oklch(84% 0.0674 253.3)",
+          "oklch(95% 0.0219 253.3)"
+        ]
+      },
+      "key-cyan": {
+        "role": "secondary",
+        "displayName": "键帽青",
+        "tonalRamp": [
+          "oklch(15% 0.0497 213.5)",
+          "oklch(26% 0.0799 213.5)",
+          "oklch(38% 0.1019 213.5)",
+          "oklch(49% 0.1095 213.5)",
+          "oklch(61% 0.1031 213.5)",
+          "oklch(72% 0.0844 213.5)",
+          "oklch(84% 0.0528 213.5)",
+          "oklch(95% 0.0171 213.5)"
+        ]
+      },
+      "key-green": {
+        "role": "secondary",
+        "displayName": "键帽绿",
+        "tonalRamp": [
+          "oklch(15% 0.0599 160.4)",
+          "oklch(26% 0.0962 160.4)",
+          "oklch(38% 0.1227 160.4)",
+          "oklch(49% 0.1319 160.4)",
+          "oklch(61% 0.1242 160.4)",
+          "oklch(72% 0.1017 160.4)",
+          "oklch(84% 0.0636 160.4)",
+          "oklch(95% 0.0206 160.4)"
+        ]
+      },
+      "key-pink": {
+        "role": "secondary",
+        "displayName": "键帽粉",
+        "tonalRamp": [
+          "oklch(15% 0.0584 351.9)",
+          "oklch(26% 0.0938 351.9)",
+          "oklch(38% 0.1197 351.9)",
+          "oklch(49% 0.1287 351.9)",
+          "oklch(61% 0.1211 351.9)",
+          "oklch(72% 0.0992 351.9)",
+          "oklch(84% 0.0620 351.9)",
+          "oklch(95% 0.0201 351.9)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "display",
+        "purpose": "首页姓名，两行分别为 360 / 660。"
+      },
+      "skills-headline": {
+        "displayName": "skills-headline",
+        "purpose": "Skills 舞台标题，局部轻字 350。"
+      },
+      "story-headline": {
+        "displayName": "story-headline",
+        "purpose": "阅读章节引导，末行 650。"
+      },
+      "projects-headline": {
+        "displayName": "projects-headline",
+        "purpose": "作品标题。"
+      },
+      "title": {
+        "displayName": "title",
+        "purpose": "经历展开行标题。"
+      },
+      "body": {
+        "displayName": "body",
+        "purpose": "正文及说明。"
+      },
+      "label": {
+        "displayName": "label",
+        "purpose": "功能按钮与元信息。"
+      },
+      "editorial-link": {
+        "displayName": "editorial-link",
+        "purpose": "无边框首页行动。"
+      },
+      "tag": {
+        "displayName": "tag",
+        "purpose": "次要分类标签。"
+      }
+    },
+    "shadows": [
+      {
+        "name": "theme-menu",
+        "value": "0 12px 25px #0004",
+        "purpose": "主题浮层。"
+      },
+      {
+        "name": "dialog",
+        "value": "0 32px 100px #0006",
+        "purpose": "原生弹窗。"
+      },
+      {
+        "name": "control-press-edge",
+        "value": "inset 0 -3px 1px #0002",
+        "purpose": "功能按钮，不用于编辑式文字链接。"
+      }
+    ],
+    "motion": [
+      {
+        "name": "editorial-underline",
+        "value": "0.45s cubic-bezier(.22,1,.36,1)",
+        "purpose": "文字链接下划线延展。"
+      },
+      {
+        "name": "opening",
+        "value": "1.4s / 2.4s fail-safe",
+        "purpose": "会话内一次，可跳过与重播。"
+      },
+      {
+        "name": "chapter-seam",
+        "value": "scrub: top bottom → top 8%",
+        "purpose": "SVG 曲线接缝随滚动变平。"
+      },
+      {
+        "name": "smooth-scroll",
+        "value": "Lenis 1.15s; navigation 1.25s",
+        "purpose": "唯一平滑滚动引擎。"
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "wide",
+        "value": "1600px"
+      },
+      {
+        "name": "compact-desktop",
+        "value": "1000px"
+      },
+      {
+        "name": "mobile",
+        "value": "767px"
+      },
+      {
+        "name": "short-mobile-height",
+        "value": "740px"
+      }
+    ],
+    "tactileSurface": {
+      "source": "src/KineticSurface.tsx + src/kinetic.css",
+      "motion": "bounded springs; pointer repulsion; scroll velocity stretch; SVG string bending",
+      "fallback": "no particle field or spatial deformation under reduced motion",
+      "reference": "Lusion About interaction principles; original geometry"
+    }
+  },
+  "components": [
+    {
+      "name": "文字行动链接",
+      "kind": "button",
+      "refersTo": "editorial-link",
+      "description": "首页的无边框行动，以文字与箭头响应悬停。",
+      "html": "<button class=\"ds-editorial\" type=\"button\"><span>认识我</span><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" aria-hidden=\"true\"><path d=\"M6 18 18 6M6 6h12v12\"/></svg></button>",
+      "css": ".ds-editorial{display:inline-flex;align-items:center;gap:22px;min-height:44px;padding:5px 0;border:0;background:none;color:var(--ink,#17211e);font:500 14px/1.2 'Space Grotesk Variable','Noto Sans SC Variable',sans-serif;cursor:pointer}.ds-editorial span{position:relative;padding:8px 0}.ds-editorial span:after{content:'';position:absolute;left:0;bottom:3px;width:100%;height:1px;background:currentColor;transform:scaleX(.25);transform-origin:left;transition:transform .45s cubic-bezier(.22,1,.36,1)}.ds-editorial svg{width:22px;height:22px;transition:transform .4s}.ds-editorial:hover span:after,.ds-editorial:focus-visible span:after{transform:scaleX(1)}.ds-editorial:hover svg{transform:translate(4px,-4px)}.ds-editorial:active svg{transform:translate(2px,-2px)}.ds-editorial:focus-visible{outline:2px solid #6ad8ee;outline-offset:5px}@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}"
+    },
+    {
+      "name": "主按钮",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "弹窗、资料编辑和表单内的功能行动；首页使用文字行动链接。",
+      "html": "<button class=\"ds-primary\" type=\"button\">保存资料</button>",
+      "css": ".ds-primary{font-family:'Space Grotesk Variable','Noto Sans SC Variable',sans-serif;min-height:42px;border-radius:6px;padding:11px 18px;display:inline-flex;align-items:center;justify-content:center;gap:10px;font-size:13px;font-weight:600;cursor:pointer;touch-action:manipulation;color:var(--button-ink,#111827);background:var(--button,#f8fafc);border:0;box-shadow:inset 0 -3px 1px #0002;transition:transform .15s,background .15s}.ds-primary:hover{transform:translateY(-2px);filter:brightness(1.08)}.ds-primary:active{transform:translateY(2px);box-shadow:none}.ds-primary:disabled{opacity:.4;cursor:not-allowed}.ds-primary:focus-visible{outline:2px solid #6ad8ee;outline-offset:5px}@media(prefers-reduced-motion:reduce){.ds-primary{transition:none!important;animation:none!important}}"
+    },
+    {
+      "name": "次按钮",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "弹窗、资料编辑和表单内的功能行动；首页使用文字行动链接。",
+      "html": "<button class=\"ds-secondary\" type=\"button\">取消</button>",
+      "css": ".ds-secondary{font-family:'Space Grotesk Variable','Noto Sans SC Variable',sans-serif;min-height:42px;border-radius:6px;padding:11px 18px;display:inline-flex;align-items:center;justify-content:center;gap:10px;font-size:13px;font-weight:600;cursor:pointer;touch-action:manipulation;color:var(--ink,#f8fafc);background:var(--surface,#080e1c);border:1px solid var(--line,#273041);box-shadow:inset 0 -3px 1px #0002;transition:transform .15s,background .15s}.ds-secondary:hover{transform:translateY(-2px);filter:brightness(1.08)}.ds-secondary:active{transform:translateY(2px);box-shadow:none}.ds-secondary:disabled{opacity:.4;cursor:not-allowed}.ds-secondary:focus-visible{outline:2px solid #6ad8ee;outline-offset:5px}@media(prefers-reduced-motion:reduce){.ds-secondary{transition:none!important;animation:none!important}}"
+    },
+    {
+      "name": "文本字段",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "外置标签、主题字段底色与青色焦点。",
+      "html": "<label class=\"ds-field-label\">你的名字<input class=\"ds-field\" name=\"name\" placeholder=\"怎么称呼你\" required /></label>",
+      "css": ".ds-field-label{font-family:'Space Grotesk Variable','Noto Sans SC Variable',sans-serif;color:var(--ink,#f8fafc);display:flex;flex-direction:column;gap:9px;font-size:12px;margin-bottom:18px}.ds-field{font-family:'Space Grotesk Variable','Noto Sans SC Variable',sans-serif;width:100%;border:1px solid transparent;border-radius:6px;padding:12px 14px;background:var(--field,#21252d);color:var(--ink,#f8fafc);font-size:13px;line-height:1.6;caret-color:#6ad8ee}.ds-field::placeholder{color:var(--muted,#a4acbc)}.ds-field:focus-visible{outline:2px solid #6ad8ee;outline-offset:5px}"
+    },
+    {
+      "name": "展开导航",
+      "kind": "nav",
+      "refersTo": "navigation-item",
+      "description": "全宽菜单内部的双语导航；这里展示导航列表，原生 dialog 由应用提供。",
+      "html": "<nav class=\"ds-nav\" aria-label=\"主要导航\"><button class=\"ds-nav-item\" type=\"button\"><span class=\"ds-nav-title\">Home</span><small class=\"ds-nav-caption\">首页</small></button><button class=\"ds-nav-item\" type=\"button\"><span class=\"ds-nav-title\">Skills</span><small class=\"ds-nav-caption\">技能</small></button></nav>",
+      "css": ".ds-nav{display:flex;flex-wrap:wrap;gap:15px 32px;max-width:1200px;padding:30px 0 40px;background:var(--surface-solid,#0b1120)}.ds-nav-item{font-family:'Space Grotesk Variable','Noto Sans SC Variable',sans-serif;display:flex;align-items:baseline;gap:12px;background:none;border:0;padding:8px 18px 8px 0;color:var(--ink,#f8fafc);text-align:left;cursor:pointer;transition:opacity .2s,transform .2s}.ds-nav:has(.ds-nav-item:hover) .ds-nav-item:not(:hover){opacity:.3}.ds-nav-item:hover{transform:translateX(6px)}.ds-nav-title{font-family:'Unbounded Variable','Noto Sans SC Variable',sans-serif;font-weight:700;font-size:clamp(35px,5vw,72px);letter-spacing:-.04em}.ds-nav-caption{font-size:12px;color:var(--muted,#a4acbc)}.ds-nav-item:focus-visible{outline:2px solid #6ad8ee;outline-offset:5px}@media(max-width:767px){.ds-nav{gap:6px;padding:10px 0 30px}.ds-nav-item{width:100%;padding:10px 0}.ds-nav-title{font-size:34px}}@media(prefers-reduced-motion:reduce){.ds-nav-item{transition:none!important;animation:none!important}}"
+    },
+    {
+      "name": "经历展开行",
+      "kind": "custom",
+      "refersTo": "experience-row",
+      "description": "原生展开行、分隔线与圆环箭头；无卡片外壳。",
+      "html": "<details class=\"ds-story\"><summary><span>经历 · 示意</span><h3>每一次尝试，都留下一个新的自己。</h3><i><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" aria-hidden=\"true\"><path d=\"M6 18 18 6M6 6h12v12\"/></svg></i></summary><p>这里将写下真实经历、变化和收获。</p></details>",
+      "css": ".ds-story{background:var(--paper,#e5e9e3);color:var(--paper-ink,#17211e);border-block:1px solid var(--paper-line,#bdc9bf);font-family:'Space Grotesk Variable','Noto Sans SC Variable',sans-serif}.ds-story summary{list-style:none;display:grid;grid-template-columns:100px 1fr 44px;gap:20px;padding:30px 0;cursor:pointer;align-items:start}.ds-story summary::-webkit-details-marker{display:none}.ds-story summary>span{font-size:11px;color:var(--paper-muted,#53605a);padding-top:8px}.ds-story h3{font-size:24px;line-height:1.45;font-weight:550;margin:0;transition:transform .4s}.ds-story i{border:1px solid var(--paper-line,#bdc9bf);border-radius:50%;width:42px;height:42px;display:grid;place-items:center;transition:transform .35s,background .35s,color .35s}.ds-story svg{width:22px;height:22px}.ds-story summary:hover h3{transform:translateX(6px)}.ds-story summary:hover i{background:var(--paper-ink,#17211e);color:var(--paper,#e5e9e3);transform:rotate(45deg)}.ds-story[open] i{transform:rotate(90deg)}.ds-story p{font-size:14px;line-height:2;color:var(--paper-muted,#53605a);padding:0 20px 25px 120px}.ds-story summary:focus-visible{outline:2px solid #6ad8ee;outline-offset:5px}@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}"
+    },
+    {
+      "name": "作品预览",
+      "kind": "card",
+      "refersTo": "project-card",
+      "description": "直角图面与下方标题；示意内容明确标注。",
+      "html": "<button class=\"ds-project\" type=\"button\"><span class=\"ds-project-art\"><strong>Make.</strong><small>内容示意 · 等待你的作品</small></span><span class=\"ds-project-caption\">从一个想法开始<small>作品 / 示意</small></span><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" aria-hidden=\"true\"><path d=\"M6 18 18 6M6 6h12v12\"/></svg></button>",
+      "css": ".ds-project{position:relative;display:block;border:0;padding:0;background:none;color:var(--paper-ink,#17211e);text-align:left;width:min(100%,420px);font-family:'Space Grotesk Variable','Noto Sans SC Variable',sans-serif;cursor:pointer}.ds-project-art{aspect-ratio:1.28;display:flex;flex-direction:column;justify-content:flex-end;padding:28px;background:#b3c1d1;color:#203332}.ds-project-art strong{font-size:80px;letter-spacing:-.04em;line-height:1;font-weight:500;transition:transform .6s}.ds-project-art small{font-size:10px;margin-top:14px}.ds-project-caption{display:block;font-size:21px;line-height:1.5;padding:22px 36px 0 0}.ds-project-caption small{display:block;font-size:10px;color:var(--paper-muted,#53605a);margin-top:8px}.ds-project>svg{position:absolute;bottom:3px;right:0;width:22px;height:22px;transition:transform .4s}.ds-project:hover strong{transform:translateY(-6px)}.ds-project:hover>svg{transform:translate(3px,-3px)}.ds-project:focus-visible{outline:2px solid #6ad8ee;outline-offset:5px}@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}"
+    },
+    {
+      "name": "阅读筛选",
+      "kind": "chip",
+      "refersTo": "filter-selected",
+      "description": "选中项以下划线标注；不使用实底标签框。",
+      "html": "<button class=\"ds-filter\" type=\"button\" aria-pressed=\"true\">全部</button>",
+      "css": ".ds-filter{position:relative;border:0;border-radius:0;background:none;color:var(--paper-ink,#17211e);padding:10px 0;font:500 12px 'Space Grotesk Variable','Noto Sans SC Variable',sans-serif;cursor:pointer}.ds-filter:after{content:'';position:absolute;bottom:2px;left:0;width:100%;height:1px;background:currentColor;transform:scaleX(0);transition:transform .3s;transform-origin:left}.ds-filter[aria-pressed=true]:after,.ds-filter:hover:after{transform:scaleX(1)}.ds-filter:focus-visible{outline:2px solid #6ad8ee;outline-offset:5px}@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}"
+    },
+    {
+      "name": "信息标签",
+      "kind": "chip",
+      "refersTo": "tag",
+      "description": "弹窗内的只读标签；经历正文中的标签去除背景。",
+      "html": "<span class=\"ds-tag\">好奇心</span>",
+      "css": ".ds-tag{display:inline-block;background:var(--field,#21252d);color:var(--muted,#a4acbc);padding:5px 10px;border-radius:5px;font:500 11px/1.5 \"Space Grotesk Variable\",\"Noto Sans SC Variable\",sans-serif}"
+    }
+  ],
+  "narrative": {
+    "northStar": "可触的空间，舒展的故事",
+    "overview": "保留 Naresh Khatri 的真实机械键盘与开放画布，将页面分成可触的空间与安静的阅读章节。首页靠字重、比例与留白组织信息；经历和作品以不透明的浅灰绿纸面承接，滚动时形成清楚的前后关系。\n\n最新方向依据用户指定的 Giats、SeamTransitions 和 Lusion 参考：借鉴编辑式留白、连续曲面接缝与短开场的节奏。OPEN SPACE 标记与 SVG 接缝为本项目绘制，未使用这些网站的标志、作品或着色器。",
+    "keyCharacteristics": [
+      "真实键帽保留按压、声音与空间姿态，视觉重心不被容器边框打断。",
+      "Space Grotesk 的轻重变化承担主显示字，Noto Sans SC 承接中文。",
+      "开放深空或日光场景，连接固定浅灰绿的阅读纸面。",
+      "首页文字链接、分隔线经历、错列作品组成无卡片外壳的内容层。",
+      "同一技能舞台统一进入与退出；静态模式保留等价内容入口。"
+    ],
+    "rules": [
+      {
+        "name": "The Opaque Chapter Rule",
+        "body": "经历和作品共享不透明阅读表面；进入这两个状态时隐藏键盘、猫和场景标签，暂停画布并拒绝场景输入。文字不得依靠透明叠加来解决层级。",
+        "section": "layout"
+      },
+      {
+        "name": "The Single Stage Rule",
+        "body": "Skills 标题、读数和操作处在同一个 sticky 舞台，随同一退出动画离场。详情只由 HTML 展示，不重新增加与正文竞争的 3D 文案。",
+        "section": "layout"
+      },
+      {
+        "name": "The Object Response Rule",
+        "body": "真实键帽用独立按压状态响应输入；编辑式链接使用下划线延展与箭头位移，阅读行使用展开状态反馈。每类对象使用适合自身的反馈。",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** 保留原键盘模型、输入控制与 MIT 署名。",
+      "**Do** 让阅读章节以实底遮住场景，并在内容高度变化后刷新滚动触发点。",
+      "**Do** 用字重、间距、细线和可见焦点组织主要信息。",
+      "**Do** 保留资料示意标签与本地房间说明。",
+      "**Do** 同时维护鼠标、触屏、实体键盘和 HTML 目录入口。"
+    ],
+    "donts": [
+      "**Don't** 把首页行动重新包成成排的实底按钮或边框卡片。",
+      "**Don't** 让透明但仍可交互的离场内容挡住新章节。",
+      "**Don't** 恢复独立固定的技能标题、重复 3D 标签或正文背后的猫动画。",
+      "**Don't** 引入第二套平滑滚动引擎或伪造加载百分比。",
+      "**Don't** 把参考站品牌、示例技术图标或缺省作品当作用户的个人事实。"
+    ]
+  }
+}
