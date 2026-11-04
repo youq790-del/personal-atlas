@@ -10,7 +10,52 @@ export type Profile = {
   keyboard?: {group?: string; label: string; title?: string; description: string; shortLabel?: string; hotkey?: string; color?: string; icon?: string}[];
 };
 export const PROFILE_KEY = 'personal-atlas-profile-v1';
-export const baseProfile: Profile = { ...defaultProfile, wechat: defaultWeChatCollection, name: 'Your Name', role: '一个持续探索的人', intro: '把好奇心，变成可以触碰的东西。', bio: '这里留给真实的我：正在做的事、走过的路，以及让我眼睛发亮的热爱。个人资料整理好后，会在这里更新。' };
+export const baseProfile: Profile = {
+  ...defaultProfile,
+  wechat: defaultWeChatCollection,
+  name: 'yo7',
+  role: '理工科写作者，也做视觉实验。',
+  intro: '把没想明白的事写下来，把想象做成看得见的东西。',
+  bio: '我在「yo7的堂吉诃德」记录理工科学习、实验观察和日常里冒出来的问题，也用 Blender 做材质、几何节点与风格化练习。',
+  facets: {
+    skills: {caption:'正在学',title:'把问题一点点想明白。',description:'记录 C++、物理、概率论、材料与工程力学的学习，也记下暂时没有答案的问题。',tags:['C++ 学习','物理','概率论','材料与工程力学']},
+    interests: {caption:'正在做',title:'让想象有一个形状。',description:'用 Blender 做材质、几何节点与风格化练习，试着让草地起风，让玻璃接住光。',tags:['Blender 练习','几何节点','材质','风格化渲染']},
+    traits: {caption:'写下来的',title:'从一件小事继续追问。',description:'一张弯曲的滤纸、一阵风、早上七点的羽毛球：学习和日常的片段，都写进「yo7的堂吉诃德」。',tags:['学习记录','实验观察','日常碎念']},
+  },
+};
+
+// Compare the entire content so a familiar template ID never hides an edited entry.
+function sameContent(left: unknown, right: unknown): boolean {
+  if (Object.is(left, right)) return true;
+  if (!left || !right || typeof left !== 'object' || typeof right !== 'object') return false;
+  if (Array.isArray(left) !== Array.isArray(right)) return false;
+  const leftKeys = Object.keys(left), rightKeys = Object.keys(right);
+  return leftKeys.length === rightKeys.length && leftKeys.every(key =>
+    Object.prototype.hasOwnProperty.call(right, key) && sameContent((left as Record<string, unknown>)[key], (right as Record<string, unknown>)[key]));
+}
+export function isTemplateEntry(entry: Entry): boolean {
+  return defaultProfile.entries.some(template => sameContent(entry, template));
+}
+
+export type ProfileIdentity = Pick<Profile, 'name' | 'role' | 'intro' | 'bio' | 'facets'>;
+export function profileIdentity(profile: Profile): ProfileIdentity {
+  const identity: ProfileIdentity = {name:profile.name,role:profile.role,intro:profile.intro,bio:profile.bio,facets:profile.facets};
+  if (!profile.isDemo || !['Your Name', '等你写下名字'].includes(profile.name)) return identity;
+  const previousDefaults = {
+    role: [defaultProfile.role],
+    intro: [defaultProfile.intro, '把好奇心，变成可以触碰的东西。'],
+    bio: [defaultProfile.bio, '这里留给真实的我：正在做的事、走过的路，以及让我眼睛发亮的热爱。个人资料整理好后，会在这里更新。'],
+  };
+  identity.name = baseProfile.name;
+  for (const field of ['role', 'intro', 'bio'] as const) {
+    if (previousDefaults[field].includes(profile[field])) identity[field] = baseProfile[field];
+  }
+  identity.facets = {...profile.facets};
+  for (const field of ['skills', 'traits', 'interests'] as const) {
+    if (sameContent(profile.facets[field], defaultProfile.facets[field])) identity.facets[field] = baseProfile.facets[field];
+  }
+  return identity;
+}
 export const asset = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\//, '')}`;
 export const shortcutCode = (value?: string) => {
   if (!value) return undefined;
@@ -61,9 +106,9 @@ export type Skill = KeyboardSkill & { detail: string; demo: boolean; entryId?: s
 const utilityKeys = [
   {name:'action-writing',label:'文章',shortDescription:'公众号文章归档',color:'#93b5a5'},
   {name:'action-about',label:'关于',shortDescription:'认识我',color:'#9ba9c4'},
-  {name:'action-skills',label:'能力',shortDescription:'擅长与特点',color:'#c3977f'},
-  {name:'action-experience',label:'经历',shortDescription:'经历与成就',color:'#b3a06d'},
-  {name:'action-achievements',label:'成就',shortDescription:'查看成就',color:'#e4a048'},
+  {name:'action-skills',label:'在学',shortDescription:'正在学与正在做',color:'#c3977f'},
+  {name:'action-experience',label:'侧面',shortDescription:'追问、造形与日常',color:'#b3a06d'},
+  {name:'action-achievements',label:'阅读',shortDescription:'直接翻阅文章',color:'#e4a048'},
   {name:'action-projects',label:'作品',shortDescription:'跳至作品集',color:'#85abb9'},
   {name:'action-contact',label:'联系',shortDescription:'联系方式',color:'#ba8ca0'},
   {name:'action-theme',label:'明暗',shortDescription:'切换明暗主题',color:'#97ac81'},

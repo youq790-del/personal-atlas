@@ -4,6 +4,7 @@ import { useGSAP } from '@gsap/react';
 import { Icon } from './Icon';
 import { WeChatShelf } from './WeChatShelf';
 import { ElasticFrame } from './ElasticFrame';
+import { ColorStudy } from './ColorStudy';
 import type { WeChatCollection } from './wechat';
 import { works, workAsset, type PortfolioWork, type WorkId } from './portfolio';
 
@@ -68,5 +69,5 @@ export function WorkStage({work,reading,collection,reduced,onClose,onWork}:Props
 }
 
 export function PortfolioGallery({onOpen,reduced=false}:{onOpen:(id:WorkId)=>void;reduced?:boolean}){
-  return <div className="portfolio-gallery">{works.map((work,index)=><button className={`portfolio-piece piece-${work.id}`} key={work.id} onClick={()=>onOpen(work.id)} style={{'--piece-color':work.color} as CSSProperties}><div className="portfolio-image"><ElasticFrame variant={index} disabled={reduced}><img src={workAsset(work.poster)} alt={work.caption} loading="lazy" decoding="async"/></ElasticFrame><span className="portfolio-specimen" aria-hidden="true"><i>{work.word}</i></span><span className="portfolio-view"><Icon name="arrow-right-up-linear"/></span></div><div className="portfolio-description"><h3>{work.title}</h3><span>{work.caption}</span></div></button>)}</div>;
+  return <div className="portfolio-gallery">{works.map((work,index)=><button className={`portfolio-piece piece-${work.id}`} key={work.id} onClick={()=>onOpen(work.id)} style={{'--piece-color':work.color} as CSSProperties}><div className="portfolio-image"><ElasticFrame variant={index} disabled={reduced}><ColorStudy src={workAsset(work.poster)} alt={work.caption} reduced={reduced}/></ElasticFrame><span className="portfolio-specimen" aria-hidden="true"><i>{work.word}</i></span><span className="portfolio-view"><Icon name="arrow-right-up-linear"/></span></div><div className="portfolio-description"><h3>{work.title}</h3><span>{work.caption}</span></div></button>)}</div>;
 }

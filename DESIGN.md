@@ -1,6 +1,6 @@
 ---
 name: "Personal Atlas"
-description: "可触的机械键盘、弹性作品轮廓与散页阅读"
+description: "让思考有形状：理工科写作者与视觉创作者的可触叙事"
 colors:
   space-bg: "#070b0f"
   space-surface: "#080e1c"
@@ -162,23 +162,27 @@ components:
 
 ## Overview
 
-**Creative North Star: "可触的空间，舒展的故事"**
+**Creative North Star: "让思考有形状"**
 
-保留 Naresh Khatri 的真实机械键盘与开放画布，将页面分成可触的空间与安静的阅读章节。首页靠字重、比例与留白组织信息；经历和作品以不透明的浅灰绿纸面承接，滚动时形成清楚的前后关系。
+主角是理工科写作者、也做视觉实验的 yo7。已提供的公众号学习记录、实验观察和生活片段，与六件 Blender 练习共同构成个人内容；不据此虚构院校、专业资格、商业项目或奖项。以“把没想明白的事写下来，把想象做成看得见的东西”为主线，让访客能从一个问题认识人，也能直接进入作品或文章。
+
+保留 Naresh Khatri 的真实机械键盘与开放画布，将页面分成可触的空间与安静的阅读章节。首页靠字重、比例与留白组织信息；个人叙事和作品以不透明的浅灰绿纸面承接，滚动时形成清楚的前后关系。新的 Santioni 研究只转译其强烈衬线字体、章节推进和直接内容路径，未复制品牌、酒类内容或视觉素材。
 
 在既有 Giats、SeamTransitions 和 Lusion 参考形成的编辑留白、连续接缝与短开场之上，本轮将真实 Blender 作品从矩形板改为不对称的弹性轮廓，公众号文章改为散页式阅读。流动的形状属于展示表面，作品构图与原文内容保持可完整查看。OPEN SPACE 标记、SVG 接缝、作品轮廓和数学流线为本项目绘制。
 
-本次记录更新于 2026-11-04：描述已确认的设计方向与当前源码，不代表本轮动态、响应式或公开发布已经验收；最终状态仍以 `qa/VERIFICATION.md` 中对应本轮证据为准。
+本次记录更新于 2026-11-04：本轮新增“让思考有形状”的个人叙事、文章直达、色彩探照和公众号书签。描述已确认的设计方向与当前源码，不代表本轮动态、响应式或公开发布已经验收；前一轮截图不能代替本轮验收，最终状态仍以 `qa/VERIFICATION.md` 中对应本轮证据为准。
 
 **Key Characteristics:**
 
 - 真实键帽保留按压、声音与空间姿态，视觉重心不被容器边框打断。
-- Space Grotesk 承担场景文字与操作；作品和散页引入 Noto Serif SC 与 Newsreader，区分观赏、阅读和控制层。
+- Newsreader 的大写意姓名与 Noto Serif SC 的中文叙事建立身份；Space Grotesk 承担场景文字、日期与操作，区分观赏、阅读和控制层。
 - 开放深空或日光场景，连接固定浅灰绿的阅读纸面。
 - 首页文字链接、分隔线经历、不对称作品轮廓与散页文章共同组成内容层；不把所有内容压进重复矩形板。
 - 同一技能舞台统一进入与退出；静态模式保留等价内容入口。
+- 认识人、看作品、读文章都有可见直达入口；互动键盘是探索方式之一。
+- “追问 / 造形 / 日常”用已归档文字串联真实练习，页尾用可带走的公众号书签延续阅读。
 
-本记录以 `src/kinetic.css`、`work-stage.css`、`ElasticFrame.tsx` / `elastic-frame.css`、`WeChatShelf.tsx` / `wechat.css` 的当前覆盖层为准；`refinement.css`、`space.css`、品牌、开场、接缝与 `scene/` 中未修改的规则继续适用。产品事实与来源分别见 `PRODUCT.md`、`REFERENCE-STUDY.md` 和 `ASSETS.md`。
+本轮新增 `src/identity.css`、`PersonalPortrait.tsx` / `personal-portrait.css` 与 `ReaderPostscript.tsx`，其身份与个人章节规则优先于早期标题配置。本记录也依据 `specimen.css`、`kinetic.css`、`work-stage.css`、`ElasticFrame.tsx` / `elastic-frame.css`、`WeChatShelf.tsx` / `wechat.css`；`refinement.css`、`space.css`、品牌、开场、接缝与 `scene/` 中未修改的规则继续适用。frontmatter 与 `.impeccable/design.json` 保留既有基础 token 快照，不将新增覆盖层误写成已重新生成的 token。产品事实与来源分别见 `PRODUCT.md`、`REFERENCE-STUDY.md` 和 `ASSETS.md`。
 
 ## Colors
 
@@ -202,6 +206,8 @@ components:
 
 ## Typography
 
+**本轮身份覆盖：** 首页单行姓名采用 Newsreader / Noto Serif SC 衬线体，大尺度、轻字重和紧密字距形成识别性；中文主张、个人章节和结尾标题使用 Noto Serif SC。`identity.css` 与 `personal-portrait.css` 是这些新位置的具体字号来源。以下基础尺度及旧章节字样保留为既有系统记录，不覆盖本轮身份标题。
+
 **Display / Controls:** 自托管 Space Grotesk Variable，中文回退 Noto Sans SC Variable，再回退 sans-serif。Unbounded Variable 仍用于旧有共享弹窗、菜单及小游戏的部分样式，不再作为首页和主要章节标题。
 
 **Artwork / Reading:** Noto Serif SC Variable 用于中文作品标题与公众号散页的阅读层；Newsreader Variable 用于拉丁短词及编辑式衬线节奏；Space Grotesk 保留日期、账号、动作和辅助信息的清楚轮廓。三者按职责分配，不逐词混用。长篇正文、代码、公式占位说明保持自然阅读次序，不随装饰轮廓裁切。
@@ -213,6 +219,20 @@ frontmatter 的 `artwork-title` 与 `specimen-word` 从当前作品样式提取�
 frontmatter 分别记录姓名、Skills、故事、作品标题和经历条目尺度。联系标题另用 `clamp(60px, 7.6vw, 112px)`、字重 480、行高 1。正文保持独立层级：经历展开正文 14px、行高 2.05；辅助说明 11–13px。小字不承担独立的关键行动。
 
 ## Layout
+
+### Current personal narrative
+
+首页先交代 yo7 的身份、正在想的问题和两条动作：“从这里认识我”“直接读文章”。页头亦提供认识与阅读入口；移动端保留首屏、菜单和正文中的等价路径。交互机械键盘继续承担作品探索，但不能成为找到个人信息的前置门槛。
+
+进入纸面后的个人章节以“一半在推演，一半在造形”为核心，将草地、玻璃等真实预览和短段文字错位安排。“追问 / 造形 / 日常”是同一人的三个侧面，使用原生按钮和 tabs 语义切换；方向键、Home / End 可选择。说明、真实原文摘句与明确动作共同形成叙事，不添加未经证实的成就指标。
+
+| 侧面 | 内容依据 | 直接入口 |
+| --- | --- | --- |
+| 追问 | 物理、代码与实验观察；《波》中关于能量与平方的提问 | `writing-a06` 对应归档文章 |
+| 造形 | Blender 材质与几何节点练习；《breaking bad》中关于滤纸形变的观察 | 真实 Blender 作品与 `writing-a04` |
+| 日常 | 《波》中的早上打球等生活片段 | `writing-a06`，保留其完整上下文 |
+
+个人章节之后是六件 Blender 练习与公众号散页。结尾以“认识我，从一篇文字继续”为阅读回路；未设置邮箱时展示公众号书签、复制账号和再读一篇，已有邮箱仍使用真实邮件入口。未填写资料的模板条目不作为个人事实公开展示，编辑入口保留。
 
 首页和 Skills 是开放的全屏场景；经历与作品是一整块阅读纸面；联系段回到场景，让分解键帽重新出现。固定画布保留 `touch-action: pan-y`。页头桌面高 92px、左右 4.5vw；主要内容边距 7vw。
 
@@ -282,6 +302,16 @@ OPEN SPACE 标志由两段开放圆角路径和一个中心点构成，表示可
 
 散页表层可作有限位移、倾斜与压缩；展开正文后让表层稳定，不用持续动画穿过长文。减少动态保留全部散页、摘要、复制账号与全文阅读能力。
 
+大画廊刊头以“把没想明白的事，先写下来”衔接个人叙事。“随手翻一篇”按真实归档文章确定轮换，避免随机重复，标题通过 `aria-live` 提示。`openArticle: { id, token }` 可由首屏问题、个人章节摘句或结尾入口请求打开对应文章；同一 ID 再次请求时递增 token。每篇原生 `details` 保留同组 `name` 与 `data-article-id`，打开后焦点回到 summary 并以 110px 顶部留量定位。长文末尾“合上这页”收起当前文章并回到摘要，形成明确回路。
+
+按钮旁 Solar 图标轻旋转，正文展开仅有短暂淡入和微移；减少动态与静态模式停用新增动效。原文标题、正文、归档缺图说明与来源链接不因叙事编排而改写，也不从公众号 ID 推导公开文章链接。
+
+### Color study and reader bookmark
+
+作品预览的色彩探照只作用于支持悬停的精细指针：平时降低图像饱和度，鼠标附近的圆形窗口显露原作色彩。触屏、键盘焦点和减少动态保留完整颜色；这是预览反馈，不改变真实作品文件。作品聚焦仍显示完整图像，形变和色彩窗口不遮住控件。
+
+收尾公众号书签把账号作为可带走的信息：折角、轻微倾斜、复制后的颜色与明确文案共同提供反馈。复制失败显示可手动搜索的账号，不把视觉成功状态当作剪贴板成功。书签优先服务阅读延续，聊天室为次要可选入口；不伪造未配置的公网在线状态。
+
 ### Editorial flow field
 
 编辑式阅读区域背景由原创数学流线构成。指针影响附近曲率，滚动输入形成起伏，流线收敛回基准排列；线条保持低对比且不越过文字的可读阈值。层级位于内容后方，装饰 SVG 不提供可访问名称、不拦截指针。静态模式显示基准流线或同等静态背景，正文和控件始终完整。
@@ -334,7 +364,7 @@ Lenis 是唯一平滑滚动引擎，时长 1.15s，导航 1.25s；GSAP 负责页
 
 ## Tactile extension — current override
 
-前一轮触觉基础以 `src/kinetic.css` 为准，以上主题、语义和防叠字规则继续适用。首页删除说明句、缩短行动文案；章节为 Play. / Traces. / Made. / Say hello.，详细内容保留在原生展开与详情中。四种原创数学几何研究现仅用于未填资料的示意档案；真实 Blender 作品采用上文 ElasticFrame 与完整作品查看规则。
+前一轮触觉基础以 `src/kinetic.css` 为准，以上主题、语义和防叠字规则继续适用。其 Play. / Traces. / Made. / Say hello. 章节记为前一轮基础；本轮通过 `identity.css` 与个人章节将身份、真实写作和结尾阅读路径具体化，见上文 Current personal narrative。四种原创数学几何研究仅用于未填资料的示意档案，不作为用户真实作品公开展示；真实 Blender 作品采用上文 ElasticFrame 与完整作品查看规则。
 
 字形的布局槽固定，只有内部视觉 span 做有限位移、挤压、拉伸与斜切；可访问名称完整。按钮和图面使用独立 translate/rotate/scale，避开原有 GSAP transform。分隔线的二次曲线控制点响应鼠标与滚动速度。所有弹簧由现有 GSAP ticker 推进，变形在停止输入后收敛，不引入第二套滚动引擎。
 

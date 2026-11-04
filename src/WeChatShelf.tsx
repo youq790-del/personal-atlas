@@ -1,4 +1,4 @@
-import { useId, useRef, useState } from 'react';
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { Icon } from './Icon';
@@ -33,14 +33,65 @@ function ArticleCover({ article }: { article: WeChatArticle }) {
   return <span className="wechat-article-cover"><img src={url} alt="" width={160} height={120} loading="lazy" decoding="async" referrerPolicy="no-referrer" onError={() => setFailed(true)} /></span>;
 }
 
-export function WeChatShelf({ collection, compact = false, reduced = false }: { collection?: WeChatCollection; compact?: boolean; reduced?: boolean }) {
+export type OpenArticleRequest = { id: string; token: number };
+
+export function WeChatShelf({ collection, compact = false, reduced = false, openArticle }: { collection?: WeChatCollection; compact?: boolean; reduced?: boolean; openArticle?: OpenArticleRequest }) {
   const titleId = useId();
   const shelf = useRef<HTMLElement>(null);
   const [copyNotice, setCopyNotice] = useState('');
-  const articles = (collection?.articles ?? []).filter(article => wechatLink(article.url) || article.body?.trim());
+  const [readingNotice, setReadingNotice] = useState('');
+  const articles = useMemo(() => (collection?.articles ?? []).filter(article => wechatLink(article.url) || article.body?.trim()), [collection]);
+  const archives = useMemo(() => articles.filter(article => article.body?.trim()), [articles]);
+  const nextArticleIndex = useRef(0);
+  const focusFrame = useRef<number | null>(null);
+  const consumedRequestToken = useRef<number | null>(null);
   const home = wechatLink(collection?.homeUrl, 'home');
   const name = collection?.name?.trim() || '文字的另一面';
   const isYo7 = name === 'yo7的堂吉诃德';
+
+  const focusSummary = useCallback((details: HTMLDetailsElement) => {
+    if (focusFrame.current !== null) cancelAnimationFrame(focusFrame.current);
+    focusFrame.current = requestAnimationFrame(() => {
+      focusFrame.current = null;
+      const summary = details.querySelector<HTMLElement>('summary');
+      if (!summary?.isConnected) return;
+      summary.focus({ preventScroll: true });
+      summary.scrollIntoView({ block: 'start', behavior: 'instant' });
+    });
+  }, []);
+
+  const revealArticle = useCallback((id: string) => {
+    const details = Array.from(shelf.current?.querySelectorAll<HTMLDetailsElement>('.wechat-archive') ?? []).find(item => item.dataset.articleId === id);
+    const index = archives.findIndex(article => article.id === id);
+    if (!details || index < 0) return false;
+    details.open = true;
+    nextArticleIndex.current = (index + 1) % archives.length;
+    setReadingNotice('翻到《' + archives[index].title + '》');
+    focusSummary(details);
+    return true;
+  }, [archives, focusSummary]);
+
+  useEffect(() => {
+    if (!openArticle || consumedRequestToken.current === openArticle.token) return;
+    // A later collection update may supply a missing article; only consume successful requests.
+    if (revealArticle(openArticle.id)) consumedRequestToken.current = openArticle.token;
+  }, [openArticle?.id, openArticle?.token, revealArticle]);
+
+  useEffect(() => () => {
+    if (focusFrame.current !== null) cancelAnimationFrame(focusFrame.current);
+  }, []);
+
+  const turnPage = () => {
+    if (archives.length) revealArticle(archives[nextArticleIndex.current % archives.length].id);
+  };
+
+  const closePage = (button: HTMLButtonElement) => {
+    const details = button.closest('details');
+    if (!details) return;
+    details.open = false;
+    setReadingNotice('这页已合上。');
+    focusSummary(details);
+  };
 
   useGSAP(() => {
     const root = shelf.current;
@@ -152,13 +203,20 @@ export function WeChatShelf({ collection, compact = false, reduced = false }: { 
       <h3 id={titleId} className={isYo7 ? 'wechat-masthead' : ''} aria-label={name}>{isYo7 ? <><span className="wechat-masthead-sign" aria-hidden="true">yo7<span>的</span></span><span className="wechat-masthead-title" aria-hidden="true">堂吉诃德<span className="wechat-masthead-dot">。</span></span></> : name}</h3>
       {home && <a className="wechat-home" href={home} target="_blank" rel="noopener noreferrer">到公众号<Icon name="arrow-right-up-linear" size={18} /><span className="wechat-sr-only">，在新窗口打开</span></a>}
     </div>
+    {compact && <div className="wechat-invitation"><p>把没想明白的事，先写下来。</p>{archives.length > 0 && <div className="wechat-turn-controls"><button type="button" className="wechat-turn-page" onClick={turnPage}>随手翻一篇<Icon name="arrow-right-up-linear" size={20}/></button><span className="wechat-reading-notice" role="status" aria-live="polite" aria-atomic="true">{readingNotice}</span></div>}</div>}
     {collection?.accountId && <div className="wechat-account"><div><span>微信公众号</span><span className="wechat-account-id">{collection.accountId}</span></div><div className="wechat-account-actions"><button type="button" onClick={() => copy(collection.name, '名称')}>复制名称<Icon name="arrow-right-up-linear" size={15}/></button><button type="button" onClick={() => copy(collection.accountId!, '账号')}>复制账号<Icon name="arrow-right-up-linear" size={15}/></button></div><p role="status" className="wechat-copy-notice">{copyNotice}</p></div>}
     {articles.length ? <ul className="wechat-articles">{articles.map((article, index) => <li key={article.id} className={`wechat-folio folio-${index % 6}${article.title.length <= 2 ? ' folio-short-title' : ''}`}>
-      {article.body ? <details className="wechat-archive" name={'wechat-archive-' + titleId}>
+      {article.body ? <details className="wechat-archive" data-article-id={article.id} name={'wechat-archive-' + titleId} onToggle={event => {
+        if (event.currentTarget.open) {
+          const index = archives.findIndex(item => item.id === article.id);
+          if (index >= 0) nextArticleIndex.current = (index + 1) % archives.length;
+        }
+      }}>
         <summary className="wechat-article" data-folio>{articleSummary(article, index, true)}</summary>
         <div className="wechat-reading">
           <div className="wechat-reading-source"><p>{article.archiveNote || '本地归档正文'}</p>{wechatLink(article.url) ? <a href={wechatLink(article.url)} target="_blank" rel="noopener noreferrer">阅读微信原文<Icon name="arrow-right-up-linear" size={16}/></a> : <span>原文链接待补充</span>}</div>
           <ArchivedBody body={article.body} />
+          <div className="wechat-reading-end"><button type="button" className="wechat-close-page" onClick={event => closePage(event.currentTarget)}>合上这页<Icon name="arrow-up-linear" size={19}/></button></div>
         </div>
       </details> : <a className="wechat-article" data-folio href={wechatLink(article.url)} target="_blank" rel="noopener noreferrer" aria-label={article.title + '，在新窗口打开微信原文'}>{articleSummary(article, index)}</a>}
     </li>)}</ul> : <div className="wechat-empty"><Icon name="document-text-linear" size={32} /><p>文章正在整理。<br />写下的思考，也会在这里相遇。</p></div>}

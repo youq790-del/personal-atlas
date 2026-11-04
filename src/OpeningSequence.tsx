@@ -28,11 +28,12 @@ function prefersLessMotion() {
 
 export type OpeningSequenceProps = {
   reduced: boolean;
+  name?: string;
   /** Change this number to replay, even when this session has already seen the opening. */
   replayKey?: number;
 };
 
-export function OpeningSequence({ reduced, replayKey = 0 }: OpeningSequenceProps) {
+export function OpeningSequence({ reduced, replayKey = 0, name = 'yo7' }: OpeningSequenceProps) {
   const root = useRef<HTMLDivElement>(null);
   const skip = useRef<HTMLButtonElement>(null);
   const lastReplayKey = useRef(replayKey);
@@ -130,7 +131,7 @@ export function OpeningSequence({ reduced, replayKey = 0 }: OpeningSequenceProps
       <div className="opening-sequence__curtain opening-sequence__curtain--bottom" aria-hidden="true" />
       <div className="opening-sequence__identity" aria-hidden="true">
         <BrandMark className="opening-sequence__mark" />
-        <span className="opening-sequence__label">OPEN SPACE</span>
+        <span className="opening-sequence__label">{name}</span>
       </div>
       <button className="opening-sequence__skip" type="button" onClick={dismiss} ref={skip}>
         跳过开场 <Icon name="arrow-right-up-linear" size={18} />

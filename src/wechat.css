@@ -50,6 +50,16 @@
 .wechat-shelf.is-compact .wechat-shelf-heading{margin-bottom:29px}
 .wechat-shelf.is-compact .wechat-shelf-heading h3{font-size:clamp(54px,8.5vw,128px);line-height:1.14}
 .wechat-shelf.is-compact .wechat-masthead{gap:clamp(15px,2vw,34px)}
+.wechat-invitation{display:flex;justify-content:space-between;align-items:baseline;gap:18px 30px;flex-wrap:wrap;margin:0 0 25px}
+.wechat-invitation>p{font-family:var(--folio-serif);font-size:clamp(16px,1.7vw,23px);font-weight:450;line-height:1.8;letter-spacing:.02em;margin:0}
+.wechat-turn-controls{display:flex;align-items:center;gap:10px 18px;flex-wrap:wrap}
+.wechat-turn-page,.wechat-close-page{display:inline-flex;align-items:center;justify-content:space-between;gap:17px;min-height:44px;padding:9px 0;background:none;color:var(--ink);font-size:12px;text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:7px}
+.wechat-turn-page svg,.wechat-close-page svg{transition:transform .3s cubic-bezier(.16,1,.3,1);flex-shrink:0}
+.wechat-turn-page:hover svg,.wechat-turn-page:focus-visible svg{transform:rotate(45deg)}
+.wechat-close-page:hover svg,.wechat-close-page:focus-visible svg{transform:rotate(-12deg) translateY(-2px)}
+.wechat-turn-page:focus-visible,.wechat-close-page:focus-visible{outline:2px solid var(--ink);outline-offset:6px}
+.wechat-reading-notice{color:var(--muted);font-size:10px;line-height:1.7;max-width:30ch;overflow-wrap:anywhere}
+.wechat-reading-notice:empty{display:none}
 .wechat-shelf.is-compact .wechat-account{margin-bottom:55px;padding-right:4%}
 .wechat-shelf.is-compact .wechat-articles{grid-template-columns:repeat(12,minmax(0,1fr));gap:60px 28px;align-items:start}
 .wechat-shelf.is-compact .wechat-folio{grid-column:span 6}
@@ -73,7 +83,7 @@
 .wechat-shelf.is-compact .folio-4 .wechat-article h4{max-width:6em;line-height:1.45}
 .wechat-shelf.is-compact .wechat-article p{font-size:11px;max-width:29ch}
 .wechat-shelf.is-compact .folio-short-title .wechat-article p{max-width:24ch}
-.wechat-archive>summary{cursor:pointer;list-style:none}
+.wechat-archive>summary{cursor:pointer;list-style:none;scroll-margin-top:110px}
 .wechat-archive>summary::-webkit-details-marker{display:none}
 .wechat-archive[open] .wechat-article{color:var(--ink);min-height:170px;padding:34px 5%;margin-bottom:26px}
 .wechat-archive[open] .wechat-folio-skin{opacity:.16}
@@ -86,6 +96,9 @@
 .wechat-shelf.is-compact .wechat-archive[open] .wechat-article{min-height:180px;padding:40px 7%}
 .wechat-shelf.is-compact .wechat-archive[open] .wechat-article h4{font-size:clamp(34px,4.8vw,68px);max-width:100%;line-height:1.3}
 .wechat-reading{padding:0 5% 35px;max-width:78ch;margin:0 auto;color:var(--ink)}
+.wechat-archive[open]>.wechat-reading{animation:wechat-page-open .4s cubic-bezier(.16,1,.3,1) both;transform-origin:top center}
+@keyframes wechat-page-open{from{opacity:.35;transform:translateY(8px)}to{opacity:1;transform:none}}
+.wechat-reading-end{display:flex;justify-content:flex-end;border-top:1px solid var(--line);padding-top:20px;margin-top:38px}
 .wechat-reading-source{font-size:11px;line-height:1.8;color:var(--muted);margin-bottom:30px;padding-bottom:24px;border-bottom:1px solid var(--line)}
 .wechat-reading-source a{display:inline-flex;align-items:center;gap:8px;min-height:44px;text-decoration:underline;text-underline-offset:5px;color:var(--ink)}
 .wechat-reading-source>span{display:block;margin-top:7px}
@@ -131,3 +144,8 @@
 .wechat-article-arrow{bottom:22%;right:14%}
 .wechat-shelf.is-compact .folio-0 .wechat-article{padding-inline:16%}
 .wechat-folio.folio-short-title .wechat-article p{margin-bottom:12px}
+
+@media(max-width:600px){.wechat-invitation{display:block;margin-bottom:21px}.wechat-invitation>p{font-size:16px}.wechat-turn-controls{margin-top:7px;gap:2px 16px}.wechat-turn-page,.wechat-close-page{font-size:11px}.wechat-reading-notice{font-size:10px}.wechat-reading-end{margin-top:28px;padding-top:16px}}
+@media(prefers-reduced-motion:reduce){.wechat-archive[open]>.wechat-reading{animation:none}.wechat-turn-page svg,.wechat-close-page svg{transition:none;transform:none!important}}
+.wechat-shelf.is-still .wechat-archive[open]>.wechat-reading,.static-scene .wechat-archive[open]>.wechat-reading{animation:none}
+.wechat-shelf.is-still .wechat-turn-page svg,.wechat-shelf.is-still .wechat-close-page svg,.static-scene .wechat-turn-page svg,.static-scene .wechat-close-page svg{transition:none;transform:none!important}

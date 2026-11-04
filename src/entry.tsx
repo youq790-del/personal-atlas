@@ -13,5 +13,6 @@ import './refinement.css';
 import './kinetic.css';
 import './work-stage.css';
 import './specimen.css';
+import './identity.css';
 import App from './App';
 createRoot(document.getElementById('root')!).render(<App />);
