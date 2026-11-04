@@ -3,6 +3,7 @@ import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { Icon } from './Icon';
 import { WeChatShelf } from './WeChatShelf';
+import { ElasticFrame } from './ElasticFrame';
 import type { WeChatCollection } from './wechat';
 import { works, workAsset, type PortfolioWork, type WorkId } from './portfolio';
 
@@ -52,9 +53,11 @@ export function WorkStage({work,reading,collection,reduced,onClose,onWork}:Props
   return <div ref={stage} className={`work-stage ${reading?'work-stage-reading':''} ${zoom?'work-stage-zoom':''}`} style={{'--work-color':work?.color||'#8ba885'} as CSSProperties} role="region" aria-label={reading?'公众号作品':`${work?.title}作品展厅`}>
     <div className="work-stage-content">
       <div className="work-stage-toolbar"><button ref={closeButton} className="work-back" onClick={()=>{if(zoom)setZoom(false);else onClose();}}><Icon name="arrow-up-linear" size={18}/><span>{zoom?'返回作品':'返回键盘'}</span><kbd>Esc</kbd></button>{work&&<span className="work-medium">Blender study</span>}</div>
-      {reading?<div className="work-reading-scroll" data-lenis-prevent><WeChatShelf collection={collection}/></div>:work&&<>
+      {reading?<div className="work-reading-scroll" data-lenis-prevent><WeChatShelf collection={collection} reduced={reduced}/></div>:work&&<>
         <div ref={media} className={`work-media ${zoom?'is-magnified':''} ${failed?'media-failed':''}`} onPointerMove={move} onPointerLeave={reset}>
+          <ElasticFrame variant={index} disabled={reduced||zoom} className="work-art-frame" preserveContent>
           {failed?<div className="work-media-error"><Icon name="document-text-linear" size={36}/><p>这幅作品暂时没有加载出来。</p><button className="text-link" onClick={()=>setFailed(false)}>重新加载</button></div>:work.video?<video key={work.id} ref={video} src={workAsset(work.video)} poster={workAsset(work.poster)} muted loop playsInline preload="none" onError={()=>setFailed(true)} aria-label={work.title}/>:<img key={work.id} src={workAsset(work.poster)} alt={`${work.title}：${work.caption}`} decoding="async" onError={()=>setFailed(true)}/>}
+          </ElasticFrame>
           {!failed&&<div className="work-media-controls">{work.video&&<button onClick={togglePlayback} aria-pressed={playing}>{playing?<span className="pause-mark" aria-hidden="true"><i/><i/></span>:<Icon name="arrow-right-linear" size={17}/>} {playing?'暂停':'播放作品'}</button>}<button onClick={()=>setZoom(v=>!v)} aria-pressed={zoom}><Icon name="magnifier-linear" size={17}/>{zoom?'收起':'看近一点'}</button></div>}
         </div>
         <div className="work-stage-caption"><div><h3>{work.title}</h3><p>{work.caption}</p></div><div className="work-next"><button className="previous-work" aria-label="上一件作品" onClick={()=>onWork(works[(index-1+works.length)%works.length].id)}><Icon name="arrow-right-linear" size={20}/></button><span aria-label={`第 ${index+1} 件，共 ${works.length} 件`}>{String(index+1).padStart(2,'0')} <i>/ {String(works.length).padStart(2,'0')}</i></span><button aria-label="下一件作品" onClick={()=>onWork(works[(index+1)%works.length].id)}><Icon name="arrow-right-linear" size={20}/></button></div></div>
@@ -64,6 +67,6 @@ export function WorkStage({work,reading,collection,reduced,onClose,onWork}:Props
   </div>;
 }
 
-export function PortfolioGallery({onOpen}:{onOpen:(id:WorkId)=>void}){
-  return <div className="portfolio-gallery">{works.map(work=><button className={`portfolio-piece piece-${work.id}`} key={work.id} onClick={()=>onOpen(work.id)} style={{'--piece-color':work.color} as CSSProperties}><div className="portfolio-image"><img src={workAsset(work.poster)} alt={work.caption} loading="lazy" decoding="async"/><span className="portfolio-view"><Icon name="arrow-right-up-linear"/>探索作品</span></div><div className="portfolio-description"><h3>{work.title}</h3><span>{work.caption}</span></div></button>)}</div>;
+export function PortfolioGallery({onOpen,reduced=false}:{onOpen:(id:WorkId)=>void;reduced?:boolean}){
+  return <div className="portfolio-gallery">{works.map((work,index)=><button className={`portfolio-piece piece-${work.id}`} key={work.id} onClick={()=>onOpen(work.id)} style={{'--piece-color':work.color} as CSSProperties}><div className="portfolio-image"><ElasticFrame variant={index} disabled={reduced}><img src={workAsset(work.poster)} alt={work.caption} loading="lazy" decoding="async"/></ElasticFrame><span className="portfolio-specimen" aria-hidden="true"><i>{work.word}</i></span><span className="portfolio-view"><Icon name="arrow-right-up-linear"/></span></div><div className="portfolio-description"><h3>{work.title}</h3><span>{work.caption}</span></div></button>)}</div>;
 }

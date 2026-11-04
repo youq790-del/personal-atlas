@@ -17,6 +17,7 @@ type Props = { skills:Skill[]; sound:boolean; playful:boolean; petSignal:number;
 export default function KeyboardScene({skills,sound,playful,petSignal,rotationSignal,focusKey=null,onReady,onSelect,onSection,onOpen}:Props) {
   const api = useRef<ChibiSceneApi>(null);
   const [ready,setReady] = useState(false);
+  const [motionSection,setMotionSection] = useState<KeyboardSection>('hero');
   const [failed,setFailed] = useState(false);
   const callbacks=useRef({onSelect,onSection,onOpen,sound,playful,onReady,focusKey});
   callbacks.current={onSelect,onSection,onOpen,sound,playful,onReady,focusKey};
@@ -47,14 +48,16 @@ export default function KeyboardScene({skills,sound,playful,petSignal,rotationSi
     const cm=createCounterMotion(api.current,scene.counter,markActive); counter.current=cm;
     cm.update(count.current,true);
     const motion=createKeyboardMotion(api.current,scene,(section)=>{
-      currentSection.current=section;hovered.current=null;input.releaseAll();syncSelection();callbacks.current.onSection(section);
+      currentSection.current=section;setMotionSection(section);hovered.current=null;input.releaseAll();syncSelection();callbacks.current.onSection(section);
     },markActive);
     controller.current=motion;
     motion.setCounterEnabled(true);motion.setPlayful(callbacks.current.playful);motion.setFocusKey(callbacks.current.focusKey);motion.reveal();
     return ()=>{motion.dispose();cm.dispose();controller.current=null;counter.current=null;};
   },[ready,scene,input,markActive,syncSelection]);
   useEffect(()=>{controller.current?.setPlayful(playful);},[playful,ready]);
-  useEffect(()=>{controller.current?.setFocusKey(focusKey);syncSelection();},[focusKey,ready,syncSelection]);
+  // A gallery selection arrives while the board is still hidden in a reading
+  // chapter. Apply that pending selection again once navigation reaches it.
+  useEffect(()=>{controller.current?.setFocusKey(focusKey);syncSelection();},[focusKey,ready,motionSection,syncSelection]);
   useEffect(()=>{if(petSignal)controller.current?.pet();},[petSignal]);
   useEffect(()=>{if(rotationSignal)controller.current?.rotateBy(Math.PI/3);},[rotationSignal]);
   useEffect(()=>{

@@ -1,9 +1,15 @@
 # Keyboard work stage
 
-Mode: Experience. This extends the approved dark physical keyboard world.
+Mode: Experience. The reading surface within it uses Read principles. This extends the approved physical keyboard world with elastic artwork contours and loose-leaf editorial writing.
 
-Six supplied Blender studies lead the stage. A selected key opens a real rendered work on the left; the keyboard settles at the right and stays operable. The archive below makes every work reachable without WebGL. Typography remains Space Grotesk / Noto Sans SC. Colors come from each work and extend to the keycaps. GSAP owns focus and reveal; Lenis remains the only smooth-scroll engine.
+Six supplied Blender studies lead the stage. A selected key opens a real rendered work; the keyboard settles beside it and stays operable. The gallery makes every work reachable without WebGL. Each artwork preview uses an asymmetric ElasticFrame SVG contour, with a stable layout slot and its own silhouette. GSAP ticker advances bounded spring nodes: the pointer pushes nearby contour points and scroll input stretches the surface. Lenis remains the only smooth-scroll engine.
 
-Hover raises a key and changes the heading. Pressing opens the work through a spatial reveal. Escape returns. Touch and reduced-motion use the same actual content. Image enlargement supports close inspection without claiming 3D rotation of a still.
+Preview clipping is expressive; full-work viewing remains an independent contain image/video layer so the complete composition is accessible. Close inspection, playback, work switching and Escape return stay ordinary HTML controls. Touch keeps vertical scrolling, and reduced-motion/static mode keeps every work and resting contour visible. The frame is a spring approximation, not a claim that the original Blender geometry is physically simulated in the browser.
 
-The original .blend files stay outside the website; only derived web-sized previews are public. Works are described as studies, with no invented commissions, awards, or original authorship of tutorial assets. WeChat uses the user-confirmed account and archived articles. Article links are never inferred from the account ID.
+WeChat is a loose-leaf reading surface. Noto Serif SC Variable carries Chinese literary titles and reading; Newsreader Variable supplies Latin editorial accents; Space Grotesk keeps dates, account identifiers and controls legible. Original details/summary behavior, true article order, confirmed account identity and archived body text remain. Decorative paper skins can respond to input, but expanded reading is stable and never clipped by the artwork contour. Public article links are not inferred from an account ID.
+
+The editorial background contains original mathematical flow lines. Nearby pointer input bends their curves and scroll input produces bounded waves; these lines sit behind text, ignore pointer hit testing and return to a resting field. Static mode preserves a complete, readable composition. Do not let ornament compete with a paragraph or control.
+
+The original .blend files stay outside the website; only derived web-sized previews are public. Works remain described as studies, with no invented commissions, awards, or original authorship of tutorial assets. Missing WeChat images and original links remain explicit.
+
+Status — 2026-11-04: Implemented and visually checked at desktop and mobile sizes. TypeScript, production build and 11 tests pass. Static mode, native reading disclosure, account copying, video playback and gallery-to-keyboard focus were checked. See qa/VERIFICATION.md for evidence and limits; deployment is verified separately.

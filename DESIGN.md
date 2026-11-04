@@ -1,6 +1,6 @@
 ---
 name: "Personal Atlas"
-description: "可触的机械键盘，与舒展的个人故事"
+description: "可触的机械键盘、弹性作品轮廓与散页阅读"
 colors:
   space-bg: "#070b0f"
   space-surface: "#080e1c"
@@ -73,6 +73,18 @@ typography:
     fontSize: "14px"
     fontWeight: 500
     lineHeight: 1.2
+  artwork-title:
+    fontFamily: "'Noto Serif SC Variable', serif"
+    fontSize: "clamp(24px, 2.2vw, 34px)"
+    fontWeight: 550
+    lineHeight: 1.4
+    letterSpacing: "-0.045em"
+  specimen-word:
+    fontFamily: "'Newsreader Variable', Georgia, serif"
+    fontSize: "clamp(22px, 3vw, 44px)"
+    fontWeight: 400
+    lineHeight: 1
+    letterSpacing: "-0.04em"
   tag:
     fontFamily: "'Space Grotesk Variable', 'Noto Sans SC Variable', sans-serif"
     fontSize: "11px"
@@ -133,6 +145,10 @@ components:
     textColor: "{colors.paper-ink}"
     rounded: "{rounded.flat}"
     padding: "0"
+  artwork-preview:
+    textColor: "{colors.paper-ink}"
+    typography: "{typography.artwork-title}"
+    padding: "0"
   navigation-item:
     textColor: "{colors.space-ink}"
     padding: "8px 18px 8px 0"
@@ -150,17 +166,19 @@ components:
 
 保留 Naresh Khatri 的真实机械键盘与开放画布，将页面分成可触的空间与安静的阅读章节。首页靠字重、比例与留白组织信息；经历和作品以不透明的浅灰绿纸面承接，滚动时形成清楚的前后关系。
 
-最新方向依据用户指定的 Giats、SeamTransitions 和 Lusion 参考：借鉴编辑式留白、连续曲面接缝与短开场的节奏。OPEN SPACE 标记与 SVG 接缝为本项目绘制，未使用这些网站的标志、作品或着色器。
+在既有 Giats、SeamTransitions 和 Lusion 参考形成的编辑留白、连续接缝与短开场之上，本轮将真实 Blender 作品从矩形板改为不对称的弹性轮廓，公众号文章改为散页式阅读。流动的形状属于展示表面，作品构图与原文内容保持可完整查看。OPEN SPACE 标记、SVG 接缝、作品轮廓和数学流线为本项目绘制。
+
+本次记录更新于 2026-11-04：描述已确认的设计方向与当前源码，不代表本轮动态、响应式或公开发布已经验收；最终状态仍以 `qa/VERIFICATION.md` 中对应本轮证据为准。
 
 **Key Characteristics:**
 
 - 真实键帽保留按压、声音与空间姿态，视觉重心不被容器边框打断。
-- Space Grotesk 的轻重变化承担主显示字，Noto Sans SC 承接中文。
+- Space Grotesk 承担场景文字与操作；作品和散页引入 Noto Serif SC 与 Newsreader，区分观赏、阅读和控制层。
 - 开放深空或日光场景，连接固定浅灰绿的阅读纸面。
-- 首页文字链接、分隔线经历、错列作品组成无卡片外壳的内容层。
+- 首页文字链接、分隔线经历、不对称作品轮廓与散页文章共同组成内容层；不把所有内容压进重复矩形板。
 - 同一技能舞台统一进入与退出；静态模式保留等价内容入口。
 
-本记录以 `src/refinement.css`（覆盖 `space.css`）、`App.tsx`、`Brand.tsx`、`OpeningSequence.tsx`、`intro.css`、`SeamTransition.tsx` 与 `scene/` 为准。产品事实与来源分别见 `PRODUCT.md`、`REFERENCE-STUDY.md` 和 `ASSETS.md`。
+本记录以 `src/kinetic.css`、`work-stage.css`、`ElasticFrame.tsx` / `elastic-frame.css`、`WeChatShelf.tsx` / `wechat.css` 的当前覆盖层为准；`refinement.css`、`space.css`、品牌、开场、接缝与 `scene/` 中未修改的规则继续适用。产品事实与来源分别见 `PRODUCT.md`、`REFERENCE-STUDY.md` 和 `ASSETS.md`。
 
 ## Colors
 
@@ -184,7 +202,11 @@ components:
 
 ## Typography
 
-**Display / Body Font:** 自托管 Space Grotesk Variable，中文回退 Noto Sans SC Variable，再回退 sans-serif。Unbounded Variable 仍用于旧有共享弹窗、菜单及小游戏的部分样式，不再作为首页和主要章节标题。
+**Display / Controls:** 自托管 Space Grotesk Variable，中文回退 Noto Sans SC Variable，再回退 sans-serif。Unbounded Variable 仍用于旧有共享弹窗、菜单及小游戏的部分样式，不再作为首页和主要章节标题。
+
+**Artwork / Reading:** Noto Serif SC Variable 用于中文作品标题与公众号散页的阅读层；Newsreader Variable 用于拉丁短词及编辑式衬线节奏；Space Grotesk 保留日期、账号、动作和辅助信息的清楚轮廓。三者按职责分配，不逐词混用。长篇正文、代码、公式占位说明保持自然阅读次序，不随装饰轮廓裁切。
+
+frontmatter 的 `artwork-title` 与 `specimen-word` 从当前作品样式提取。公众号散页的具体字号与断点以完成后的 `wechat.css` 为准，本次不把尚在调整的值写成规范 token。
 
 首页姓名第一行字重 330，末行 640；轻重和行距形成识别性。单行姓名用 `clamp(70px, 8vw, 136px)`、最大 7ch，并允许长姓名换行。当前故事标题 Traces. 字重 450；Skills 标题 Play. 字重 480。
 
@@ -197,7 +219,9 @@ frontmatter 分别记录姓名、Skills、故事、作品标题和经历条目�
 - 首页高 100svh、最小 680px，内边距 `112px 7vw 150px`，文字宽 54%；底部声音、目录与滚动提示分散排列。
 - Skills 高 170svh、最小 1100px。舞台 sticky 于顶部、高 100svh、最小 600px，内层 `112px 7vw 48px`；标题与读数共同退出。
 - 经历上方 20vh SVG 接缝和纸面相接；内容内边距 `130px 7vw 100px`。引导为 `1.15fr 1fr`、间距 12vw；经历行以类别、正文、展开箭头构成三列。
-- 作品网格 `1.15fr 1fr`，间距 `75px 5vw`，偶数项下错 110px；预览比例 1.28，无通用浏览器窗口边框。
+- 真实作品网格为 `1.05fr .95fr`，列距 7vw、行距 86px，偶数项下错 100px；图面比例按作品变化，轮廓由 ElasticFrame 定义。公众号散页承接其后；标题、日期、摘要和展开动作在文档流中保持顺序。
+- 作品聚焦时，完整图像与缩小的可操作键盘共处同一舞台；`contain` 保留完整构图。装饰曲线位于其后，不能挤走返回、切换、播放与放大控件。
+- 编辑式内容区的数学流线位于文字与操作下方，沿鼠标和滚动输入缓慢弯曲；不占用内容布局槽，不接管滚动和点击。
 - 联系段内边距 `120px 7vw 110px`，两列空间安排内容与物体；联系内容没有额外卡片外壳。
 
 | 响应条件 | 当前布局 |
@@ -210,7 +234,9 @@ frontmatter 分别记录姓名、Skills、故事、作品标题和经历条目�
 
 **The Opaque Chapter Rule.** 经历和作品共享不透明阅读表面；进入这两个状态时隐藏键盘、猫和场景标签，暂停画布并拒绝场景输入。文字不得依靠透明叠加来解决层级。
 
-**The Single Stage Rule.** Skills 标题、读数和操作处在同一个 sticky 舞台，随同一退出动画离场。详情只由 HTML 展示，不重新增加与正文竞争的 3D 文案。
+**The Single Stage Rule.** Skills 标题、读数和操作处在同一个 sticky 舞台，随同一退出动画离场。作品和文章由 HTML 展示，聚焦后隐藏重复标题与索引；不重新增加与正文竞争的 3D 文案。
+
+**The Stable Content Rule.** 曲线形变只改变视觉皮肤，文本、焦点、命中范围和文档流保持稳定。阅读展开后以理解正文为主，停止追逐鼠标的装饰动作。
 
 ## Elevation & Depth
 
@@ -222,7 +248,11 @@ frontmatter 分别记录姓名、Skills、故事、作品标题和经历条目�
 
 ## Shapes
 
-阅读区域采用直角矩形图片、开放文字和 1px 分隔线。经历展开箭头使用圆环；静态技能目录使用紧密网格。功能弹窗与输入仍保留既有圆角，frontmatter 列出真实角色，不能将旧卡片圆角重新推广到阅读章节。
+真实作品使用六组不对称 SVG 曲线轮廓，取代矩形图片板；轮廓点与控制线呈现同一片可受力表面。预览可按轮廓裁切，进入作品后必须以 `contain` 显示完整画面；放大查看不继续施加边缘挤压。
+
+公众号采用散页式编辑排版，纸面轮廓、少量数学波纹和衬线标题形成各篇区别。装饰面与正文分层：不能裁掉标题、账号或展开全文，不能把原文段落拆成视觉拼贴。
+
+经历仍采用开放文字与 1px 分隔线，展开箭头使用圆环；静态技能目录使用紧密网格。功能弹窗与输入保留既有圆角，frontmatter 列出真实角色，不将弹窗样式推广成作品外壳。
 
 OPEN SPACE 标志由两段开放圆角路径和一个中心点构成，表示可进入的空间；它独立于个人姓名。首屏、页头和缺省作品预览使用同一几何来源。后续提供个人标志时应整体替换，不伪称当前图形是个人签名。
 
@@ -238,7 +268,23 @@ OPEN SPACE 标志由两段开放圆角路径和一个中心点构成，表示可
 
 经历使用原生 `details/summary`，以细线分隔；悬停标题轻移、圆环箭头旋转，展开后显示完整说明与标签。展开导致高度变化时刷新 ScrollTrigger。
 
-作品整体仍是可聚焦按钮；两列错列布局中，标题在图片下方。真实图片悬停轻微放大（1.035）；缺省预览使用排印与原创标志，悬停标志旋转、词组上移。它们不是实际项目截图。
+真实作品整体仍是可聚焦按钮。两列错列布局中，ElasticFrame 包住预览图，衬线标题在下方，圆形探索动作贴近轮廓；静态模式保留形状和全部入口。其余档案中的数学示意图继续明确标为示意，不能与六件真实 Blender 练习混淆。
+
+### ElasticFrame
+
+固定布局槽内使用 SVG `clipPath` 和一条同形描边；每件作品选择独立轮廓。当前轮廓由十个节点闭合为三次曲线，GSAP ticker 推进带阻尼的节点弹簧。鼠标靠近时局部向外推开，滚动速度带来有界纵向拉伸与轻微剪切，输入停止后回到基准形状。它是视觉弹簧近似，不称为完整软体物理。
+
+离屏、页面隐藏、减少动态与手动静态模式暂停形变并恢复基准轮廓。保留 `touch-action: pan-y`，不新增平滑滚动引擎。作品详情通过独立内容层保留 `contain`，轮廓只作用于背景和描边；键盘旋转与作品预览的形变不能互相争用 transform。
+
+### WeChat folios
+
+公众号名称、已确认 ID、真实标题、日期与正文保持原样。列表采用不等长散页节奏，以 Noto Serif SC / Newsreader 提供阅读性，以 Space Grotesk 承担元信息与动作。原生 `details/summary` 保留 Tab、Enter、展开状态和文档顺序；原文链接存在时才显示直达入口，缺失配图继续如实说明。
+
+散页表层可作有限位移、倾斜与压缩；展开正文后让表层稳定，不用持续动画穿过长文。减少动态保留全部散页、摘要、复制账号与全文阅读能力。
+
+### Editorial flow field
+
+编辑式阅读区域背景由原创数学流线构成。指针影响附近曲率，滚动输入形成起伏，流线收敛回基准排列；线条保持低对比且不越过文字的可读阈值。层级位于内容后方，装饰 SVG 不提供可访问名称、不拦截指针。静态模式显示基准流线或同等静态背景，正文和控件始终完整。
 
 ### Navigation and dialogs
 
@@ -273,6 +319,8 @@ Lenis 是唯一平滑滚动引擎，时长 1.15s，导航 1.25s；GSAP 负责页
 - **Do** 用字重、间距、细线和可见焦点组织主要信息。
 - **Do** 保留资料示意标签与本地房间说明。
 - **Do** 同时维护鼠标、触屏、实体键盘和 HTML 目录入口。
+- **Do** 允许预览轮廓裁切，但始终提供保留完整构图的作品查看。
+- **Do** 把散页形变、背景流线与真实文章正文分层；展开时优先保证阅读稳定。
 
 ### Don't:
 
@@ -280,11 +328,13 @@ Lenis 是唯一平滑滚动引擎，时长 1.15s，导航 1.25s；GSAP 负责页
 - **Don't** 让透明但仍可交互的离场内容挡住新章节。
 - **Don't** 恢复独立固定的技能标题、重复 3D 标签或正文背后的猫动画。
 - **Don't** 引入第二套平滑滚动引擎或伪造加载百分比。
+- **Don't** 让曲线裁切藏掉按钮、焦点、原文段落或作品完整查看入口。
+- **Don't** 将本轮设计方向、静态组件示意或源码检查写成已经完成的视觉验收。
 - **Don't** 把参考站品牌、示例技术图标或缺省作品当作用户的个人事实。
 
 ## Tactile extension — current override
 
-最新视觉以 src/kinetic.css 为准，以上未改的主题、语义和防叠字规则继续适用。首页删除说明句、缩短行动文案；章节为 Play. / Traces. / Made. / Say hello.，详细内容保留在原生展开与详情中。作品图面替换成四种原创数学几何研究，并保留示意标签。
+前一轮触觉基础以 `src/kinetic.css` 为准，以上主题、语义和防叠字规则继续适用。首页删除说明句、缩短行动文案；章节为 Play. / Traces. / Made. / Say hello.，详细内容保留在原生展开与详情中。四种原创数学几何研究现仅用于未填资料的示意档案；真实 Blender 作品采用上文 ElasticFrame 与完整作品查看规则。
 
 字形的布局槽固定，只有内部视觉 span 做有限位移、挤压、拉伸与斜切；可访问名称完整。按钮和图面使用独立 translate/rotate/scale，避开原有 GSAP transform。分隔线的二次曲线控制点响应鼠标与滚动速度。所有弹簧由现有 GSAP ticker 推进，变形在停止输入后收敛，不引入第二套滚动引擎。
 

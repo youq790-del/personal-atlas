@@ -1,0 +1,6 @@
+.elastic-frame{position:relative;width:100%;height:100%;isolation:isolate;touch-action:pan-y}
+.elastic-frame-defs{position:absolute;width:0;height:0;overflow:hidden;pointer-events:none}
+.elastic-frame-surface{width:100%;height:100%;position:relative;overflow:hidden;background:var(--elastic-ground,transparent)}
+.elastic-frame-content{position:absolute;inset:0;display:grid;place-items:center}
+.elastic-frame-contour{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;fill:none;stroke:var(--elastic-line,currentColor);stroke-width:.7px;opacity:.28}
+.elastic-frame-surface>img,.elastic-frame-surface>video{display:block;width:100%;height:100%;object-fit:cover}

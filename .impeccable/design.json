@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-03T15:28:29.870475+00:00",
+  "generatedAt": "2026-11-04T08:25:45.431894+00:00",
   "title": "Design System: Personal Atlas",
   "extensions": {
     "colorMeta": {
@@ -405,6 +405,14 @@
       "tag": {
         "displayName": "tag",
         "purpose": "次要分类标签。"
+      },
+      "artwork-title": {
+        "displayName": "作品衬线标题",
+        "purpose": "真实 Blender 作品名称；中文 Noto Serif SC，尺寸来自 work-stage.css。"
+      },
+      "specimen-word": {
+        "displayName": "作品短词",
+        "purpose": "轮廓旁的拉丁短词；Newsreader 提供编辑式节奏，不代替作品名称。"
       }
     },
     "shadows": [
@@ -444,6 +452,21 @@
         "name": "smooth-scroll",
         "value": "Lenis 1.15s; navigation 1.25s",
         "purpose": "唯一平滑滚动引擎。"
+      },
+      {
+        "name": "elastic-frame",
+        "value": "GSAP ticker; 10 bounded spring nodes; stiffness .14; damping .77",
+        "purpose": "指针局部推开与滚动拉伸 SVG 轮廓；完整作品内容独立 contain。离屏、页面隐藏与减少动态时复位。"
+      },
+      {
+        "name": "folio-response",
+        "value": "bounded surface response; stable expanded reading",
+        "purpose": "散页视觉皮肤随输入轻微响应，原生 details 展开正文保持稳定；具体动态参数以当前 WeChatShelf 源码为准，尚待本轮验收。"
+      },
+      {
+        "name": "editorial-flow-field",
+        "value": "pointer curvature + scroll impulse → resting field",
+        "purpose": "编辑区数学流线在内容后方响应；静态模式保留基准排列，不劫持输入，不增加滚动引擎。尚待本轮验收。"
       }
     ],
     "breakpoints": [
@@ -521,10 +544,10 @@
       "css": ".ds-story{background:var(--paper,#e5e9e3);color:var(--paper-ink,#17211e);border-block:1px solid var(--paper-line,#bdc9bf);font-family:'Space Grotesk Variable','Noto Sans SC Variable',sans-serif}.ds-story summary{list-style:none;display:grid;grid-template-columns:100px 1fr 44px;gap:20px;padding:30px 0;cursor:pointer;align-items:start}.ds-story summary::-webkit-details-marker{display:none}.ds-story summary>span{font-size:11px;color:var(--paper-muted,#53605a);padding-top:8px}.ds-story h3{font-size:24px;line-height:1.45;font-weight:550;margin:0;transition:transform .4s}.ds-story i{border:1px solid var(--paper-line,#bdc9bf);border-radius:50%;width:42px;height:42px;display:grid;place-items:center;transition:transform .35s,background .35s,color .35s}.ds-story svg{width:22px;height:22px}.ds-story summary:hover h3{transform:translateX(6px)}.ds-story summary:hover i{background:var(--paper-ink,#17211e);color:var(--paper,#e5e9e3);transform:rotate(45deg)}.ds-story[open] i{transform:rotate(90deg)}.ds-story p{font-size:14px;line-height:2;color:var(--paper-muted,#53605a);padding:0 20px 25px 120px}.ds-story summary:focus-visible{outline:2px solid #6ad8ee;outline-offset:5px}@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}"
     },
     {
-      "name": "作品预览",
+      "name": "示意档案预览",
       "kind": "card",
       "refersTo": "project-card",
-      "description": "直角图面与下方标题；示意内容明确标注。",
+      "description": "未填个人档案中的旧矩形示意图；真实 Blender 作品采用独立弹性轮廓。",
       "html": "<button class=\"ds-project\" type=\"button\"><span class=\"ds-project-art\"><strong>Make.</strong><small>内容示意 · 等待你的作品</small></span><span class=\"ds-project-caption\">从一个想法开始<small>作品 / 示意</small></span><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" aria-hidden=\"true\"><path d=\"M6 18 18 6M6 6h12v12\"/></svg></button>",
       "css": ".ds-project{position:relative;display:block;border:0;padding:0;background:none;color:var(--paper-ink,#17211e);text-align:left;width:min(100%,420px);font-family:'Space Grotesk Variable','Noto Sans SC Variable',sans-serif;cursor:pointer}.ds-project-art{aspect-ratio:1.28;display:flex;flex-direction:column;justify-content:flex-end;padding:28px;background:#b3c1d1;color:#203332}.ds-project-art strong{font-size:80px;letter-spacing:-.04em;line-height:1;font-weight:500;transition:transform .6s}.ds-project-art small{font-size:10px;margin-top:14px}.ds-project-caption{display:block;font-size:21px;line-height:1.5;padding:22px 36px 0 0}.ds-project-caption small{display:block;font-size:10px;color:var(--paper-muted,#53605a);margin-top:8px}.ds-project>svg{position:absolute;bottom:3px;right:0;width:22px;height:22px;transition:transform .4s}.ds-project:hover strong{transform:translateY(-6px)}.ds-project:hover>svg{transform:translate(3px,-3px)}.ds-project:focus-visible{outline:2px solid #6ad8ee;outline-offset:5px}@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}"
     },
@@ -543,16 +566,31 @@
       "description": "弹窗内的只读标签；经历正文中的标签去除背景。",
       "html": "<span class=\"ds-tag\">好奇心</span>",
       "css": ".ds-tag{display:inline-block;background:var(--field,#21252d);color:var(--muted,#a4acbc);padding:5px 10px;border-radius:5px;font:500 11px/1.5 \"Space Grotesk Variable\",\"Noto Sans SC Variable\",sans-serif}"
+    },
+    {
+      "name": "弹性作品轮廓",
+      "kind": "custom",
+      "refersTo": "artwork-preview",
+      "description": "ElasticFrame 的静态轮廓示意；生产组件以 GSAP ticker 推进节点。此处不模拟或验证动画。",
+      "html": "<figure class=\"ds-elastic\"><svg viewBox=\"0 0 1 1\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><path d=\"M0.075,0.26 C0.11417,0.17917 0.18583,0.11167 0.27,0.075 C0.35417,0.03833 0.48333,0.02750 0.58,0.04 C0.67667,0.05250 0.78833,0.09333 0.85,0.15 C0.91167,0.20667 0.94000,0.29333 0.95,0.38 C0.96000,0.46667 0.94833,0.58333 0.91,0.67 C0.87167,0.75667 0.80167,0.85167 0.72,0.9 C0.63833,0.94833 0.51667,0.97167 0.42,0.96 C0.32333,0.94833 0.20417,0.89667 0.14,0.83 C0.07583,0.76333 0.04583,0.65500 0.035,0.56 C0.02417,0.46500 0.03583,0.34083 0.075,0.26 Z\" vector-effect=\"non-scaling-stroke\"/></svg><figcaption>作品轮廓示意<small>完整作品独立显示，保留 contain</small></figcaption></figure>",
+      "css": ".ds-elastic{position:relative;margin:0;width:min(100%,420px);aspect-ratio:1.2;color:var(--paper-ink,#17211e);font-family:\"Noto Serif SC Variable\",serif}.ds-elastic svg{width:100%;height:100%;fill:color-mix(in srgb,currentColor 7%,transparent);stroke:currentColor;stroke-width:.7px}.ds-elastic figcaption{position:absolute;inset:38% 18%;text-align:center;font-size:22px;font-weight:550}.ds-elastic small{display:block;margin-top:12px;font:400 11px/1.6 \"Space Grotesk Variable\",sans-serif}"
+    },
+    {
+      "name": "公众号散页阅读",
+      "kind": "custom",
+      "description": "真实归档继续使用原生 details；此静态示意说明衬线标题、元信息和正文分层，不声明本轮动态已验收。",
+      "html": "<details class=\"ds-folio\"><summary><time datetime=\"2026-10-28\">2026.10.28</time><h4>波</h4><span>展开阅读</span></summary><p>其实我们看能量，大多都是与某个物理量的平方有关，这个平方结构难道有什么特殊性吗，为什么能量往往与某个物理量的平方有关？</p></details>",
+      "css": ".ds-folio{max-width:460px;color:var(--paper-ink,#17211e);border-top:1px solid currentColor;padding:24px 18px}.ds-folio summary{cursor:pointer;list-style:none}.ds-folio summary:focus-visible{outline:2px solid #6ad8ee;outline-offset:5px}.ds-folio time,.ds-folio summary>span{font:400 11px/1.5 \"Space Grotesk Variable\",sans-serif}.ds-folio h4{font:550 34px/1.4 \"Noto Serif SC Variable\",serif;margin:20px 0}.ds-folio p{font:400 15px/1.95 \"Noto Serif SC Variable\",serif;max-width:65ch;margin-top:24px}"
     }
   ],
   "narrative": {
     "northStar": "可触的空间，舒展的故事",
-    "overview": "保留 Naresh Khatri 的真实机械键盘与开放画布，将页面分成可触的空间与安静的阅读章节。首页靠字重、比例与留白组织信息；经历和作品以不透明的浅灰绿纸面承接，滚动时形成清楚的前后关系。\n\n最新方向依据用户指定的 Giats、SeamTransitions 和 Lusion 参考：借鉴编辑式留白、连续曲面接缝与短开场的节奏。OPEN SPACE 标记与 SVG 接缝为本项目绘制，未使用这些网站的标志、作品或着色器。",
+    "overview": "保留 Naresh Khatri 的真实机械键盘与开放画布，将页面分成可触的空间与安静的阅读章节。首页靠字重、比例与留白组织信息；经历和作品以不透明的浅灰绿纸面承接，滚动时形成清楚的前后关系。\n\n在既有 Giats、SeamTransitions 和 Lusion 参考形成的编辑留白、连续接缝与短开场之上，本轮将真实 Blender 作品从矩形板改为不对称的弹性轮廓，公众号文章改为散页式阅读。流动的形状属于展示表面，作品构图与原文内容保持可完整查看。OPEN SPACE 标记、SVG 接缝、作品轮廓和数学流线为本项目绘制。\n\n本次记录更新于 2026-11-04：描述已确认的设计方向与当前源码，不代表本轮动态、响应式或公开发布已经验收；最终状态仍以 `qa/VERIFICATION.md` 中对应本轮证据为准。",
     "keyCharacteristics": [
       "真实键帽保留按压、声音与空间姿态，视觉重心不被容器边框打断。",
-      "Space Grotesk 的轻重变化承担主显示字，Noto Sans SC 承接中文。",
+      "Space Grotesk 承担场景文字与操作；作品和散页引入 Noto Serif SC 与 Newsreader，区分观赏、阅读和控制层。",
       "开放深空或日光场景，连接固定浅灰绿的阅读纸面。",
-      "首页文字链接、分隔线经历、错列作品组成无卡片外壳的内容层。",
+      "首页文字链接、分隔线经历、不对称作品轮廓与散页文章共同组成内容层；不把所有内容压进重复矩形板。",
       "同一技能舞台统一进入与退出；静态模式保留等价内容入口。"
     ],
     "rules": [
@@ -563,13 +601,18 @@
       },
       {
         "name": "The Single Stage Rule",
-        "body": "Skills 标题、读数和操作处在同一个 sticky 舞台，随同一退出动画离场。详情只由 HTML 展示，不重新增加与正文竞争的 3D 文案。",
+        "body": "Skills 标题、读数和操作在同一个 sticky 舞台退出；作品与文章由 HTML 展示，聚焦后隐藏重复标题与索引。",
         "section": "layout"
       },
       {
         "name": "The Object Response Rule",
         "body": "真实键帽用独立按压状态响应输入；编辑式链接使用下划线延展与箭头位移，阅读行使用展开状态反馈。每类对象使用适合自身的反馈。",
         "section": "elevation"
+      },
+      {
+        "name": "The Stable Content Rule",
+        "body": "曲线形变只改变视觉皮肤，文本、焦点、命中范围和文档流稳定；文章展开时优先保证阅读，完整作品保留 contain。",
+        "section": "layout"
       }
     ],
     "dos": [
@@ -577,13 +620,17 @@
       "**Do** 让阅读章节以实底遮住场景，并在内容高度变化后刷新滚动触发点。",
       "**Do** 用字重、间距、细线和可见焦点组织主要信息。",
       "**Do** 保留资料示意标签与本地房间说明。",
-      "**Do** 同时维护鼠标、触屏、实体键盘和 HTML 目录入口。"
+      "**Do** 同时维护鼠标、触屏、实体键盘和 HTML 目录入口。",
+      "**Do** 允许预览轮廓裁切，但始终提供保留完整构图的作品查看。",
+      "**Do** 把散页形变、背景流线与真实文章正文分层；展开时优先保证阅读稳定。"
     ],
     "donts": [
       "**Don't** 把首页行动重新包成成排的实底按钮或边框卡片。",
       "**Don't** 让透明但仍可交互的离场内容挡住新章节。",
       "**Don't** 恢复独立固定的技能标题、重复 3D 标签或正文背后的猫动画。",
       "**Don't** 引入第二套平滑滚动引擎或伪造加载百分比。",
+      "**Don't** 让曲线裁切藏掉按钮、焦点、原文段落或作品完整查看入口。",
+      "**Don't** 将本轮设计方向、静态组件示意或源码检查写成已经完成的视觉验收。",
       "**Don't** 把参考站品牌、示例技术图标或缺省作品当作用户的个人事实。"
     ]
   }
