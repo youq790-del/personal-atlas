@@ -1,0 +1,61 @@
+.thinking-desk{--thinking-ink:#192532;--thinking-muted:#505e69;--thinking-blue:#204ce6;position:relative;color:var(--thinking-ink);margin:65px 0 100px;isolation:isolate}
+.thinking-desk-heading{display:flex;align-items:baseline;justify-content:space-between;gap:30px;padding:0 0 42px}
+.thinking-desk .thinking-desk-heading h3{font-family:'Noto Serif SC Variable',serif;font-size:clamp(42px,5.6vw,78px);font-weight:440;letter-spacing:-.04em;line-height:1.35;margin:0}
+.thinking-topics{display:flex;align-items:center;gap:29px}
+.thinking-topics button{display:flex;align-items:center;gap:12px;background:none;color:var(--thinking-muted);font-family:'Noto Serif SC Variable',serif;font-size:18px;padding:10px 0;min-height:44px;cursor:pointer}
+.thinking-topics button>span{width:6px;height:6px;border:1px solid currentColor;border-radius:50%;transition:background .2s,transform .2s}
+.thinking-topics button[aria-selected=true]{color:var(--thinking-blue)}
+.thinking-topics button[aria-selected=true]>span{background:currentColor;transform:scale(1.2)}
+.thinking-composition{display:grid;grid-template-columns:minmax(0,1.8fr) minmax(240px,1fr);gap:clamp(35px,6vw,95px);align-items:center}
+.thinking-drawing{min-width:0;align-self:stretch;display:flex;align-items:center}
+.thinking-model{width:100%;position:relative}
+.thinking-model>svg{display:block;width:100%;height:auto;overflow:visible;fill:none;touch-action:pan-y}
+.thinking-wave>svg{cursor:ns-resize;touch-action:none}
+.thinking-guide{stroke:#64717c;stroke-width:.65;stroke-dasharray:3 7;opacity:.35}
+.thinking-wave-line{stroke:var(--thinking-blue);stroke-width:1.35}
+.thinking-point{fill:var(--paper,#e9ece8);stroke:var(--thinking-blue);stroke-width:1.4}
+.thinking-point-main{fill:var(--thinking-blue);stroke:var(--paper,#e9ece8);stroke-width:4}
+.thinking-mesh{stroke:var(--thinking-blue);stroke-width:.85;opacity:.48}
+.thinking-mesh-main{stroke:var(--thinking-blue);stroke-width:1.7}
+.thinking-support{stroke:var(--thinking-ink);stroke-width:1;stroke-linecap:round}
+.thinking-string{stroke:var(--thinking-blue);stroke-width:1.5}
+.thinking-pivot{fill:var(--paper,#e9ece8);stroke:var(--thinking-blue);stroke-width:2;cursor:grab;touch-action:none}
+.thinking-bob{fill:var(--thinking-blue);stroke:var(--paper,#e9ece8);stroke-width:4;cursor:grab;touch-action:none}
+.thinking-pivot:active,.thinking-bob:active{cursor:grabbing}
+.thinking-hang-options{position:absolute;top:4%;left:2%;display:flex;gap:16px;z-index:1}
+.thinking-hang-options button{background:none;color:var(--thinking-muted);padding:9px 0;min-height:44px;font-size:11px;border-bottom:1px solid transparent;cursor:pointer}
+.thinking-hang-options button[aria-pressed=true]{border-color:var(--thinking-blue);color:var(--thinking-blue)}
+.thinking-model-controls{display:flex;align-items:center;justify-content:center;gap:32px;flex-wrap:wrap;margin-top:-5px}
+.thinking-model-controls>button{display:inline-flex;align-items:center;gap:9px;min-height:44px;background:none;color:var(--thinking-blue);font-size:12px;cursor:pointer;padding:8px 0}
+.thinking-model-controls label{display:flex;align-items:center;gap:14px;font-size:11px;color:var(--thinking-muted);min-height:44px}
+.thinking-model-controls input[type=range]{width:110px;height:30px;margin:0;accent-color:var(--thinking-blue);cursor:ew-resize;background:none}
+.thinking-coffee-controls{gap:22px}.thinking-coffee-controls input[type=range]{width:85px}
+.thinking-model-note{display:block;text-align:center;font-size:10px;color:var(--thinking-muted);line-height:1.7;margin-top:5px}
+.thinking-margin{position:relative;padding:20px 0 12px;min-width:0}
+.thinking-desk .thinking-margin h4{font-family:'Noto Serif SC Variable',serif;font-size:clamp(26px,2.7vw,40px);font-weight:470;letter-spacing:-.035em;line-height:1.5;margin:0 0 36px;text-wrap:balance}
+.thinking-steps{display:flex;gap:18px;position:relative;align-items:center;margin-bottom:24px}
+.thinking-steps::before{content:'';position:absolute;left:0;right:0;top:12px;height:1px;background:#8e9ba9;opacity:.35;z-index:-1}
+.thinking-steps button{display:flex;flex-direction:column;align-items:flex-start;gap:12px;background:none;color:var(--thinking-muted);font-size:10px;min-width:50px;padding:8px 0;min-height:54px;cursor:pointer}
+.thinking-step-dot{width:8px;height:8px;border:1px solid #687891;background:var(--paper,#e9ece8);border-radius:50%;transition:background .2s,transform .2s}
+.thinking-steps button[aria-pressed=true]{color:var(--thinking-blue)}
+.thinking-steps button[aria-pressed=true] .thinking-step-dot{border-color:var(--thinking-blue);background:var(--thinking-blue);transform:scale(1.35)}
+.thinking-excerpt{min-height:170px}
+.thinking-excerpt blockquote{font-family:'Noto Serif SC Variable',serif;font-size:clamp(15px,1.4vw,20px);font-weight:420;line-height:1.9;margin:0;max-width:24em;text-wrap:pretty}
+.thinking-read{display:inline-flex;align-items:center;gap:13px;background:none;color:var(--thinking-blue);font-size:11px;min-height:44px;padding:8px 0;margin-top:15px;cursor:pointer}
+.thinking-read svg{transition:transform .25s}
+.thinking-read:hover svg{transform:translate(3px,-3px)}
+.thinking-reading-thread{display:flex;align-items:flex-start;gap:30px;margin-top:65px;padding-top:27px;border-top:1px solid #82909b50}
+.thinking-reading-thread>span{font-size:10px;line-height:2;color:var(--thinking-muted);padding-top:20px;white-space:nowrap}
+.thinking-reading-thread>div{display:flex;align-items:center;flex-wrap:wrap;column-gap:20px;row-gap:12px}
+.thinking-reading-thread>div>span{display:flex;align-items:center;gap:20px}
+.thinking-reading-thread>div>span>svg{color:var(--thinking-blue);opacity:.65}
+.thinking-reading-thread button{display:flex;flex-direction:column;align-items:flex-start;gap:6px;min-height:44px;padding:0;background:none;color:var(--thinking-ink);font-family:'Noto Serif SC Variable',serif;font-size:12px;cursor:pointer}
+.thinking-reading-thread button small{font-family:'Space Grotesk Variable',sans-serif;font-size:10px;color:var(--thinking-muted)}
+.thinking-reading-thread button:hover{color:var(--thinking-blue)}
+.thinking-desk :focus-visible{outline:2px solid var(--thinking-blue);outline-offset:5px}
+.thinking-desk ::selection{background:#204ce62b;color:var(--thinking-ink)}
+@media(max-width:1000px){.thinking-composition{grid-template-columns:minmax(0,1.5fr) minmax(230px,1fr);gap:28px}.thinking-model-controls{gap:20px}.thinking-coffee-controls{gap:12px}.thinking-coffee-controls input[type=range]{width:65px}.thinking-margin{padding-top:0}.thinking-reading-thread{gap:20px}.thinking-reading-thread>div{column-gap:14px}.thinking-reading-thread>div>span{gap:14px}.thinking-topics{gap:22px}}
+@media(max-width:767px){.thinking-desk{margin:40px 0 70px}.thinking-desk-heading{display:block;padding-bottom:8px}.thinking-desk .thinking-desk-heading h3{font-size:42px;margin-bottom:20px}.thinking-topics{gap:28px}.thinking-topics button{font-size:16px;gap:11px}.thinking-composition{display:flex;flex-direction:column;gap:25px}.thinking-drawing{width:100%}.thinking-model>svg{width:calc(100% + 20px);margin-left:-10px}.thinking-model-controls{margin-top:4px;gap:24px}.thinking-coffee-controls{gap:15px}.thinking-coffee-controls input[type=range]{width:61px}.thinking-model-controls label{gap:8px}.thinking-hang-options{top:0}.thinking-model-note{font-size:10px;margin-top:5px}.thinking-margin{width:100%;padding:20px 6% 0}.thinking-desk .thinking-margin h4{font-size:29px;line-height:1.5;margin-bottom:24px}.thinking-steps{gap:29px;margin-bottom:18px}.thinking-steps button{font-size:11px;min-width:52px}.thinking-steps::before{right:24%}.thinking-excerpt{min-height:152px}.thinking-excerpt blockquote{font-size:17px;line-height:1.85}.thinking-read{margin-top:12px;font-size:12px}.thinking-reading-thread{display:block;margin-top:28px;padding-top:18px}.thinking-reading-thread>span{display:block;padding:0;margin-bottom:18px}.thinking-reading-thread>div{align-items:flex-start;gap:17px}.thinking-reading-thread>div>span{gap:12px}.thinking-reading-thread button{font-size:12px;max-width:9em;text-align:left}.thinking-reading-thread button small{font-size:10px}}
+@media(max-width:380px){.thinking-coffee-controls{gap:10px}.thinking-coffee-controls input[type=range]{width:50px}.thinking-model-controls label{gap:5px}.thinking-steps{gap:23px}}
+@media(prefers-reduced-motion:reduce){.thinking-desk *, .thinking-desk *::before{transition:none!important}.thinking-excerpt{clip-path:none!important}}
+.thinking-is-still .thinking-excerpt{clip-path:none!important}.thinking-is-still *{transition:none!important}

@@ -1,34 +1,51 @@
-# Personal narrative — 让思考有形状
+# Personal narrative — questions, works, notes
 
-Direction recorded on 2026-11-04. This extends the physical keyboard and elastic specimen system; it does not replace their content, input, provenance or accessibility contracts.
+Current direction recorded on 2026-11-04. The user's latest request takes priority: remove AI-sounding slogans throughout the site, reduce explanatory copy, and let artistic interactions reveal actual thought. Preserve the physical keyboard and elastic artwork system, along with content provenance and accessible alternatives.
 
-## Identity and reference
+## Identity and evidence
 
-The subject is yo7, a science-and-engineering writer who also makes visual studies. The supplied WeChat archives contain learning notes, experimental observations and everyday life; the six Blender projects remain studies. Do not invent a degree, employer, award, commission or skill certification from those materials.
+The subject is yo7, who values thinking and recording in science and engineering and also makes visual studies. Six supplied Blender files remain practice pieces. The complete user-supplied `yo7的堂吉诃德-公众号文章归档.zip` contains 25 published articles dated 2026-07-22 through 2026-11-03, with 342 local images, 32 inline SVGs and 25 real public article URLs. The previous six-article, text-only limitation no longer applies.
 
-[Santioni Spirits](https://santionispirits.com/) was inspected through Experience and Collection after the user's age confirmation. Transfer the strong serif scale, chapter-by-chapter narrative and direct content routes. Do not copy its branding, products, photographs or other assets, or assert knowledge of its private implementation. Earlier Naresh, Giats, SeamTransitions and Lusion provenance remains in REFERENCE-STUDY.md and ASSETS.md.
+The articles include learning notes, observations and everyday life. They do not establish a degree, employer, award, commission or certification. The nine short quotations in ThinkingDesk have been checked against the source prose; the underlying technical arguments have not been individually audited or certified.
 
-## Content route
+[Santioni Spirits](https://santionispirits.com/) informed expressive serif scale, chapter progression and direct content routes after the user's age confirmation. Its branding, products and assets are not copied. Earlier Naresh, Giats, SeamTransitions and Lusion references remain documented in REFERENCE-STUDY.md and ASSETS.md.
 
-- The hero identifies yo7, states the writing-and-making practice, and offers “从这里认识我” and “直接读文章”. A concrete current question links to its real archive.
-- The personal chapter uses “一半在推演，一半在造形” and the three tabs “追问 / 造形 / 日常”. Each view combines a short description, actual work previews and an attributed quote. “追问” and “日常” lead to 《波》 (`writing-a06`); “造形” connects the visual studies with 《breaking bad》 (`writing-a04`).
-- The gallery preserves all six real Blender studies and complete image/video viewing. The WeChat masthead follows with “把没想明白的事，先写下来” and an ordered next-article action.
-- The closing chapter returns to reading: “认识我，从一篇文字继续”. Without a supplied email, a folded account bookmark offers copying and another article. A configured email continues to use the real email route. Chat remains secondary.
+## Current content route
 
-The main theme is “让思考有形状”. A visible direct route must coexist with playful discovery; no visitor should have to master the keyboard scene to learn about the author or read an article.
+- Identify yo7 briefly and give visible routes to the person, works and writing. The keyboard is an invitation, not a prerequisite for finding content.
+- The personal chapter uses “在学 / Blender / 日常”, actual work previews and short attributed quotations. Its labels and actions describe what is there; they do not construct a grand narrative about the author.
+- Preserve complete viewing of all six Blender studies. The article area begins with ThinkingDesk: coffee, filter paper and a wave, each paired with a concrete question.
+- Let visitors move a pendulum or its suspension point, bend a saddle surface, or change and pluck a wave. Buttons and range inputs provide equivalent controls without dragging. These are mathematical illustrations, visibly marked “示意，非实测”.
+- Each topic reveals one of three verified short quotations. Coffee and paper keep observation, hypothesis and uncertainty distinct; the wave links observation, explanation and a further question. Never turn a tentative statement into a proven conclusion.
+- Follow with the latest three articles, an expandable complete index and search. Open full articles in a stable reading modal, with a real public WeChat source link outside the iframe.
+- Keep the closing account bookmark and reading route concise. A supplied email can use the real email route; chat remains secondary.
 
-## Visual and interaction rules
+## Words and visual hierarchy
 
-Newsreader gives the name an expressive serif silhouette; Noto Serif SC carries the Chinese personal statement, chapter titles and reading surfaces. Space Grotesk remains for controls and metadata. The current identity and chapter styles live in identity.css and personal-portrait.css. The generated design.json is the existing base-token snapshot, not a newly generated representation of every override.
+Prefer concrete prompts such as “换成手提，就稳了？” and short functional labels such as “拨一下”, “找一篇” and “微信原文”. Use the original author’s phrasing when quoting; preserve “可能” and “未确定”. Remove abstract summaries, inflated claims and repeated instructions. Do not rewrite the full articles in order to simplify the interface.
 
-The three personal views use semantic tabs, arrow-key navigation, Home / End and visible focus. Elastic artwork surfaces and restrained waves react separately from text; expanded article paragraphs stay stable. Transition code must not compete with the global kinetic field for the same transform.
+Newsreader shapes the name; Noto Serif SC supports Chinese headings and reading surfaces; Space Grotesk supports controls and metadata. Current article components are ThinkingDesk.tsx / thinking-desk.css and WeChatShelf.tsx / reading-room.css. Identity and personal-chapter styles remain in identity.css and personal-portrait.css. The generated design.json remains the earlier base-token snapshot.
 
-Color exploration is a local, circular reveal of the original preview color on fine-pointer hover. Touch, keyboard focus and reduced-motion show the complete original colors. No original media is rewritten, and stage viewing remains complete.
+The previous theme “让思考有形状”, the heading “一半在推演，一半在造形”, the long gallery manifesto and the old scattered-page disclosure are historical design choices. They are superseded and must not be used as current copy guidance.
 
-The article API is `openArticle?: { id: string; token: number }`. A new token reopens the same ID. Requests only target the current shelf's matching `data-article-id`; native details `name` keeps single-article disclosure. Open or close schedules focus on summary and an immediate scroll with 110px top clearance. “随手翻一篇” deterministically advances through actual archived bodies; an aria-live status names the selection. “合上这页” at the end of a long article closes it and returns to its summary. Article text, links and missing-image notes are preserved.
+## Interaction and reader contracts
 
-Small arrow rotations and the brief paper-opening fade stop in reduced-motion and static mode. The account bookmark reports clipboard success only after success; failures retain a manually searchable account. No unverified account URL or public multiplayer status is invented.
+Topic tabs support arrow keys, Home / End and visible focus. Keep the object, selected question, original quotation and source action close together. Models stop continuous motion when offscreen, when the page is hidden, or when motion is reduced; static states and direct reading remain usable. The site's single GSAP/Lenis motion system remains in place.
+
+The public article index is fetched from `content/wechat.json` relative to the deployment base. Original bodies are not bundled into the main JavaScript payload. `openArticle?: { id: string; token: number }` supports direct reading from other sections; a new token can reopen the same article.
+
+The complete reader loads a sanitized local HTML page in an iframe with an empty `sandbox` and `no-referrer`. Images, SVGs and formulas remain local and intact. The parent modal provides the verified source URL, Escape/close behavior and focus restoration. If a reader page is unavailable for an entry, preserve plain-text or source-link fallback. Do not claim the sandboxed internal popup link is the main external navigation route.
+
+Artwork color exploration remains a fine-pointer reveal; touch, keyboard focus and reduced-motion show full original color. Original media is not modified. Account copying reports success only after the clipboard succeeds; failure retains a searchable account. No public homepage is fabricated from the `gh_` ID.
+
+## Updating articles
+
+The account backend confirms a personal, unverified account without official published-article API permission. The optional official API tooling is not an active feed for this account.
+
+The user's latest requested cadence is every seven days. A Codex local heartbeat attached to the current task is planned, pending activation by the task owner. It depends on the computer and Codex running and the backend login remaining valid. This is weekly checking, not publication-triggered real-time synchronization. A failed or expired login must not be reported as a successful update.
+
+New published articles can enter the public index after import and deployment. New featured thought connections require reading their actual contents; automatic keyword tags must not be presented as the author's intellectual progression. Only published material is eligible, with no drafts, session credentials or administrative URLs in public files.
 
 ## Status
 
-This document records the current narrative and interaction design. It does not certify this iteration's desktop, mobile, motion or deployment behavior. QA will be added separately by the task owner; previous specimen screenshots remain evidence only for their own iteration.
+This document records the current design and evidence, not browser or deployment acceptance. The task owner records this iteration's visual QA separately.

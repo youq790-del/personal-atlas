@@ -14,7 +14,8 @@ export function Editor({profile,onSave,onClose}:{profile:Profile;onSave:(p:Profi
     <label>关于我<textarea rows={3} maxLength={3000} value={draft.bio} onChange={e=>setDraft({...draft,bio:e.target.value})}/></label>
     <label>联系邮箱<input type="email" value={draft.email} onChange={e=>setDraft({...draft,email:e.target.value})}/></label>
     <label className="check-label"><input type="checkbox" checked={!draft.isDemo} onChange={e=>setDraft({...draft,isDemo:!e.target.checked})}/>内容已替换为我的真实资料</label>
-    <WeChatEditor value={draft.wechat} onChange={wechat=>setDraft(current=>({...current,wechat}))}/>
+    <label className="check-label"><input type="checkbox" checked={draft.wechatAutoUpdate!==false} onChange={e=>setDraft({...draft,wechatAutoUpdate:e.target.checked})}/>跟随网站公开文章更新</label>
+    <WeChatEditor value={draft.wechat} onChange={wechat=>setDraft(current=>({...current,wechat,wechatAutoUpdate:false}))}/>
     <div className="file-tools"><label className="button secondary file-label">导入资料 JSON<input type="file" accept=".json,application/json" onChange={async e=>{const file=e.target.files?.[0];if(!file)return;try{if(file.size>1024*1024)throw new Error('文件不能超过 1 MB。');setDraft(validateProfile(JSON.parse(await file.text())));setNotice('已导入预览，点击保存后生效。');setError('');}catch(error){setError((error as Error).message);}e.target.value='';}}/></label><button type="button" className="button secondary" onClick={download}>导出 JSON</button><a className="text-link" href={asset('profile-template.json')} download>下载模板</a></div>
     <p className="muted small">技能、作品和成就通过 JSON 分类填写。可为每颗键设置标题、介绍、颜色与快捷键。</p>
     {error&&<p role="alert" className="error">{error}</p>}{notice&&<p role="status">{notice}</p>}

@@ -32,15 +32,60 @@ All six public posters are WebP at 1280×720. Five were rendered in Blender 5.2.
 
 ## User's WeChat writing archive
 
-The user confirmed the public account name **yo7的堂吉诃德** and original ID **gh_29c0b927a35c** during this task. `src/archived-writing.ts` imports six pieces from the user's existing local article corpus, recorded by the `yo7-wechat-voice` corpus manifest. Titles, dates and supplied body text are retained:
+The user confirmed the public account name **yo7的堂吉诃德** and original ID **gh_29c0b927a35c**. On 2026-11-04, the user supplied `yo7的堂吉诃德-公众号文章归档.zip`, which supersedes the earlier six-article text-only corpus for the website. The new archive contains 25 published articles from 2026-07-22 through 2026-11-03, each with HTML, Markdown, plain text, metadata and its real public WeChat URL.
+
+`scripts/import-wechat-archive.py` imports the already-extracted archive using the Python standard library. It verifies saved image paths and recorded SHA-256 values, preserves the article body through a static markup/CSS allowlist, and produces `public/content/wechat.json` plus `public/content/articles/<id>/index.html` and adjacent `images/` directories. Article text is fetched as public data instead of being bundled into the main JavaScript. Readers are isolated in an empty sandbox iframe, with a restrictive CSP in the generated page; verified original-article navigation lives in the parent reader.
+
+There are **342 saved image files** corresponding to 341 unique source image URLs, including **6 GIFs**, and **32 inline SVGs**. 《梨来》 has 31 SVGs and 《格林函数》 has one long SVG page. These visuals and image-based formulas remain part of the complete local reading experience. They are supplied article media, not newly generated site artwork. The archive itself and private local collection files are not published as website resources.
 
 | Article | Archived publication date |
 | --- | --- |
+| 文末的设计太夯了 | 2026-11-03 |
+| 前端设计流 | 2026-11-02 |
+| 光为什么沿直线传播 | 2026-10-30 |
+| 如何在骑车的时候将袋子里的咖啡稳稳拿捏 | 2026-10-29 |
 | 波 | 2026-10-28 |
+| 多维随机变量的分布 | 2026-10-27 |
 | 指针与数组 | 2026-10-26 |
+| 花两节水课看完边缘行者2，难平（评） | 2026-10-20 |
 | breaking bad | 2026-10-19 |
-| 常见离散随机分布 | 2026-10-15 |
+| 波波与概率分布的结构 | 2026-10-15 |
+| 常见离散随机分布 | 2026-10-14 |
 | 我怎么证明我感受到了风 | 2026-10-10 |
+| 找合适的随机变量 | 2026-10-08 |
 | 反方向的钟 | 2026-10-07 |
+| 淡 | 2026-09-29 |
+| 嗯。。。 | 2026-09-28 |
+| 零概率在条件概率中怎么处理 | 2026-09-24 |
+| 无人飞机决策系统 | 2026-09-23 |
+| 一二节课就开始想午饭吃什么了 | 2026-09-22 |
+| 为什么字节跳动不叫bitdance或者PBdance | 2026-09-21 |
+| 梨来 | 2026-08-17 |
+| 在《痴迷》中怎么安全许愿 | 2026-08-06 |
+| 格林函数 | 2026-07-30 |
+| 留数 | 2026-07-24 |
+| 在WAIC中没看懂transformer架构，但看到了具体到人 | 2026-07-22 |
 
-These are supplied local archives, not a live WeChat feed. Public homepage/article URLs are still missing and have not been fabricated. The interface provides account-name/ID copying and marks original links as pending. Source images and image-only formulas were not in the archive; explicit missing-figure notes remain. No unverified cover images, screenshots, QR codes, WeChat session credentials or private administrative URLs are bundled. Adding a valid public URL later enables the original-article link while retaining the local reading text.
+All 25 source links are supplied public `https://mp.weixin.qq.com/s/<shortlink>` URLs, without query parameters. An account homepage has not been verified and is not fabricated from the account ID. Scripts, event attributes, remote resource loads, active embedded content and session-bearing links do not enter the generated reader. No WeChat session credentials, draft contents or private administrative URLs are public assets.
+
+The former six article IDs remain stable: `writing-a06` (波), `writing-a05` (指针与数组), `writing-a04` (breaking bad), `writing-a03` (常见离散随机分布), `writing-a02` (我怎么证明我感受到了风), and `writing-a01` (反方向的钟). Other IDs derive from hashes of their public article URLs. The previous 2026-10-15 date for 《常见离散随机分布》 was a historical error; the supplied metadata establishes 2026-10-14.
+
+## ThinkingDesk illustrations and quotations
+
+`src/ThinkingDesk.tsx` creates original SVG mathematical illustrations for a pendulum and suspension point, a saddle surface and a traveling wave. These are interface illustrations inspired by questions in the user's writing, not measured reconstructions of the author's experiment or externally sourced scientific plots. Each model retains a visible “示意，非实测” note and accessible non-drag controls.
+
+Nine short quotations, three per topic, were checked against the corresponding archive text. Their observation, hypothesis, uncertainty and further-question roles are editorial organization; no new research result or claim of technical review is implied. The underlying articles' mathematical and scientific arguments have not been individually verified in this work.
+
+| Topic | Source article | Article ID |
+| --- | --- | --- |
+| Coffee and suspension | 如何在骑车的时候将袋子里的咖啡稳稳拿捏 | `wx-e9a08c5b62806c95` |
+| Filter paper and curvature | breaking bad | `writing-a04` |
+| Wave and squared quantities | 波 | `writing-a06` |
+
+The full source-path and image mapping is retained in the task workspace's `work/wechat-corpus-index.json`; content interpretation and quotation locations are in `work/wechat-corpus-analysis.md`. These working records are distinct from the public article index.
+
+## Update provenance and cadence
+
+The archive is a complete supplied snapshot, not a live feed. The account backend confirms a personal, unverified account without official published-article API permission. The user's latest instruction is to check for updates every seven days through a Codex local heartbeat attached to this task. Activation remains pending at this documentation update; the task owner will enable it through the automation tool. Operation depends on the computer/Codex being available and the account backend login remaining valid. This cadence must not be described as real-time synchronization.
+
+Future imports must retain actual publication dates, public source URLs, image provenance and the distinction between original writing and newly curated interactive questions. Only published articles are eligible for the public site.

@@ -6,7 +6,7 @@ import type { KeyboardSkill } from './scene/scene';
 export type Entry = { id: string; category: string; title: string; description: string; detail: string; label: string; tags: string[]; url: string; image?: string };
 export type Profile = {
   version: number; isDemo: boolean; name: string; role: string; intro: string; bio: string; email: string;
-  entries: Entry[]; facets: Record<string, {caption: string; title: string; description: string; tags: string[]}>; wechat?: WeChatCollection;
+  entries: Entry[]; facets: Record<string, {caption: string; title: string; description: string; tags: string[]}>; wechat?: WeChatCollection; wechatAutoUpdate?: boolean;
   keyboard?: {group?: string; label: string; title?: string; description: string; shortLabel?: string; hotkey?: string; color?: string; icon?: string}[];
 };
 export const PROFILE_KEY = 'personal-atlas-profile-v1';
@@ -14,13 +14,13 @@ export const baseProfile: Profile = {
   ...defaultProfile,
   wechat: defaultWeChatCollection,
   name: 'yo7',
-  role: '理工科写作者，也做视觉实验。',
-  intro: '把没想明白的事写下来，把想象做成看得见的东西。',
-  bio: '我在「yo7的堂吉诃德」记录理工科学习、实验观察和日常里冒出来的问题，也用 Blender 做材质、几何节点与风格化练习。',
+  role: '写理工科笔记，也做 Blender。',
+  intro: '物理、代码，偶尔跑题。',
+  bio: '公众号里写学习笔记和日常。Blender 里试试材质、节点和动画。',
   facets: {
-    skills: {caption:'正在学',title:'把问题一点点想明白。',description:'记录 C++、物理、概率论、材料与工程力学的学习，也记下暂时没有答案的问题。',tags:['C++ 学习','物理','概率论','材料与工程力学']},
-    interests: {caption:'正在做',title:'让想象有一个形状。',description:'用 Blender 做材质、几何节点与风格化练习，试着让草地起风，让玻璃接住光。',tags:['Blender 练习','几何节点','材质','风格化渲染']},
-    traits: {caption:'写下来的',title:'从一件小事继续追问。',description:'一张弯曲的滤纸、一阵风、早上七点的羽毛球：学习和日常的片段，都写进「yo7的堂吉诃德」。',tags:['学习记录','实验观察','日常碎念']},
+    skills: {caption:'在学',title:'学习笔记',description:'物理、C++，还有材料与力学。',tags:['C++ 学习','物理','概率论','材料与工程力学']},
+    interests: {caption:'Blender',title:'做过的练习',description:'材质、几何节点和风格化渲染。',tags:['Blender 练习','几何节点','材质','风格化渲染']},
+    traits: {caption:'公众号',title:'学习日记',description:'会写实验，也写打球和追剧。',tags:['学习记录','实验观察','日常碎念']},
   },
 };
 
@@ -38,9 +38,32 @@ export function isTemplateEntry(entry: Entry): boolean {
 }
 
 export type ProfileIdentity = Pick<Profile, 'name' | 'role' | 'intro' | 'bio' | 'facets'>;
+// Exact defaults from the previous public release. Only unchanged fields receive
+// the current display copy; saved profiles and independently edited facets stay intact.
+const previousYo7Identity = {
+  role: '理工科写作者，也做视觉实验。',
+  intro: '把没想明白的事写下来，把想象做成看得见的东西。',
+  bio: '我在「yo7的堂吉诃德」记录理工科学习、实验观察和日常里冒出来的问题，也用 Blender 做材质、几何节点与风格化练习。',
+  facets: {
+    skills: {caption:'正在学',title:'把问题一点点想明白。',description:'记录 C++、物理、概率论、材料与工程力学的学习，也记下暂时没有答案的问题。',tags:['C++ 学习','物理','概率论','材料与工程力学']},
+    interests: {caption:'正在做',title:'让想象有一个形状。',description:'用 Blender 做材质、几何节点与风格化练习，试着让草地起风，让玻璃接住光。',tags:['Blender 练习','几何节点','材质','风格化渲染']},
+    traits: {caption:'写下来的',title:'从一件小事继续追问。',description:'一张弯曲的滤纸、一阵风、早上七点的羽毛球：学习和日常的片段，都写进「yo7的堂吉诃德」。',tags:['学习记录','实验观察','日常碎念']},
+  },
+};
 export function profileIdentity(profile: Profile): ProfileIdentity {
   const identity: ProfileIdentity = {name:profile.name,role:profile.role,intro:profile.intro,bio:profile.bio,facets:profile.facets};
-  if (!profile.isDemo || !['Your Name', '等你写下名字'].includes(profile.name)) return identity;
+  if (!profile.isDemo) return identity;
+  if (profile.name === 'yo7') {
+    for (const field of ['role', 'intro', 'bio'] as const) {
+      if (profile[field] === previousYo7Identity[field]) identity[field] = baseProfile[field];
+    }
+    identity.facets = {...profile.facets};
+    for (const field of ['skills', 'traits', 'interests'] as const) {
+      if (sameContent(profile.facets[field], previousYo7Identity.facets[field])) identity.facets[field] = baseProfile.facets[field];
+    }
+    return identity;
+  }
+  if (!['Your Name', '等你写下名字'].includes(profile.name)) return identity;
   const previousDefaults = {
     role: [defaultProfile.role],
     intro: [defaultProfile.intro, '把好奇心，变成可以触碰的东西。'],
@@ -104,10 +127,10 @@ const demos = [
 ];
 export type Skill = KeyboardSkill & { detail: string; demo: boolean; entryId?: string };
 const utilityKeys = [
-  {name:'action-writing',label:'文章',shortDescription:'公众号文章归档',color:'#93b5a5'},
+  {name:'action-writing',label:'文章',shortDescription:'读公众号文章',color:'#93b5a5'},
   {name:'action-about',label:'关于',shortDescription:'认识我',color:'#9ba9c4'},
-  {name:'action-skills',label:'在学',shortDescription:'正在学与正在做',color:'#c3977f'},
-  {name:'action-experience',label:'侧面',shortDescription:'追问、造形与日常',color:'#b3a06d'},
+  {name:'action-skills',label:'在学',shortDescription:'学习与练习',color:'#c3977f'},
+  {name:'action-experience',label:'近况',shortDescription:'在学、Blender、日常',color:'#b3a06d'},
   {name:'action-achievements',label:'阅读',shortDescription:'直接翻阅文章',color:'#e4a048'},
   {name:'action-projects',label:'作品',shortDescription:'跳至作品集',color:'#85abb9'},
   {name:'action-contact',label:'联系',shortDescription:'联系方式',color:'#ba8ca0'},
@@ -119,12 +142,12 @@ const utilityKeys = [
 ] as const;
 export function skillsFor(profile: Profile): Skill[] {
   const portfolio = works.map(work => ({
-    name:`work-${work.id}`, label:work.keyLabel, shortDescription:work.caption, detail:`${work.caption}。打开作品展厅，观察来自「${work.sourceFile}」的真实场景渲染。`,
+    name:`work-${work.id}`, label:work.keyLabel, shortDescription:work.caption, detail:`${work.caption}。源文件：${work.sourceFile}`,
     color:work.color, icon:'', demo:false, workId:work.id,
   }));
   const actions = utilityKeys.map(key => ({
     ...key, label:key.label, name:key.name, icon:'', demo:false,
-    detail:key.shortDescription + '。可在键盘上点击此键，或通过 Tab 焦点与 Enter 触发。',
+    detail:key.shortDescription + '。点击或 Tab + Enter。',
   }));
   const custom = (profile.keyboard ?? []).map((key,i) => ({
     name:`key-${i}`, label:key.title || key.label, shortDescription:key.description.slice(0,160), detail:key.description,

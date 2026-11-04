@@ -8,6 +8,7 @@ export type WeChatArticle = {
   workId?: string;
   body?: string;
   archiveNote?: string;
+  readerPath?: string;
 };
 
 export type WeChatCollection = {
@@ -15,7 +16,13 @@ export type WeChatCollection = {
   accountId?: string;
   homeUrl?: string;
   articles: WeChatArticle[];
+  updatedAt?: string;
 };
+
+/** Only our generated, script-free local readers may be embedded. */
+export function wechatReader(value: unknown): string {
+  return typeof value === 'string' && /^content\/articles\/[a-z0-9][a-z0-9_-]{0,99}\/index\.html$/.test(value) ? value : '';
+}
 
 const privateParameters = ['token', 'appmsg_token', 'pass_ticket', 'key', 'uin', 'wxtoken', 'exportkey'];
 const publicHomePaths = new Set(['/mp/profile_ext', '/mp/appmsgalbum', '/mp/homepage']);
@@ -62,9 +69,10 @@ const text = (value: unknown, field: string, max: number, required = false) => {
 export function validateWeChat(input: unknown): WeChatCollection {
   if (!input || typeof input !== 'object' || Array.isArray(input)) throw new Error('公众号资料需要是一个对象。');
   const source = input as Record<string, unknown>;
-  if (!Array.isArray(source.articles) || source.articles.length > 40) throw new Error('公众号文章需要是数组，最多 40 篇。');
+  if (!Array.isArray(source.articles) || source.articles.length > 1000) throw new Error('公众号文章需要是数组，最多 1000 篇。');
   const name = text(source.name, '名称', 100, source.articles.length > 0 || !!source.homeUrl || !!source.accountId);
   const result: WeChatCollection = { name, articles: [] };
+  if (typeof source.updatedAt === 'string' && !Number.isNaN(Date.parse(source.updatedAt))) result.updatedAt = source.updatedAt;
   if (source.accountId !== undefined) {
     const id = text(source.accountId, '账号', 64);
     if (id && !/^gh_[a-z0-9]{3,60}$/i.test(id)) throw new Error('公众号原始 ID 请使用 gh_ 开头的账号。');
@@ -87,15 +95,18 @@ export function validateWeChat(input: unknown): WeChatCollection {
     const title = text(article.title, '文章标题', 160, true);
     const rawLink = article.url === undefined ? '' : text(article.url, '原文链接', 4096);
     const link = wechatLink(rawLink);
-    const body = article.body === undefined ? '' : text(article.body, '归档正文', 50000);
+    const body = article.body === undefined ? '' : text(article.body, '归档正文', 200000);
+    const readerPath = wechatReader(article.readerPath);
+    if (article.readerPath && !readerPath) throw new Error('文章阅读页路径无效。');
     if (rawLink && !link) throw new Error('「' + title + '」需要 https://mp.weixin.qq.com/s 开头的公开文章链接。');
-    if (!link && !body) throw new Error('「' + title + '」请补充原文链接，或在 JSON 中保留已有的归档正文。');
+    if (!link && !body && !readerPath) throw new Error('「' + title + '」请补充原文链接，或在 JSON 中保留已有的归档正文。');
     if (ids.has(id)) throw new Error('每篇公众号文章的 id 必须不同。');
     if (link && links.has(link)) throw new Error('同一篇公众号文章只需添加一次。');
     ids.add(id); if (link) links.add(link);
     const checked: WeChatArticle = { id, title };
     if (link) checked.url = link;
     if (body) checked.body = body;
+    if (readerPath) checked.readerPath = readerPath;
     if (article.archiveNote !== undefined) checked.archiveNote = text(article.archiveNote, '归档说明', 600);
     if (article.excerpt !== undefined) checked.excerpt = text(article.excerpt, '文章摘要', 600);
     if (article.cover !== undefined) {

@@ -15,24 +15,24 @@ type Props = {
 };
 const perspectives = [
   {
-    label: '追问', word: '为什么。',
-    description: '物理、代码、实验里的小现象，都是继续追问的起点。我把这些推演写进公众号，也把还没想通的问题留下来。',
+    label: '在学', word: '为什么？',
+    description: '公式之外，也想知道为什么要这么写。',
     quote: '为什么能量往往与某个物理量的平方有关？',
-    article: '波', articleId: 'writing-a06', action: '读这个问题',
+    article: '波', articleId: 'writing-a06', action: '看笔记',
     main: 'grass' as WorkId, second: 'liquid' as WorkId,
   },
   {
-    label: '造形', word: '看得见。',
-    description: '草地、云和玻璃，是我的 Blender 练习。文字之外，也用节点、材质和光，试着表达一些东西。',
+    label: 'Blender', word: '试试。',
+    description: '调材质、接节点，也做点动画。',
     quote: '但又为什么非得是类似于马鞍面的弯曲呢',
-    article: 'breaking bad', articleId: 'writing-a04', action: '读形状背后的问题',
+    article: 'breaking bad', articleId: 'writing-a04', action: '看实验记录',
     main: 'liquid' as WorkId, second: 'grass' as WorkId,
   },
   {
-    label: '日常', word: '还有生活。',
-    description: '笔记里有代码，也有打球、追剧和课间的太阳。想让你看到的，还有这些不太像简历的小事。',
+    label: '日常', word: '下课了。',
+    description: '打球、追剧，还有课间的太阳。',
     quote: '终于找到早7来打羽毛球的搭子了呀',
-    article: '波', articleId: 'writing-a06', action: '读这篇日记',
+    article: '波', articleId: 'writing-a06', action: '看日记',
     main: 'grass' as WorkId, second: 'liquid' as WorkId,
   },
 ];
@@ -141,8 +141,8 @@ export function PersonalPortrait({ reduced, onOpenWork, onReadArticle }: Props) 
 
   return <div ref={root} className={`personal-portrait portrait-view-${active}${reduced ? ' portrait-is-still' : ''}`}>
     <div className="portrait-heading">
-      <h2>一半在推演，<span>一半在<em>造形。</em></span></h2>
-      <p>我是 yo7。<br/>在思考与记录之间，<br/>也留一点位置给视觉表达。</p>
+      <h2>最近。</h2>
+      <p>学习笔记，<br/>Blender 练习。</p>
     </div>
     <div className="portrait-perspectives" role="tablist" aria-label="认识 yo7 的三个侧面">{perspectives.map((item, index) => <button
       key={item.label} ref={element => { tabButtons.current[index] = element; }} type="button" role="tab"

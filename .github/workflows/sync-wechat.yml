@@ -1,0 +1,66 @@
+name: Optional official WeChat sync
+
+# Personal/unverified accounts do not have this API permission. No schedule is
+# enabled. Enable only after confirming both API access and a fixed egress IP.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    if: vars.WECHAT_OFFICIAL_SYNC_ENABLED == 'true'
+    runs-on: ${{ vars.WECHAT_SYNC_RUNNER || 'ubuntu-latest' }}
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    outputs:
+      changed: ${{ steps.sync.outputs.changed }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Fetch published content
+        id: sync
+        env:
+          WECHAT_APPID: ${{ secrets.WECHAT_APPID }}
+          WECHAT_APPSECRET: ${{ secrets.WECHAT_APPSECRET }}
+        run: node scripts/sync-wechat.mjs
+      - name: Verify, commit and build
+        if: steps.sync.outputs.changed == 'true'
+        run: |
+          npm ci
+          npm run typecheck
+          npm test
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/content/wechat.json
+          git commit -m "Update published WeChat articles"
+          git push origin HEAD:main
+          npm run build
+      - name: Upload site
+        if: steps.sync.outputs.changed == 'true'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+  deploy:
+    if: needs.sync.outputs.changed == 'true'
+    needs: sync
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publish updated site
+        id: deployment
+        uses: actions/deploy-pages@v4
