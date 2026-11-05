@@ -10,7 +10,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import type { ChibiDocument, ChibiNode, ChibiSceneApi, ChibiSceneProps, NodeTransformPatch, ScenePointerEvent } from '@chibi3d/runtime';
 import { inkOutline, printMaterial } from './print-material';
 
-type Props = ChibiSceneProps & { document: ChibiDocument; initiallyPaused?: boolean };
+type Props = ChibiSceneProps & { document: ChibiDocument };
 
 /** A deliberately small renderer for our keyboard document, retaining the
  * public host API used by motion/input while allowing authored print shaders. */
@@ -22,7 +22,7 @@ export function ComicScene(props: Props) {
   useEffect(() => {
     const element = canvas.current!;
     const doc = props.document;
-    let disposed = false, paused = props.initiallyPaused ?? false, frame = 0;
+    let disposed = false, paused = false, frame = 0;
     let renderer: WebGLRenderer;
     try { renderer = new WebGLRenderer({ canvas: element, alpha: true, antialias: true, powerPreference: 'high-performance' }); }
     catch (error) { callbacks.current.onError?.(error instanceof Error ? error : new Error(String(error))); return; }
@@ -170,12 +170,6 @@ export function ComicScene(props: Props) {
       invalidate(); return true;
     };
     const states: Record<string,string> = {};
-    let hovered:string|null=null;
-    const downTargets=new Map<number,string>();
-    const clearPointerState=()=>{
-      for(const pointerId of downTargets.keys())if(element.hasPointerCapture(pointerId))element.releasePointerCapture(pointerId);
-      downTargets.clear();hovered=null;
-    };
     const api: ChibiSceneApi = {
       setNodeTransform:setTransform,
       setNodeVisible:(id,visible)=>{const o=objects.get(id);if(!o)return false;o.visible=visible;invalidate();return true;},
@@ -186,24 +180,11 @@ export function ComicScene(props: Props) {
         const override=state==='base'?undefined:doc.states[state]?.overrides[id];
         const destination=(override?.['transform.position'] as number[]|undefined)||node.transform.position;
         gsap.killTweensOf(object.position);
-        if(paused||options?.duration===0){object.position.fromArray(destination);invalidate();return;}
         const tween=gsap.to(object.position,{x:destination[0],y:destination[1],z:destination[2],duration:options?.duration??.1,ease:'power2.out',onUpdate:invalidate,onComplete:()=>transitions.delete(tween),onInterrupt:()=>transitions.delete(tween)});
         transitions.add(tween);
       },
       transitionTo:()=>{},play:()=>{},pause:()=>{},stop:()=>{},getState:()=>states,
-      setPaused:(next)=>{
-        if(next===paused)return;
-        paused=next;
-        if(paused){
-          clearPointerState();
-          cancelAnimationFrame(frame);frame=0;
-          transitions.forEach(tween=>tween.pause());
-          if(!disposed&&!document.hidden)renderer.clear();
-        }else{
-          transitions.forEach(tween=>tween.resume());
-          invalidate();
-        }
-      },getScrollProgress:()=>0,getPointer:()=>({x:.5,y:.5}),
+      setPaused:(next)=>{if(next&&!paused&&!disposed&&!document.hidden)renderer.render(world,camera);paused=next;if(!paused)invalidate();},getScrollProgress:()=>0,getPointer:()=>({x:.5,y:.5}),
       setMaterial:(target,patch)=>{
         let found=false;
         for(const [id,material]of materials){
@@ -219,9 +200,9 @@ export function ComicScene(props: Props) {
     };
     const ref=callbacks.current.api;if(typeof ref==='function')ref(api);else if(ref)ref.current=api;
     const ray=new Raycaster(),point=new Vector2(),targets=new Set(props.pointerTargets);
+    let hovered:string|null=null;const downTargets=new Map<number,string>();
     const emit=(event:PointerEvent,type:ScenePointerEvent['type'],id:string)=>callbacks.current.onPointerEvent?.({type,nodeId:id,pointerId:event.pointerId,pointerType:event.pointerType});
     const pick=(event:PointerEvent)=>{
-      if(paused||disposed||document.hidden)return null;
       point.set(event.clientX/innerWidth*2-1,1-event.clientY/innerHeight*2);ray.setFromCamera(point,camera);world.updateMatrixWorld(true);
       const hits=ray.intersectObjects(world.children,true);
       for(const hit of hits){
@@ -239,7 +220,7 @@ export function ComicScene(props: Props) {
     const up=(event:PointerEvent)=>{const id=downTargets.get(event.pointerId);if(id){emit(event,'pointerUp',id);downTargets.delete(event.pointerId);}if(element.hasPointerCapture(event.pointerId))element.releasePointerCapture(event.pointerId);};
     const cancel=(event:PointerEvent)=>{const id=downTargets.get(event.pointerId);if(id)emit(event,'pointerCancel',id);downTargets.delete(event.pointerId);};
     const leave=(event:PointerEvent)=>{if(hovered)emit(event,'hoverExit',hovered);hovered=null;};
-    const blur=clearPointerState;
+    const blur=()=>{downTargets.clear();hovered=null;};
     const visibility=()=>{if(document.hidden){cancelAnimationFrame(frame);frame=0;}else invalidate();};
     const lost=(event:Event)=>{event.preventDefault();callbacks.current.onError?.(new Error('WebGL context lost'));};
     element.addEventListener('pointermove',move);element.addEventListener('pointerdown',down);element.addEventListener('pointerup',up);element.addEventListener('pointercancel',cancel);element.addEventListener('pointerleave',leave);
@@ -248,7 +229,6 @@ export function ComicScene(props: Props) {
     Promise.all(jobs).then(()=>{if(!disposed){invalidate();callbacks.current.onLoad?.();}}).catch(error=>{if(!disposed)callbacks.current.onError?.(error instanceof Error?error:new Error(String(error)));});
     return()=>{
       disposed=true;cancelAnimationFrame(frame);resolution.current=()=>{};
-      clearPointerState();
       transitions.forEach(t=>t.kill());for(const object of objects.values())gsap.killTweensOf(object.position);
       element.removeEventListener('pointermove',move);element.removeEventListener('pointerdown',down);element.removeEventListener('pointerup',up);element.removeEventListener('pointercancel',cancel);element.removeEventListener('pointerleave',leave);element.removeEventListener('webglcontextlost',lost);
       window.removeEventListener('resize',resize);window.removeEventListener('blur',blur);document.removeEventListener('visibilitychange',visibility);

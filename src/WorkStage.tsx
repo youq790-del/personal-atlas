@@ -64,11 +64,11 @@ export function WorkStage({work,reading,collection,reduced,onClose,onWork}:Props
   </div>;
 }
 
-export function PortfolioGallery({onOpen,reduced=false,featured=false}:{onOpen:(id:WorkId)=>void;reduced?:boolean;featured?:boolean}){
-  const shown=featured?works.filter(work=>['grass','particles'].includes(work.id)):works;
-  return <div className="portfolio-gallery">{shown.map((work,index)=><article className={'portfolio-piece piece-' + work.id + (work.video?' has-film':'')} key={work.id} style={{'--piece-color':work.color} as CSSProperties}>
+export function PortfolioGallery({onOpen,reduced=false}:{onOpen:(id:WorkId)=>void;reduced?:boolean}){
+  return <div className="portfolio-gallery">{works.map((work,index)=><article className={'portfolio-piece piece-' + work.id + (work.video?' has-film':'')} key={work.id} style={{'--piece-color':work.color} as CSSProperties}>
     <div className="portfolio-image">
       {work.video?<WorkFilm key={work.id + ':' + work.video} src={workAsset(work.video)} poster={workAsset(work.poster)} title={work.title} reduced={reduced} frameVariant={index} preview onOpen={()=>onOpen(work.id)}/>:<button type="button" className="portfolio-art-open" onClick={()=>onOpen(work.id)} aria-label={'打开' + work.title}><ElasticFrame variant={index} disabled={reduced}><ColorStudy src={workAsset(work.poster)} alt={work.caption} reduced={reduced}/></ElasticFrame><span className="portfolio-view"><Icon name="arrow-right-up-linear"/></span></button>}
+      <span className="portfolio-specimen" aria-hidden="true"><i>{work.word}</i></span>
     </div>
     <div className="portfolio-description"><h3><button type="button" onClick={()=>onOpen(work.id)}>{work.title}</button></h3><span>{work.caption}</span></div>
   </article>)}</div>;

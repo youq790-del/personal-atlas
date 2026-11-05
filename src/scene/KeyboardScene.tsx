@@ -4,7 +4,7 @@ import { type ChibiSceneApi, type ScenePointerEvent } from '@chibi3d/runtime';
 import { ComicScene } from './ComicScene';
 import { DefaultLoadingManager } from 'three';
 import { createKeyboardScene, resolveKeyboardAsset, type KeyboardKey } from './scene';
-import { createKeyboardMotion, isReadingSection, isSkillsSection, type KeyboardSection } from './motion';
+import { createKeyboardMotion, isReadingSection, type KeyboardSection } from './motion';
 import { createKeyInput, isTypingTarget } from './input';
 import { useKeyboardSounds } from './use-keyboard-sounds';
 import { useAdaptiveGraphics } from './use-adaptive-graphics';
@@ -25,7 +25,7 @@ export default function KeyboardScene({skills,sound,playful,petSignal,rotationSi
   const scene=useMemo(()=>createKeyboardScene(skills),[skills]);
   const input=useMemo(()=>createKeyInput(scene.keys,scene.columns),[scene]);
   const play=useKeyboardSounds();
-  const {settings,markActive}=useAdaptiveGraphics(ready&&isSkillsSection(motionSection));
+  const {settings,markActive}=useAdaptiveGraphics(ready);
   const held=useRef<KeyboardKey[]>([]);
   const hovered=useRef<KeyboardKey|null>(null);
   const currentSection=useRef<KeyboardSection>('hero');
@@ -41,7 +41,7 @@ export default function KeyboardScene({skills,sound,playful,petSignal,rotationSi
   const dpr=useMemo<[number,number]>(()=>[0.5,Math.min(settings.dpr,1.5)],[settings.dpr]);
   useEffect(()=>{
     if(!ready)return;
-    const sync=()=>{const color=document.documentElement.dataset.theme==='light'?'#172033':'#ffffff';for(const [id,material]of Object.entries(scene.document.materials))if(material.name==='Skill text'||material.name.startsWith('Description ')||material.name.startsWith('Heading '))api.current?.setMaterial(id,{color});if(isSkillsSection(currentSection.current))markActive();};
+    const sync=()=>{const color=document.documentElement.dataset.theme==='light'?'#172033':'#ffffff';for(const [id,material]of Object.entries(scene.document.materials))if(material.name==='Skill text'||material.name.startsWith('Description ')||material.name.startsWith('Heading '))api.current?.setMaterial(id,{color});markActive();};
     sync();const observer=new MutationObserver(sync);observer.observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});return()=>observer.disconnect();
   },[ready,scene,markActive]);
   useEffect(()=>{
@@ -49,10 +49,7 @@ export default function KeyboardScene({skills,sound,playful,petSignal,rotationSi
     const cm=createCounterMotion(api.current,scene.counter,markActive); counter.current=cm;
     cm.update(count.current,true);
     const motion=createKeyboardMotion(api.current,scene,(section)=>{
-      currentSection.current=section;setMotionSection(section);hovered.current=null;
-      cm.setActive(isSkillsSection(section)&&!document.hidden);
-      input.releaseAll();gesture.current.active=false;gesture.current.moved=true;document.documentElement.classList.remove('dragging-keyboard');
-      syncSelection();callbacks.current.onSection(section);
+      currentSection.current=section;setMotionSection(section);hovered.current=null;input.releaseAll();syncSelection();callbacks.current.onSection(section);
     },markActive);
     controller.current=motion;
     motion.setCounterEnabled(true);motion.setPlayful(callbacks.current.playful);motion.setFocusKey(callbacks.current.focusKey);motion.reveal();
@@ -65,7 +62,7 @@ export default function KeyboardScene({skills,sound,playful,petSignal,rotationSi
   useEffect(()=>{if(petSignal)controller.current?.pet();},[petSignal]);
   useEffect(()=>{if(rotationSignal)controller.current?.rotateBy(Math.PI/3);},[rotationSignal]);
   useEffect(()=>{
-    if(!ready||!isSkillsSection(motionSection))return;
+    if(!ready)return;
     let lastScroll=window.scrollY,lastScrollTime=performance.now();
     const scroll=()=>{const now=performance.now();controller.current?.setScroll((window.scrollY-lastScroll)/Math.max(16,now-lastScrollTime)/2.5);lastScroll=window.scrollY;lastScrollTime=now;};
     const down=(e:PointerEvent)=>{const g=gesture.current;g.x=g.originX=e.clientX;g.y=g.originY=e.clientY;g.id=e.pointerId;g.moved=false;g.active=false;g.type=e.pointerType;};
@@ -86,11 +83,10 @@ export default function KeyboardScene({skills,sound,playful,petSignal,rotationSi
     const up=()=>{gesture.current.active=false;controller.current?.endDrag();input.release(`pointer:${gesture.current.id}`);document.documentElement.classList.remove('dragging-keyboard');};
     window.addEventListener('pointerdown',down,true);window.addEventListener('pointermove',move,{capture:true,passive:false});window.addEventListener('pointerup',up,true);window.addEventListener('pointercancel',up,true);window.addEventListener('blur',up);window.addEventListener('scroll',scroll,{passive:true});
     return()=>{window.removeEventListener('pointerdown',down,true);window.removeEventListener('pointermove',move,true);window.removeEventListener('pointerup',up,true);window.removeEventListener('pointercancel',up,true);window.removeEventListener('blur',up);window.removeEventListener('scroll',scroll);up();};
-  },[ready,motionSection,input,syncSelection]);
+  },[ready,input,syncSelection]);
   useEffect(()=>input.subscribe((key,pressed)=>{
-    const active=isSkillsSection(currentSection.current)&&!document.hidden;
-    if(active)markActive();
-    api.current?.transitionNodeTo(key.nodeId,pressed?key.pressedStateId:'base',{duration:active?0.1:0,ease:'easeInOut'});
+    markActive();
+    api.current?.transitionNodeTo(key.nodeId,pressed?key.pressedStateId:'base',{duration:0.1,ease:'easeInOut'});
     controller.current?.setKeyPressed(key.skill.name,pressed);
     held.current=held.current.filter(k=>k!==key);
     if(pressed){held.current.push(key);count.current++;counter.current?.update(count.current,true);if(callbacks.current.playful)controller.current?.pet();}
@@ -100,7 +96,6 @@ export default function KeyboardScene({skills,sound,playful,petSignal,rotationSi
     if(callbacks.current.sound&&!isReadingSection(currentSection.current))play(pressed);
   }),[input,scene,play,markActive,syncSelection]);
   useEffect(()=>{
-    if(!ready||!isSkillsSection(motionSection))return;
     const down=(event:KeyboardEvent)=>{
       if(!ready||isReadingSection(currentSection.current)||event.defaultPrevented||event.repeat||event.ctrlKey||event.metaKey||event.altKey||isTypingTarget(event.target)||document.querySelector('dialog[open]'))return;
       const key=input.shortcuts.get(event.code);
@@ -109,10 +104,10 @@ export default function KeyboardScene({skills,sound,playful,petSignal,rotationSi
     };
     const up=(e:KeyboardEvent)=>input.release(`key:${e.code}`);
     const release=()=>{input.releaseAll();hovered.current=null;controller.current?.setHoveredKey(null);syncSelection();};
-    const visibility=()=>{counter.current?.setActive(!document.hidden);if(document.hidden)release();};
+    const visibility=()=>{if(document.hidden)release();};
     window.addEventListener('keydown',down);window.addEventListener('keyup',up);window.addEventListener('blur',release);document.addEventListener('visibilitychange',visibility);
     return ()=>{window.removeEventListener('keydown',down);window.removeEventListener('keyup',up);window.removeEventListener('blur',release);document.removeEventListener('visibilitychange',visibility);release();};
-  },[input,ready,motionSection,syncSelection]);
+  },[input,ready,syncSelection]);
   useEffect(()=>{
     if(ready)return;
     const id=window.setTimeout(()=>{setFailed(true);callbacks.current.onReady(false);},20000);
@@ -150,5 +145,5 @@ export default function KeyboardScene({skills,sound,playful,petSignal,rotationSi
     window.setTimeout(()=>URL.revokeObjectURL(url),1000);
   };
   if(failed)return null;
-  return <><SceneCanvas initiallyPaused document={scene.document} environment={environment} resolveAsset={resolveKeyboardAsset} api={api} style={style} dpr={dpr} transparent orbit={false} orthographic pointerTargets={scene.pointerTargets} onPointerEvent={onPointerEvent} onLoad={()=>{setReady(true);callbacks.current.onReady(true);}} onError={(error)=>{console.warn('Keyboard unavailable',error);setFailed(true);callbacks.current.onReady(false);}} onEvent={event=>{if(event.type==='contextLost'){setFailed(true);callbacks.current.onReady(false);}}} />{import.meta.env.DEV&&new URLSearchParams(location.search).has('keyboard-capture')&&<button type="button" onClick={exportPoster} disabled={!ready} style={{position:'fixed',bottom:20,left:20,zIndex:99999,padding:'16px 24px',background:'#f4dd22',color:'#171632',border:'3px solid #171632',pointerEvents:'auto'}}>导出透明键盘 PNG</button>}</>;
+  return <><SceneCanvas document={scene.document} environment={environment} resolveAsset={resolveKeyboardAsset} api={api} style={style} dpr={dpr} transparent orbit={false} orthographic pointerTargets={scene.pointerTargets} onPointerEvent={onPointerEvent} onLoad={()=>{setReady(true);callbacks.current.onReady(true);}} onError={(error)=>{console.warn('Keyboard unavailable',error);setFailed(true);callbacks.current.onReady(false);}} onEvent={event=>{if(event.type==='contextLost'){setFailed(true);callbacks.current.onReady(false);}}} />{import.meta.env.DEV&&new URLSearchParams(location.search).has('keyboard-capture')&&<button type="button" onClick={exportPoster} disabled={!ready} style={{position:'fixed',bottom:20,left:20,zIndex:99999,padding:'16px 24px',background:'#f4dd22',color:'#171632',border:'3px solid #171632',pointerEvents:'auto'}}>导出透明键盘 PNG</button>}</>;
 }

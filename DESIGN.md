@@ -389,6 +389,3 @@ Lenis 是唯一平滑滚动引擎，时长 1.15s，导航 1.25s；GSAP 负责页
 - **运行与回退**：字符运动使用现有 GSAP ticker，在离屏、页面隐藏或减少动态时停止；Lenis 仍为唯一平滑滚动引擎。对话框、按钮和阅读路径保留键盘入口。新版静态键盘海报已从本轮真实 GPU 渲染捕获，作为减少动态和渲染失败时的备用画面。
 
 桌面、手机、减少动态、按键与弹窗的验收记录见 `qa/VERIFICATION.md`；公开部署以对应提交的 GitHub Actions 成功结果及公网核验为准。
-# Current direction: an explorable sculpture
-
-The 2026-11-04 sculpture release supersedes the older hero and chapter order below. See `ART-DIRECTION.md` for the active composition and `qa/ART-EXPERIENCE.md` for evidence and limits. The route is sculpture → real experiment → keyboard → Blender → notes → author → contact. `art-site.css` owns layout overrides; the sculpture owns its local shaders and controls. Global particles and universal elastic-input listeners are no longer mounted. The keyboard is scoped to its section; authored SVG in this release is a projection of a mathematical model. No visual browser acceptance is claimed for this release.

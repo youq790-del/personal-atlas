@@ -5,7 +5,6 @@ import { COUNTER_WIDTH, counterDigits, type CounterModel } from "./counter-model
 
 export function createCounterMotion(api: ChibiSceneApi, model: CounterModel, onActivity: () => void) {
   let previous = "";
-  let active = false;
   const rolls = model.slots.map(() => ({ angle: 0 }));
   const show = (index: number, character: string) => {
     model.slots[index].symbols.forEach((id, symbol) => api.setNodeVisible(id, symbol === (character === "-" ? 10 : Number(character))));
@@ -13,7 +12,7 @@ export function createCounterMotion(api: ChibiSceneApi, model: CounterModel, onA
   return {
     update(total: number, available: boolean) {
       const digits = counterDigits(total, available);
-      const animate = active && previous.length === digits.length && !previous.includes("-") && available
+      const animate = previous.length === digits.length && !previous.includes("-") && available
         && !document.hidden && !matchMedia("(prefers-reduced-motion: reduce)").matches;
       model.slots.forEach((slot, index) => {
         api.setNodeVisible(slot.id, index < digits.length);
@@ -37,14 +36,7 @@ export function createCounterMotion(api: ChibiSceneApi, model: CounterModel, onA
         } });
       });
       previous = digits;
-      if(active)onActivity();
-    },
-    setActive(next: boolean) {
-      active=next;
-      if(!active)model.slots.forEach((slot,index)=>{
-        gsap.killTweensOf(rolls[index]);rolls[index].angle=0;
-        api.setNodeTransform(slot.drumId,{rotation:[0,0,0]});
-      });
+      onActivity();
     },
     dispose() { rolls.forEach(roll => gsap.killTweensOf(roll)); },
   };
