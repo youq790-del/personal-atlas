@@ -100,3 +100,22 @@ The new keyboard rendering direction is documented in `src/scene/PRINT-DESIGN.md
 Public work titles now describe the supplied content: 粒子Logo, 草地与风, 波普练习, 液态玻璃, 云体, 有机方块. This renaming does not change the underlying six rendered studies, ownership notes, source filenames or practice status. English scene words are retained as presentation labels. Intro copy was rewritten using the user’s published notes and confirmed student/creator context; the reference portfolio supplied only an information-order example. Article bodies and quotations are unchanged.
 
 This section records source provenance and the current implementation direction. Browser validation and deployment for this iteration remain pending at the time of writing.
+
+
+## Local type system (2026-11-04)
+
+The site now uses Bricolage Grotesque for Latin display lettering, a small LXGW WenKai-derived web subset for Chinese personal statements and short titles, and the existing Noto Sans SC shards for UI and longer reading. Official sources: [Bricolage Grotesque](https://github.com/ateliertriay/bricolage), by Mathieu Triay / The Bricolage Grotesque Project Authors; [LXGW WenKai](https://github.com/lxgw/LxgwWenKai), by LXGW, based on Klee. Both are SIL OFL 1.1. Their original licence texts and Noto Sans SC's licence are shipped in `public/fonts/`.
+
+The four new WOFF2 assets total 348,552 bytes. Bricolage is delivered as three static weights (400/600/700, optical size 48, width 100); WenKai contains 1,130 project characters and is renamed internally `Yo7 WenKai` to identify the modified web-only subset. No original 25.9 MB TTF, font-conversion wheel, remote font-service dependency, or old Newsreader/Space Grotesk/Unbounded/Noto Serif loading is included in the new delivery. Characters outside the subset fall back to Noto Sans SC. Archived article iframe styles are preserved.
+
+See `FONT-NOTES.md` for exact file sizes, source revision checks, licensing, subset generation, fallback behavior and validation limits. This records typography implementation and sources; browser visual QA and publishing remain separate steps.
+
+## Moving Blender studies (2026-11-04)
+
+The gallery and keyboard detail view share `WorkFilm`, which plays actual same-site H.264 footage. Images remain posters and failure fallbacks. Playback is muted, visible-only and paused on page hide; reduced-motion and save-data settings suppress automatic loading/playback. Explicit play, pause, seeking, and enlargement remain available. Manual pause is retained when a preview leaves and re-enters the viewport. The detail view preserves the complete frame; the gallery uses the existing elastic preview silhouette.
+
+The supplied scenes, materials and timeline logic are the sources. Particle Logo uses source frames 60–180, grass and organic use 1–144, all at 24 fps. The earlier 110-frame, 30 fps pop animation is unchanged. Liquid and cloud source files have no time-varying content in the supplied versions; their newly rendered camera studies are explicitly labelled “展示运镜” in the site, not represented as recovered source animation. These orbit clips use 72 and 96 frames respectively, at 24 fps.
+
+Export-only adjustments are documented in `BLENDER-MOTION.md`: the tutorial cube is hidden in grass; organic receives temporary lights and an equivalent numeric value for an inspected static height driver; cloud receives a presentation camera. The organic `frame / 110` driver is preserved. Particle and cloud web previews use Eevee instead of the saved Cycles engine; liquid retains Cycles to show refraction. Cloud receives mild FFmpeg denoising without interpolation. All source files remain untouched and source script auto-execution stays disabled.
+
+`scripts/render-blender-motion.py` accepts explicit local source and output directories. Blender binaries, original source files, temporary frames and font-conversion tools are not public website assets. Motion verification and current release limitations are recorded separately in `MOTION-RELEASE.md`.

@@ -6,7 +6,7 @@
 .elastic-text{display:inline-block;white-space:nowrap}.elastic-letter{display:inline-block;position:relative}.elastic-ink{display:inline-block;transform-origin:50% 72%;backface-visibility:hidden}
 .single-name .elastic-text{white-space:normal}
 .experience-row .elastic-text,.hero-copy .elastic-text{white-space:normal}
-.kinetic-app .hero-copy h1{font-size:clamp(96px,12vw,180px);line-height:.87;letter-spacing:-.04em}
+.kinetic-app .hero-copy h1{font-size:clamp(96px,12vw,180px);line-height:1.05;letter-spacing:-.04em}
 .kinetic-app .hero-copy{width:51%}.kinetic-app .hero-role{font-size:12px;letter-spacing:.06em;margin-top:28px}.kinetic-app .hero-actions{margin-top:20px}
 .kinetic-app .hero-copy h1 .name-line:first-child{font-weight:330}.kinetic-app .hero-copy h1 .name-line:last-child{font-weight:640}
 .kinetic-app .hero-bottom{bottom:29px}.kinetic-app .hero-caption{font-size:10px;letter-spacing:.08em}

@@ -4,7 +4,7 @@
 .site-header.on-paper{--ink:#17211e;--muted:#53605a;--line:#b8c3ba;--surface:#e5e9e3;--surface-solid:#e5e9e3;--field:#d4dcd3;color:var(--ink);background:linear-gradient(#e5e9e3e8,transparent)}
 .wordmark{display:flex;align-items:center;gap:12px}
 .wordmark .brand-mark{width:37px;height:37px}
-.wordmark-type{font-family:'Space Grotesk Variable',sans-serif;font-size:12px;line-height:1.1;font-weight:600;letter-spacing:.045em}
+.wordmark-type{font-family:var(--font-display);font-size:12px;line-height:1.1;font-weight:600;letter-spacing:.045em}
 .wordmark-type>span{display:block;font-size:11px;font-weight:400;letter-spacing:.15em;margin-top:3px}
 .header-actions{gap:22px}
 .header-actions .icon-button,.header-actions .source-link{background:none;box-shadow:none;border:0;min-height:44px}
@@ -17,7 +17,7 @@
 [data-theme=light] .cosmos i{opacity:.14!important}
 .hero-section{min-height:680px;height:100svh;padding:112px 7vw 150px;align-items:center}
 .hero-copy{width:54%;z-index:2}
-.hero-copy h1{font-family:'Space Grotesk Variable','Noto Sans SC Variable',sans-serif;font-size:clamp(88px,10.5vw,168px);font-weight:500;line-height:.92;letter-spacing:-.04em;margin:0}
+.hero-copy h1{font-family:var(--font-display);font-size:clamp(88px,10.5vw,168px);font-weight:600;line-height:1.05;letter-spacing:-.04em;margin:0}
 .name-line{display:block;overflow-wrap:anywhere}
 .name-line:first-child{font-weight:360}
 .name-line:last-child{font-weight:660}
@@ -56,12 +56,12 @@
 .skills-stage{position:sticky;top:0;height:100svh;min-height:600px;overflow:clip;pointer-events:none}
 .skills-stage-inner{height:100%;padding:112px 7vw 48px;display:flex;flex-direction:column;justify-content:space-between}
 .skills-section .section-title{position:static;margin:0;text-align:left;pointer-events:none}
-.skills-heading h2{font-family:'Space Grotesk Variable','Noto Sans SC Variable',sans-serif;font-size:clamp(42px,5.5vw,82px);line-height:.98;font-weight:620;letter-spacing:-.04em}
+.skills-heading h2{font-family:var(--font-display);font-size:clamp(42px,5.5vw,82px);line-height:.98;font-weight:620;letter-spacing:-.04em}
 .skills-heading h2>span{font-weight:350}
 .skills-heading p{font-size:12px;margin-top:18px}
 .skill-readout{position:static;left:auto;bottom:auto;transform:none;text-align:left;min-width:0;max-width:none;width:100%;display:flex;justify-content:space-between;align-items:flex-end;gap:30px;pointer-events:auto}
 .skill-readout>div{display:block}
-.skill-readout strong{font-family:'Space Grotesk Variable','Noto Sans SC Variable',sans-serif;font-size:clamp(18px,2.5vw,30px);line-height:1.4;font-weight:500}
+.skill-readout strong{font-family:var(--font-ui);font-size:clamp(18px,2.5vw,30px);line-height:1.4;font-weight:500}
 .skill-readout p{font-size:11px;margin-top:8px}
 .skill-readout .skill-controls{display:flex;align-items:center;gap:25px}
 .skill-readout .skill-controls .editorial-link{font-size:12px}
@@ -81,7 +81,7 @@
 .experience-section{position:relative;max-width:none;min-height:0;padding:130px 7vw 100px;background:var(--paper);overflow:visible}
 .chapter-seam{position:absolute;top:calc(-20vh + 1px);left:0;width:100%;height:20vh;overflow:visible;pointer-events:none;fill:var(--paper);z-index:0}
 .story-intro{display:grid;grid-template-columns:1.15fr 1fr;gap:12vw;align-items:end;margin-bottom:100px;position:relative}
-.story-intro h2{font-family:'Space Grotesk Variable','Noto Sans SC Variable',sans-serif;font-size:clamp(66px,9vw,132px);line-height:.95;font-weight:400;text-align:left;margin:0;letter-spacing:-.04em}
+.story-intro h2{font-family:var(--font-display);font-size:clamp(66px,9vw,132px);line-height:.95;font-weight:400;text-align:left;margin:0;letter-spacing:-.04em}
 .story-intro h2>span{font-weight:650}
 .story-intro>div>p{font-size:clamp(22px,2.8vw,38px);line-height:1.5;font-weight:450;letter-spacing:-.025em}
 .story-context{display:block;font-size:12px;line-height:1.8;color:var(--paper-muted);margin-top:22px}
@@ -91,7 +91,7 @@
 .experience-row summary{list-style:none;display:grid;grid-template-columns:20% 1fr 48px;gap:24px;align-items:start;padding:36px 0;cursor:pointer}
 .experience-row summary::-webkit-details-marker{display:none}
 .experience-category{font-size:11px;padding-top:8px;color:var(--paper-muted)}
-.experience-row h3{font-family:'Space Grotesk Variable','Noto Sans SC Variable',sans-serif;font-size:clamp(22px,2.6vw,36px);font-weight:550;line-height:1.45;letter-spacing:-.025em;transition:transform .4s}
+.experience-row h3{font-family:var(--font-display);font-size:clamp(22px,2.6vw,36px);font-weight:550;line-height:1.45;letter-spacing:-.025em;transition:transform .4s}
 .experience-row summary p{font-size:13px;line-height:1.9;color:var(--paper-muted);margin-top:12px}
 .row-toggle{width:44px;height:44px;border:1px solid var(--line);border-radius:50%;display:grid;place-items:center;transition:transform .35s,background .35s,color .35s}
 .experience-row summary:hover .row-toggle{background:var(--paper-ink);color:var(--paper);transform:rotate(45deg)}
@@ -102,7 +102,7 @@
 .experience-story .tags{margin-top:20px}.experience-story .tags>span{padding:0;font-size:11px;background:none}
 .projects-section{padding:80px 7vw 140px;max-width:none;min-height:0}
 .projects-section .section-title{text-align:left;display:flex;align-items:end;justify-content:space-between;gap:35px;margin-bottom:48px}
-.projects-section .section-title h2{font-family:'Space Grotesk Variable','Noto Sans SC Variable',sans-serif;font-size:clamp(50px,6.5vw,96px);font-weight:550;line-height:1}
+.projects-section .section-title h2{font-family:var(--font-display);font-size:clamp(50px,6.5vw,96px);font-weight:550;line-height:1}
 .projects-section .section-title p{font-size:12px;margin:0 0 6px}
 .project-tools{margin-bottom:40px;gap:25px}
 .filters{gap:22px;flex-wrap:wrap}
@@ -124,7 +124,7 @@
 .project-achievement .project-art{background:#c4cdaf}.project-experience .project-art{background:#b9c9c6}.project-note .project-art{background:#d1bfab}
 .project-art>.brand-mark{position:absolute;width:52%;height:52%;top:8%;right:-8%;stroke-width:.7;opacity:.4;transform:rotate(-20deg);transition:transform 1.2s cubic-bezier(.22,1,.36,1)}
 .project-card:hover .project-art>.brand-mark{transform:rotate(25deg) scale(1.15)}
-.project-art-type{position:relative;font-family:'Space Grotesk Variable',sans-serif;font-size:clamp(45px,6.5vw,110px);line-height:1;font-weight:500;letter-spacing:-.04em;transform:translateY(0);transition:transform .6s cubic-bezier(.22,1,.36,1)}
+.project-art-type{position:relative;font-family:var(--font-display);font-size:clamp(45px,6.5vw,110px);line-height:1;font-weight:500;letter-spacing:-.04em;transform:translateY(0);transition:transform .6s cubic-bezier(.22,1,.36,1)}
 .project-card:hover .project-art-type{transform:translateY(-6px)}
 .project-art-note{font-size:10px;line-height:1.5;margin-top:14px;color:#344844}
 .project-caption{position:static;padding:22px 36px 0 0;background:none;color:var(--paper-ink)}
@@ -135,11 +135,11 @@
 .project-count{text-align:left;margin-top:60px;font-size:11px}
 .contact-section{position:relative;z-index:2;max-width:none;min-height:110svh;padding:120px 7vw 110px}
 .contact-section .section-title{text-align:left;margin-bottom:75px}
-.contact-section .section-title h2{font-family:'Space Grotesk Variable','Noto Sans SC Variable',sans-serif;font-size:clamp(60px,7.6vw,112px);font-weight:480;letter-spacing:-.04em;line-height:1}
+.contact-section .section-title h2{font-family:var(--font-display);font-size:clamp(60px,7.6vw,112px);font-weight:480;letter-spacing:-.04em;line-height:1}
 .contact-section .section-title p{padding:0;font-size:13px;margin-top:24px}
 .contact-layout{margin:0;gap:12vw;grid-template-columns:1fr 1fr}
 .contact-card{background:none;border:0;border-radius:0;box-shadow:none;padding:0;max-width:500px}
-.contact-card h3{font-family:'Space Grotesk Variable','Noto Sans SC Variable',sans-serif;font-weight:450;font-size:25px}
+.contact-card h3{font-family:var(--font-display);font-weight:450;font-size:25px}
 .contact-empty{gap:20px}.contact-empty>.button{border-radius:0;background:none;border-bottom:1px solid var(--line);color:var(--ink);box-shadow:none;justify-content:space-between;width:100%;padding:16px 0;font-size:14px}
 .contact-empty>.button:hover{transform:none;border-bottom-color:var(--ink)}
 .contact-empty>.text-link{align-self:flex-start;font-size:10px}

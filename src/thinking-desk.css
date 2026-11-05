@@ -1,8 +1,8 @@
 .thinking-desk{--thinking-ink:#192532;--thinking-muted:#505e69;--thinking-blue:#204ce6;position:relative;color:var(--thinking-ink);margin:65px 0 100px;isolation:isolate}
 .thinking-desk-heading{display:flex;align-items:baseline;justify-content:space-between;gap:30px;padding:0 0 42px}
-.thinking-desk .thinking-desk-heading h3{font-family:'Noto Serif SC Variable',serif;font-size:clamp(42px,5.6vw,78px);font-weight:440;letter-spacing:-.04em;line-height:1.35;margin:0}
+.thinking-desk .thinking-desk-heading h3{font-family:var(--font-personal);font-size:clamp(42px,5.6vw,78px);font-weight:400;letter-spacing:0;line-height:1.35;margin:0}
 .thinking-topics{display:flex;align-items:center;gap:29px}
-.thinking-topics button{display:flex;align-items:center;gap:12px;background:none;color:var(--thinking-muted);font-family:'Noto Serif SC Variable',serif;font-size:18px;padding:10px 0;min-height:44px;cursor:pointer}
+.thinking-topics button{display:flex;align-items:center;gap:12px;background:none;color:var(--thinking-muted);font-family:var(--font-personal);font-size:18px;padding:10px 0;min-height:44px;cursor:pointer;font-weight:400}
 .thinking-topics button>span{width:6px;height:6px;border:1px solid currentColor;border-radius:50%;transition:background .2s,transform .2s}
 .thinking-topics button[aria-selected=true]{color:var(--thinking-blue)}
 .thinking-topics button[aria-selected=true]>span{background:currentColor;transform:scale(1.2)}
@@ -32,7 +32,7 @@
 .thinking-coffee-controls{gap:22px}.thinking-coffee-controls input[type=range]{width:85px}
 .thinking-model-note{display:block;text-align:center;font-size:10px;color:var(--thinking-muted);line-height:1.7;margin-top:5px}
 .thinking-margin{position:relative;padding:20px 0 12px;min-width:0}
-.thinking-desk .thinking-margin h4{font-family:'Noto Serif SC Variable',serif;font-size:clamp(26px,2.7vw,40px);font-weight:470;letter-spacing:-.035em;line-height:1.5;margin:0 0 36px;text-wrap:balance}
+.thinking-desk .thinking-margin h4{font-family:var(--font-personal);font-size:clamp(26px,2.7vw,40px);font-weight:400;letter-spacing:0;line-height:1.5;margin:0 0 36px;text-wrap:balance}
 .thinking-steps{display:flex;gap:18px;position:relative;align-items:center;margin-bottom:24px}
 .thinking-steps::before{content:'';position:absolute;left:0;right:0;top:12px;height:1px;background:#8e9ba9;opacity:.35;z-index:-1}
 .thinking-steps button{display:flex;flex-direction:column;align-items:flex-start;gap:12px;background:none;color:var(--thinking-muted);font-size:10px;min-width:50px;padding:8px 0;min-height:54px;cursor:pointer}
@@ -40,7 +40,7 @@
 .thinking-steps button[aria-pressed=true]{color:var(--thinking-blue)}
 .thinking-steps button[aria-pressed=true] .thinking-step-dot{border-color:var(--thinking-blue);background:var(--thinking-blue);transform:scale(1.35)}
 .thinking-excerpt{min-height:170px}
-.thinking-excerpt blockquote{font-family:'Noto Serif SC Variable',serif;font-size:clamp(15px,1.4vw,20px);font-weight:420;line-height:1.9;margin:0;max-width:24em;text-wrap:pretty}
+.thinking-excerpt blockquote{font-family:var(--font-personal);font-size:clamp(15px,1.4vw,20px);font-weight:400;line-height:1.9;margin:0;max-width:24em;text-wrap:pretty}
 .thinking-read{display:inline-flex;align-items:center;gap:13px;background:none;color:var(--thinking-blue);font-size:11px;min-height:44px;padding:8px 0;margin-top:15px;cursor:pointer}
 .thinking-read svg{transition:transform .25s}
 .thinking-read:hover svg{transform:translate(3px,-3px)}
@@ -49,8 +49,8 @@
 .thinking-reading-thread>div{display:flex;align-items:center;flex-wrap:wrap;column-gap:20px;row-gap:12px}
 .thinking-reading-thread>div>span{display:flex;align-items:center;gap:20px}
 .thinking-reading-thread>div>span>svg{color:var(--thinking-blue);opacity:.65}
-.thinking-reading-thread button{display:flex;flex-direction:column;align-items:flex-start;gap:6px;min-height:44px;padding:0;background:none;color:var(--thinking-ink);font-family:'Noto Serif SC Variable',serif;font-size:12px;cursor:pointer}
-.thinking-reading-thread button small{font-family:'Space Grotesk Variable',sans-serif;font-size:10px;color:var(--thinking-muted)}
+.thinking-reading-thread button{display:flex;flex-direction:column;align-items:flex-start;gap:6px;min-height:44px;padding:0;background:none;color:var(--thinking-ink);font-family:var(--font-personal);font-size:12px;cursor:pointer;font-weight:400}
+.thinking-reading-thread button small{font-family:var(--font-ui);font-size:10px;color:var(--thinking-muted)}
 .thinking-reading-thread button:hover{color:var(--thinking-blue)}
 .thinking-desk :focus-visible{outline:2px solid var(--thinking-blue);outline-offset:5px}
 .thinking-desk ::selection{background:#204ce62b;color:var(--thinking-ink)}

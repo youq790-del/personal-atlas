@@ -1,0 +1,14 @@
+/* Three roles: display lettering, a personal note, and everyday reading. */
+@font-face{font-family:'Bricolage Grotesque';src:url('/fonts/bricolage-display-regular.woff2') format('woff2');font-style:normal;font-weight:400;font-display:swap;unicode-range:U+0020-024F,U+2000-206F,U+20A0-22FF}
+@font-face{font-family:'Bricolage Grotesque';src:url('/fonts/bricolage-display-semibold.woff2') format('woff2');font-style:normal;font-weight:600;font-display:swap;unicode-range:U+0020-024F,U+2000-206F,U+20A0-22FF}
+@font-face{font-family:'Bricolage Grotesque';src:url('/fonts/bricolage-display-bold.woff2') format('woff2');font-style:normal;font-weight:700;font-display:swap;unicode-range:U+0020-024F,U+2000-206F,U+20A0-22FF}
+@font-face{font-family:'Yo7 WenKai';src:url('/fonts/yo7-wenkai-text.woff2') format('woff2');font-style:normal;font-weight:400;font-display:swap;unicode-range:U+2000-206F,U+3000-303F,U+3400-9FFF,U+FF00-FFEF}
+:root{
+  --font-ui:'Noto Sans SC Variable','PingFang SC','Microsoft YaHei',sans-serif;
+  --font-display:'Bricolage Grotesque',var(--font-ui);
+  --font-personal:'Yo7 WenKai',var(--font-ui);
+  --font-reading:var(--font-ui);
+}
+.hero-role,.hero-manifesto,.portrait-view-copy>p,.about-bio{font-family:var(--font-personal);font-weight:400}
+.article-text-fallback,.wechat-reading-body,.article-reader-meta{font-family:var(--font-reading)}
+.article-text-fallback h1,.article-text-fallback h2,.article-text-fallback h3,.article-text-fallback h4,.article-text-fallback h5,.wechat-reading-body h5{font-family:var(--font-reading)}

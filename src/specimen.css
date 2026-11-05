@@ -7,7 +7,7 @@
 .field-backdrop[data-ready=true] .field-poster{display:none}
 .editorial-world>.experience-section,.editorial-world>.projects-section{position:relative;z-index:1;background:none}
 .site-header.on-paper{--ink:#192532;--muted:#5c6570;--surface:#e9ece8;--surface-solid:#e9ece8;background:linear-gradient(#e9ece8f5,transparent)}
-.kinetic-app .projects-section .section-title h2{font-family:'Newsreader Variable',Georgia,serif;font-size:clamp(100px,13vw,190px);font-weight:380;letter-spacing:-.04em;line-height:.82}
+.kinetic-app .projects-section .section-title h2{font-family:var(--font-display);font-size:clamp(100px,13vw,190px);font-weight:380;letter-spacing:-.04em;line-height:1.03}
 .kinetic-app .projects-section .section-title p{max-width:13ch;line-height:1.8;color:var(--paper-muted)}
 .portfolio-writing{border-top:0;margin-top:90px;padding-top:60px}
 .kinetic-app .project-preview{overflow:visible;background:none;aspect-ratio:1.12}
@@ -18,7 +18,7 @@
 .project-preview .elastic-frame{--elastic-line:#53668b}
 .kinetic-app .project-art-note{bottom:16%;left:18%;letter-spacing:0}
 .kinetic-app .project-caption{padding:20px 7% 0}
-.kinetic-app .project-caption h3{font-family:'Noto Serif SC Variable',serif;font-size:clamp(27px,3.4vw,46px);font-weight:520;letter-spacing:-.04em}
+.kinetic-app .project-caption h3{font-family:var(--font-personal);font-size:clamp(27px,3.4vw,46px);font-weight:400;letter-spacing:0}
 .project-card .project-open{right:7%;bottom:9px}
 .projects-grid{column-gap:10vw;row-gap:65px}
 .project-card:nth-child(even){margin-top:85px}

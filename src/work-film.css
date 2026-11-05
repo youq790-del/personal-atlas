@@ -1,0 +1,46 @@
+.work-film{position:relative;width:100%;height:100%;--film-ink:#fff;--film-track:#ffffff38;--film-accent:var(--work-color,var(--piece-color,#d77a92))}
+.work-film-image{position:absolute;inset:0 0 52px}
+.work-film-screen{position:relative;width:100%;height:100%;overflow:hidden}
+.work-film-screen video,.work-film-screen .work-film-poster{display:block;width:100%;height:100%;object-fit:contain;object-position:center;transform:none;transition:none}
+.work-film-screen video{opacity:0}
+.work-film-screen video.has-frame{opacity:1}
+.work-film-screen .work-film-poster{position:absolute;inset:0}
+.work-film-empty{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);font-size:16px}
+.work-film-controls{position:absolute;inset:auto 0 0;display:flex;align-items:center;gap:12px;min-height:48px;padding:0 12px;color:var(--film-ink);background:#171b22;border-radius:5px;pointer-events:auto;z-index:4}
+.work-film-controls button{display:inline-flex;align-items:center;justify-content:center;gap:9px;flex:none;min-height:44px;padding:0 4px;background:none;color:inherit;font-size:11px;white-space:nowrap}
+.work-film-controls button:hover{color:var(--film-accent)}
+.work-film-controls button:focus-visible,.work-film-open:focus-visible{outline:2px solid var(--film-accent);outline-offset:4px}
+.film-play{width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:8px solid currentColor;margin-left:2px}
+.film-pause{display:inline-flex;gap:3px;width:10px;height:11px}
+.film-pause i{display:block;width:3px;background:currentColor}
+.work-film-seek{--film-progress:0%;appearance:none;-webkit-appearance:none;flex:1;width:0;min-width:24px;height:36px;border:0;padding:0;background:transparent;cursor:pointer;touch-action:pan-y}
+.work-film-seek::-webkit-slider-runnable-track{height:3px;border-radius:2px;background:linear-gradient(to right,var(--film-accent) 0 var(--film-progress),var(--film-track) var(--film-progress) 100%)}
+.work-film-seek::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:11px;height:11px;margin-top:-4px;background:#fff;border:0;border-radius:50%;box-shadow:0 0 0 3px #171b22}
+.work-film-seek::-moz-range-track{height:3px;border-radius:2px;background:var(--film-track)}
+.work-film-seek::-moz-range-progress{height:3px;background:var(--film-accent)}
+.work-film-seek::-moz-range-thumb{width:11px;height:11px;background:#fff;border:0;border-radius:50%;box-shadow:0 0 0 3px #171b22}
+.work-film-seek:focus-visible{outline:2px solid var(--film-accent);outline-offset:2px;border-radius:3px}
+.work-film-seek:disabled{opacity:.35;cursor:default}
+.work-film-clock{font-size:10px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.work-film-clock>span{color:#c8cad0}
+.work-film-status{position:absolute;left:7%;right:7%;bottom:62px;width:fit-content;max-width:86%;padding:6px 10px;margin:0!important;background:#171b22e8;color:#fff;font-size:11px!important;line-height:1.5;pointer-events:none;z-index:3}
+.work-film-preview .work-film-image{inset:0}
+.work-film-preview .work-film-screen video,.work-film-preview .work-film-screen .work-film-poster{object-fit:cover}
+.work-film-preview .work-film-controls{inset:auto auto 7% 5%;padding:0 11px;min-height:42px;border-radius:30px;background:#171b22eb}
+.work-film-preview .work-film-controls button{min-height:42px}
+.work-film-open{position:absolute;inset:0;width:100%;height:100%;background:transparent;color:var(--paper-ink,var(--ink));z-index:2;text-align:left;border-radius:0}
+.work-film-open-caption{position:absolute;right:5%;bottom:7%;display:flex;align-items:center;gap:10px;min-height:44px;padding:0 14px;color:var(--paper-ink,var(--ink));background:var(--paper,var(--bg));border:1px solid color-mix(in srgb,currentColor 25%,transparent);border-radius:30px;font-size:11px;pointer-events:auto;z-index:2}
+.work-film-open:focus-visible{outline-offset:-5px}
+.work-film-preview:focus-within .work-film-open-caption{outline:2px solid var(--film-accent);outline-offset:4px}
+.work-film-preview:hover .work-film-open-caption,.work-film-preview:focus-within .work-film-open-caption{background:var(--piece-color)}
+.work-film-preview .work-film-status{bottom:calc(7% + 51px)}
+@media(max-width:767px){
+ .portfolio-description{flex-wrap:wrap;row-gap:6px}
+ .portfolio-description>span{white-space:normal}
+ .work-film-image{bottom:48px}
+ .work-film-controls{gap:9px;padding:0 9px;min-height:44px}
+ .work-film-controls button{min-height:44px;font-size:10px;gap:7px}
+ .work-film-clock{font-size:9px}
+ .work-film-expand span{display:none}
+ .work-film-status{bottom:55px;font-size:10px!important}
+}

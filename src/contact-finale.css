@@ -1,11 +1,11 @@
 .contact-finale{--finale-blue:#3430ed;position:relative;isolation:isolate;overflow:hidden;min-height:680px;height:100svh;max-height:1100px;background:var(--finale-blue);color:#f4f2ff;display:grid;place-items:center;z-index:4;touch-action:pan-y}
 .contact-finale::before{content:'';position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(#15114755 .65px,transparent .85px);background-size:5px 5px;opacity:.22;z-index:-1}
 .finale-type-field{position:absolute;inset:7% 4% 5%;pointer-events:none;user-select:none}
-.finale-type-field>span{position:absolute;font-family:'Space Grotesk Variable','Noto Sans SC Variable',sans-serif;font-weight:650;font-size:var(--glyph-size);line-height:1;transform:rotate(var(--turn));text-shadow:2px 2px 0 #15114738}
+.finale-type-field>span{position:absolute;font-family:var(--font-display);font-weight:650;font-size:var(--glyph-size);line-height:1;transform:rotate(var(--turn));text-shadow:2px 2px 0 #15114738}
 .finale-type-field>span:nth-child(11n){font-size:calc(var(--glyph-size) * 1.9);font-weight:350}
 .finale-center{position:relative;display:flex;flex-direction:column;align-items:center;z-index:2;margin-top:-25px;pointer-events:none}
-.finale-signature{font-family:'Newsreader Variable',serif;font-size:28px;font-style:italic;margin-bottom:28px}
-.contact-finale .finale-word{font-family:'Noto Sans SC Variable',sans-serif;font-size:clamp(115px,18vw,280px);font-weight:760;letter-spacing:-.09em;line-height:1.25;margin:0;padding:0 0 .12em;text-shadow:5px 6px 0 #19174c;transform-origin:center}
+.finale-signature{font-family:var(--font-display);font-size:28px;font-style:normal;margin-bottom:28px}
+.contact-finale .finale-word{font-family:var(--font-ui);font-size:clamp(115px,18vw,280px);font-weight:760;letter-spacing:-.09em;line-height:1.25;margin:0;padding:0 0 .12em;text-shadow:5px 6px 0 #19174c;transform-origin:center}
 .finale-word>span{display:inline-block;color:#f6dc57;transform:rotate(11deg);margin-left:-.04em}
 .finale-contact-button{pointer-events:auto;display:flex;align-items:center;justify-content:space-between;gap:70px;background:#f4f2ff;color:#252142;min-height:64px;padding:17px 25px 17px 31px;border:2px solid #19174c;border-radius:40px;box-shadow:5px 6px 0 #19174c;font-size:16px;font-weight:550;transition:transform .25s,box-shadow .25s}
 .finale-contact-button:hover{transform:translate(-2px,-3px);box-shadow:7px 9px 0 #19174c}.finale-contact-button:active{transform:translate(4px,5px);box-shadow:1px 1px 0 #19174c}.finale-contact-button svg{transition:transform .3s}.finale-contact-button:hover svg{transform:rotate(45deg)}
@@ -17,7 +17,7 @@
 .site-colophon button,.site-colophon a{color:inherit}.site-colophon a{font-size:10px;opacity:.65}.site-colophon .text-link{font-size:10px}
 .modal.contact-reveal{--ink:#252142;--muted:#56506c;--line:#25214230;--surface:#f4f2ff;--surface-solid:#f4f2ff;color:var(--ink);background:#f4f2ff;max-width:520px;border:2px solid #19174c;border-radius:0;box-shadow:12px 12px 0 #19174c}
 .contact-reveal .modal-head{margin-bottom:40px}.contact-reveal .modal-head h2{font-size:20px;font-weight:500}.contact-reveal .icon-button{color:var(--ink)}
-.contact-reveal .contact-reveal-label{font-size:11px;color:var(--muted);margin-bottom:13px}.contact-reveal .contact-reveal-name{font-family:'Noto Serif SC Variable',serif;font-size:clamp(24px,4vw,34px);line-height:1.6;margin:0 0 26px}
+.contact-reveal .contact-reveal-label{font-size:11px;color:var(--muted);margin-bottom:13px}.contact-reveal .contact-reveal-name{font-family:var(--font-personal);font-size:clamp(24px,4vw,34px);line-height:1.6;margin:0 0 26px;font-weight:400}
 .contact-reveal-account{display:flex;align-items:center;justify-content:space-between;gap:20px;width:100%;background:none;color:var(--ink);border-top:1px solid var(--line);border-bottom:1px solid var(--line);min-height:68px;padding:16px 0;text-align:left;font-size:15px;overflow-wrap:anywhere}
 .contact-reveal .contact-reveal-status{font-size:12px;color:var(--muted);min-height:36px;line-height:1.7;margin:14px 0 30px}.contact-reveal-links{display:flex;flex-wrap:wrap;gap:10px 25px}.contact-reveal-links>*{display:flex;align-items:center;gap:12px;min-height:44px;background:none;color:var(--ink);font-size:13px;padding:0}
 .contact-reveal :focus-visible{outline:2px solid #3430ed;outline-offset:5px}
