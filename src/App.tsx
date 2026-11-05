@@ -6,44 +6,38 @@ import { useGSAP } from '@gsap/react';
 import Lenis from 'lenis';
 import { Icon } from './Icon';
 import { BrandMark } from './Brand';
-import { OpeningSequence } from './OpeningSequence';
-import { SeamTransition } from './SeamTransition';
-import { ElasticText, ElasticLine, KineticArtwork, ParticleField, useKineticSurface } from './KineticSurface';
+import { SurfaceHero } from './SurfaceHero';
+import { DiscoveryBridge } from './DiscoveryBridge';
+import { AuthorNote } from './AuthorNote';
+import './art-site.css';
+import { KineticArtwork } from './KineticSurface';
 import { resolveShortcuts } from './scene/input';
 import { Modal } from './Modal';
 import { Editor } from './Editor';
 import { loadProfile, skillsFor, isTemplateEntry, profileIdentity, PROFILE_KEY, categories, safeUrl, asset, type Profile, type Entry, type Skill } from './data';
 import { useRoom } from './realtime';
 import type { KeyboardSection } from './scene/motion';
+import { resolveKeyboardSection } from './scene/sections';
 import { PortfolioGallery, WorkStage } from './WorkStage';
 import { WeChatShelf } from './WeChatShelf';
 import { ElasticFrame } from './ElasticFrame';
-import { FieldBackdrop } from './FieldBackdrop';
-import { PersonalPortrait } from './PersonalPortrait';
 import { ContactFinale } from './ContactFinale';
 import { usePublishedWriting } from './usePublishedWriting';
 import { workById, works, type WorkId } from './portfolio';
 gsap.registerPlugin(ScrollTrigger,useGSAP);
 const KeyboardScene=lazy(()=>import('./scene/KeyboardScene'));
-const sections=[['hero','首页','Home'],['skills','键盘','Play'],['experience','认识我','About'],['projects','作品与文字','Works'],['writing','读笔记','Read'],['contact','找到我','Find me']];
-const stars=Array.from({length:88},(_,i)=>({left:`${(i*37.17+7)%100}%`,top:`${(i*19.67+11)%100}%`,opacity:0.16+(i%5)*0.1,width:i%4?1.5:2.5,height:i%4?1.5:2.5}));
-type Overlay='menu'|'about'|'editor'|'chat'|'game'|'directory'|null;
+const sections=[['hero','曲面','Begin'],['skills','键盘','Explore'],['projects','Blender','Made'],['writing','笔记','Read'],['experience','关于我','yo7']];
+
+type Overlay='menu'|'about'|'editor'|'chat'|'directory'|null;
 class SceneBoundary extends React.Component<{children:React.ReactNode;onFail:()=>void},{failed:boolean}> {
   state={failed:false};static getDerivedStateFromError(){return {failed:true};}componentDidCatch(){this.props.onFail();}render(){return this.state.failed?null:this.props.children;}
-}
-function MiniGame(){
-  const [playing,setPlaying]=useState(false),[target,setTarget]=useState(0),[score,setScore]=useState(0),[time,setTime]=useState(20);
-  useEffect(()=>{if(!playing)return;const interval=setInterval(()=>setTime(t=>Math.max(0,t-1)),1000);return()=>clearInterval(interval);},[playing]);
-  useEffect(()=>{if(time===0)setPlaying(false);},[time]);
-  const hit=(i:number)=>{if(!playing||i!==target)return;setScore(s=>s+1);setTarget(t=>(t+1+Math.floor(Math.random()*8))%9);};
-  return <><p className="muted">20 秒内，按下亮起的键。鼠标、触屏，或者 Tab + Enter 都可以。</p><div className="game-score"><span>命中 <strong>{score}</strong></span><span>剩余 <strong>{time}s</strong></span></div><div className="game-board">{Array.from({length:9},(_,i)=><button key={i} className={`game-key ${playing&&target===i?'lit':''}`} onClick={()=>hit(i)} disabled={!playing} aria-label={`键 ${i+1}${playing&&target===i?'，已亮起':''}`}>{i+1}</button>)}</div><p aria-live="polite">{time===0?`完成！你按中了 ${score} 颗键。`:'让眼睛和手指一起热身。'}</p><button className="button primary" onClick={()=>{setTime(20);setScore(0);setTarget(Math.floor(Math.random()*9));setPlaying(true);}}>{playing?'重新开始':'开始挑战'}</button></>;
 }
 export default function App(){
   const [profile,setProfile]=useState(loadProfile);
   const identity=useMemo(()=>profileIdentity(profile),[profile]);
   const publicEntries=useMemo(()=>profile.entries.filter(entry=>!isTemplateEntry(entry)),[profile.entries]);
   const writing=usePublishedWriting(profile.wechat,profile.wechatAutoUpdate);
-  const questionArticle=writing?.articles.find(article=>article.id==='writing-a06');
+  const paperArticle=writing?.articles.find(article=>article.title.toLowerCase()==='breaking bad');
   const [articleRequest,setArticleRequest]=useState<{id:string;token:number}>();
   const skills=useMemo(()=>skillsFor(profile),[profile]);
   const writingKey=useMemo<Skill>(()=>skills.find(skill=>skill.name==='action-writing')||{name:'action-writing',label:'文章',shortDescription:'公众号文章归档',detail:'',color:'#93b5a5',icon:'',demo:false},[skills]);
@@ -53,14 +47,15 @@ export default function App(){
   const [focusKey,setFocusKey]=useState<string|null>(null),[activeWork,setActiveWork]=useState<WorkId|null>(null),[reading,setReading]=useState(false);
   const [sceneStatus,setSceneStatus]=useState<'loading'|'ready'|'failed'>('loading');
   const [theme,setTheme]=useState(()=>{try{return localStorage.getItem('space-theme')||'dark';}catch{return 'dark';}});
-  const [themeMenu,setThemeMenu]=useState(false),[sound,setSound]=useState(true),[quiet,setQuiet]=useState(false);
+  const [sound,setSound]=useState(false),[quiet,setQuiet]=useState(false);
   const reduced=!!useReducedMotion()||quiet;
   const [filter,setFilter]=useState('all'),[query,setQuery]=useState('');
-  const [replayKey,setReplayKey]=useState(0);
+  const [showAllWorks,setShowAllWorks]=useState(false);
+  const [keyboardLoaded,setKeyboardLoaded]=useState(false);
   const [playful,setPlayful]=useState(false);
   const [petSignal,setPetSignal]=useState(0),[rotationSignal,setRotationSignal]=useState(0);
-  const [paperHeader,setPaperHeader]=useState(false),[finaleHeader,setFinaleHeader]=useState(false);
-  const [toast,setToast]=useState(''),[party,setParty]=useState(false),[chatText,setChatText]=useState('');
+  const [paperHeader,setPaperHeader]=useState(false),[finaleHeader,setFinaleHeader]=useState(false),[heroHeader,setHeroHeader]=useState(true);
+  const [toast,setToast]=useState(''),[chatText,setChatText]=useState('');
   const room=useRoom(),root=useRef<HTMLDivElement>(null),lenis=useRef<Lenis|null>(null);
   const currentSection=useRef<KeyboardSection>('hero');
   const pendingFocus=useRef<string|null>(null),focusNavigationFrame=useRef<number|null>(null),focusClearFrame=useRef<number|null>(null);
@@ -108,7 +103,7 @@ export default function App(){
       openKeyboardContent(id);
     } else if(skill.name==='action-writing'){
       openKeyboardContent(null);
-    } else if(skill.name==='action-cat'){setPlayful(true);setActiveWork(null);setReading(false);setFocusKey(skill.name);setPetSignal(v=>v+1);}
+    } else if(skill.name==='action-cat'){setPlayful(true);setActiveWork(null);setReading(false);setFocusKey(null);setPetSignal(v=>v+1);}
     else if(skill.name==='action-theme')setTheme(v=>v==='light'?'dark':'light');
     else if(skill.name==='action-sound')setSound(v=>!v);
     else if(skill.name==='action-rotate')setRotationSignal(v=>v+1);
@@ -128,6 +123,25 @@ export default function App(){
     focusNavigationFrame.current=null;pendingFocus.current=null;
     setFocusKey(null);setActiveWork(null);setReading(false);
   },[]);
+  useEffect(()=>{
+    let frame:number|null=null,refreshing=false;
+    const sync=()=>{
+      frame=null;
+      if(refreshing)return;
+      const anchors=Array.from(document.querySelectorAll<HTMLElement>('#hero,#discovery,#skills,#projects,#writing,#experience,#contact')).map(element=>({id:element.id as KeyboardSection,top:element.getBoundingClientRect().top}));
+      const bounds=document.getElementById('skills')?.getBoundingClientRect();
+      onSection(resolveKeyboardSection(anchors,innerHeight,bounds?{top:bounds.top,bottom:bounds.bottom}:undefined));
+    };
+    const schedule=()=>{if(frame===null)frame=requestAnimationFrame(sync);};
+    const beginRefresh=()=>{refreshing=true;};
+    const endRefresh=()=>{refreshing=false;schedule();};
+    window.addEventListener('scroll',schedule,{passive:true});
+    window.addEventListener('resize',schedule);
+    ScrollTrigger.addEventListener('refreshInit',beginRefresh);
+    ScrollTrigger.addEventListener('refresh',endRefresh);
+    schedule();
+    return()=>{if(frame!==null)cancelAnimationFrame(frame);window.removeEventListener('scroll',schedule);window.removeEventListener('resize',schedule);ScrollTrigger.removeEventListener('refreshInit',beginRefresh);ScrollTrigger.removeEventListener('refresh',endRefresh);};
+  },[onSection]);
   const selectWork=useCallback((id:WorkId)=>openKeyboardContent(id),[openKeyboardContent]);
   const openWorkFromGallery=selectWork;
   useEffect(()=>()=>{
@@ -165,92 +179,84 @@ export default function App(){
   useEffect(()=>{if(overlay||detail)lenis.current?.stop();else lenis.current?.start();},[overlay,detail]);
   useGSAP(()=>{
     if(reduced)return;
-    gsap.from('.hero-copy > *',{y:24,filter:'blur(8px)',opacity:0,duration:1.05,stagger:0.13,ease:'expo.out',clearProps:'all'});
-    gsap.from('.site-header',{y:-60,duration:0.9,ease:'expo.out',clearProps:'transform'});
-    gsap.utils.toArray<HTMLElement>('.section-title').forEach(el=>gsap.from(el,{filter:'blur(10px)',opacity:0.2,duration:0.8,ease:'expo.out',scrollTrigger:{trigger:el,start:'top 85%',once:true},clearProps:'filter,opacity'}));
-    gsap.to('.hero-copy,.hero-bottom',{y:-45,autoAlpha:0,ease:'none',scrollTrigger:{trigger:'#hero',start:'55% top',end:'bottom 18%',scrub:true}});
-    gsap.to('.skills-stage-inner',{autoAlpha:0,y:-30,ease:'none',scrollTrigger:{trigger:'#skills',start:'bottom 92%',end:'bottom 48%',scrub:true}});
-    const progress=document.querySelector('.reading-progress');
-    ScrollTrigger.create({start:0,end:'max',onUpdate:self=>gsap.set(progress,{scaleX:self.progress})});
+    gsap.from('.site-header',{y:-12,opacity:0,duration:.6,ease:'power2.out',clearProps:'all'});
+    gsap.to('.surface-art',{yPercent:9,rotation:3,ease:'none',scrollTrigger:{trigger:'#hero',start:'top top',end:'bottom top',scrub:.5}});
+    gsap.to('.skills-stage-inner',{autoAlpha:0,y:-24,ease:'none',scrollTrigger:{trigger:'#skills',start:'bottom 92%',end:'bottom 48%',scrub:true}});
+    const progress=root.current?.querySelector('.reading-progress');
+    if(progress)ScrollTrigger.create({start:0,end:'max',onUpdate:self=>gsap.set(progress,{scaleX:self.progress})});
   },{scope:root,dependencies:[reduced],revertOnUpdate:true});
   useEffect(()=>{
-    let sequence='';
-    const key=(e:KeyboardEvent)=>{if((e.target as HTMLElement)?.closest('input,textarea,[contenteditable]'))return;sequence=(sequence+e.key.toLowerCase()).slice(-12);if(sequence.endsWith('curiosity')){setParty(true);notify('被你发现了。');setTimeout(()=>setParty(false),5000);}};
-    window.addEventListener('keydown',key);return()=>{window.removeEventListener('keydown',key);if(toastTimer.current)clearTimeout(toastTimer.current);};
-  },[notify]);
+    const target=document.getElementById('skills');
+    if(!target)return;
+    const observer=new IntersectionObserver(([entry])=>{
+      if(entry.isIntersecting){setKeyboardLoaded(true);observer.disconnect();}
+    },{rootMargin:'600px 0px'});
+    observer.observe(target);
+    return()=>observer.disconnect();
+  },[]);
+  useEffect(()=>()=>{if(toastTimer.current)clearTimeout(toastTimer.current);},[]);
   useEffect(()=>{if(overlay==='chat')chatEnd.current?.scrollIntoView({block:'nearest'});},[room.messages,overlay]);
   useEffect(()=>{
     const frame=requestAnimationFrame(()=>ScrollTrigger.refresh());
     const observer=new ResizeObserver(()=>ScrollTrigger.refresh());
-    document.querySelectorAll('#experience,#projects').forEach(el=>observer.observe(el));
+    document.querySelectorAll('#discovery,#experience,#projects,#writing').forEach(el=>observer.observe(el));
     return()=>{cancelAnimationFrame(frame);observer.disconnect();};
-  },[profile,filter,query,reduced,sceneStatus]);
+  },[profile,filter,query,reduced,sceneStatus,showAllWorks]);
   useEffect(()=>{
-    const surface=ScrollTrigger.create({trigger:'.editorial-world',start:'top 70px',end:'bottom 70px',onToggle:self=>setPaperHeader(self.isActive),onRefresh:self=>setPaperHeader(self.isActive)});
+    const updateSurface=()=>{const light=['discovery','projects','writing','experience'].some(id=>{const b=document.getElementById(id)?.getBoundingClientRect();return b&&b.top<=70&&b.bottom>70;});setPaperHeader(light);setHeroHeader((document.getElementById('hero')?.getBoundingClientRect().bottom??0)>70);};
+    const surface=ScrollTrigger.create({start:0,end:'max',onUpdate:updateSurface,onRefresh:updateSurface});
     const finale=ScrollTrigger.create({trigger:'#contact',start:'top 100px',end:'max',onToggle:self=>setFinaleHeader(self.isActive),onRefresh:self=>setFinaleHeader(self.isActive)});
     return()=>{surface.kill();finale.kill();};
   },[]);
   const saveProfile=(next:Profile)=>{try{localStorage.setItem(PROFILE_KEY,JSON.stringify(next));}catch{throw new Error('本机存储已满，请先导出资料备份。');}setSceneStatus('loading');setProfile(next);notify('资料已保存在当前浏览器。');};
   const sendChat=(event:FormEvent)=>{event.preventDefault();if(!chatText.trim())return;room.send(chatText);setChatText('');};
   const entries=publicEntries.filter(e=>(filter==='all'||e.category===filter)&&`${e.title} ${e.description} ${e.tags.join(' ')}`.toLowerCase().includes(query.toLowerCase()));
-  const experiences=publicEntries.filter(e=>['experience','achievement'].includes(e.category));
   const displayName=identity.name;
-  const words=displayName.split(/\s+/);
   const showFallback=reduced||sceneStatus==='failed';
-  useKineticSurface(root,reduced,`${displayName}:${filter}:${query}:${profile.entries.length}:${sceneStatus}:${playful}`);
-  return <div ref={root} className={`space-app kinetic-app ${showFallback?'static-scene':''} ${party?'easter-active':''}`}>
-    <OpeningSequence reduced={reduced} replayKey={replayKey} name={displayName}/>
+  const directorySkills=skills.map((skill,index)=>({skill,index})).filter(({skill})=>!showFallback||!['action-cat','action-rotate'].includes(skill.name));
+  return <div ref={root} className={`space-app kinetic-app art-site ${showFallback?'static-scene':''}`}>
     <a href="#main" className="skip-link">跳到主要内容</a><div className="reading-progress" aria-hidden="true"/>
-    <div className="cosmos" aria-hidden="true">{stars.map((style,i)=><i key={i} style={style}/>)}</div>
-    <ParticleField disabled={reduced}/>
-    {!reduced&&skills.length>0&&<div className="scene-layer" data-section={section}><SceneBoundary onFail={fail}><Suspense fallback={null}><KeyboardScene key={JSON.stringify(skills)} skills={skills} sound={sound} playful={playful} petSignal={petSignal} rotationSignal={rotationSignal} focusKey={focusKey} onReady={onReady} onSelect={onSelect} onSection={onSection} onOpen={onOpen}/></Suspense></SceneBoundary></div>}
-    <header className={`site-header ${finaleHeader?'on-finale':paperHeader?'on-paper':''}`}><a href="#hero" className="wordmark" onClick={e=>{e.preventDefault();go('hero');}}><BrandMark/><span className="wordmark-type">{displayName}<span>笔记与练习</span></span></a><nav className="header-paths" aria-label="快速了解"><button onClick={()=>go('experience')}>认识我</button><button onClick={()=>go('writing')}>读文章</button></nav><div className="header-actions">
-      <div className="theme-wrap"><button className="icon-button bare" aria-label="切换主题" aria-expanded={themeMenu} onClick={()=>setThemeMenu(!themeMenu)}><Icon name={theme==='light'?'sun-2-linear':'moon-linear'}/></button>{themeMenu&&<div className="theme-menu" role="group" aria-label="主题选项">{[['dark','深空'],['light','日光'],['system','跟随系统']].map(([value,label])=><button key={value} aria-pressed={theme===value} onClick={()=>{setTheme(value);setThemeMenu(false);notify(value==='light'?'日光模式':'已切换。');}}>{label}</button>)}</div>}</div>
-      <button className="icon-button game-trigger" aria-label="打开键盘小游戏" onClick={()=>setOverlay('game')}><Icon name="gamepad-linear"/></button>
-      <button className="icon-button people-button" aria-label={`打开聊天，${room.peers.length+1} 人${room.mode==='online'?'在线':'在本地房间'}`} onClick={()=>setOverlay('chat')}><Icon name="users-group-rounded-linear"/><span>{room.peers.length+1}</span></button>
-      <a className="source-link" href="https://github.com/youq790-del/personal-atlas" target="_blank" rel="noreferrer"><Icon name="code-circle-linear"/><span>Source</span></a>
-      <button className="menu-button" onClick={()=>setOverlay('menu')} aria-label="打开导航菜单"><span>Menu</span><i aria-hidden="true"/></button>
-    </div></header>
+    {keyboardLoaded&&!reduced&&skills.length>0&&<div className="scene-layer" data-section={section}><SceneBoundary onFail={fail}><Suspense fallback={null}><KeyboardScene key={JSON.stringify(skills)} skills={skills} sound={sound} playful={playful} petSignal={petSignal} rotationSignal={rotationSignal} focusKey={focusKey} onReady={onReady} onSelect={onSelect} onSection={onSection} onOpen={onOpen}/></Suspense></SceneBoundary></div>}
+    <header className={`site-header ${finaleHeader?'on-finale':paperHeader?'on-paper':heroHeader?'on-hero':''}`}>
+      <a href="#hero" className="wordmark" onClick={e=>{e.preventDefault();go('hero');}} aria-label={`${displayName}，回到曲面`}><BrandMark/><span className="wordmark-type">{displayName}</span></a>
+      <nav className="header-paths" aria-label="主要导航"><button onClick={()=>go('skills')}>探索</button><button onClick={()=>go('writing')}>笔记</button><button onClick={()=>go('experience')}>关于我</button></nav>
+      <button className="menu-button" onClick={()=>setOverlay('menu')} aria-label="打开导航与设置"><span>菜单</span><i aria-hidden="true"/></button>
+    </header>
     <main id="main">
-      <section id="hero" className="hero-section">
-        <div className="hero-copy">
-          <h1 aria-label={displayName} className={words.length===1?'single-name':''}>{words.map((word,i)=><span className="name-line" aria-hidden="true" key={i}><ElasticText text={word}/>{i===words.length-1&&<span className="name-period">.</span>}</span>)}</h1>
-          <p className="hero-role">{identity.role}</p><p className="hero-manifesto">{identity.intro}</p>
-          <div className="hero-actions"><button className="editorial-link" onClick={()=>go('experience')}><span>关于我</span><Icon name="arrow-right-up-linear"/></button><button className="editorial-link subtle" onClick={()=>go('writing')}><span>读笔记</span><Icon name="arrow-right-up-linear"/></button></div>
-          <button className="hero-footnote" onClick={()=>questionArticle?readArticle(questionArticle.id):go('writing')}><Icon name="arrow-down-linear" size={15}/>{questionArticle?'为什么总是平方？':'最近的笔记'}</button>
-        </div>
-        {showFallback&&<img className="keyboard-poster" src={asset('assets/keyboard/keyboard-comic-poster.webp')} alt="彩色机械键盘，技能目录在下方"/>}
-        <div className="hero-bottom"><span className="hero-caption" data-kinetic>拖拽旋转 · 点击探索</span><button className="scroll-invitation" onClick={()=>go('skills')} aria-label="向下探索技能"><span>按一颗</span><Icon name="arrow-down-linear"/></button><div className="hero-utilities"><button aria-label={sound?'关闭键盘声音':'开启键盘声音'} aria-pressed={sound} onClick={()=>setSound(!sound)}><span className={sound?'sound-bars active':'sound-bars'} aria-hidden="true"><i/><i/><i/></span>{sound?'ON':'OFF'}</button><button aria-label="打开技能键位目录" onClick={()=>setOverlay('directory')}>键位<Icon name="arrow-right-up-linear" size={15}/></button></div></div>
-      </section>
-      <section id="skills" className={`skills-section ${showFallback?'fallback-skills':''} ${focusKey?'is-exploring':''}`}>
+      <SurfaceHero reduced={reduced} onDiscover={()=>go('discovery')} onRead={()=>paperArticle?readArticle(paperArticle.id):go('writing')}/>
+      <DiscoveryBridge reduced={reduced} onRead={()=>paperArticle?readArticle(paperArticle.id):go('writing')} onExplore={()=>go('skills')}/>
+      <section id="skills" className={`skills-section ${showFallback?'fallback-skills':''} ${activeWork||reading||(!showFallback&&focusKey)?'is-exploring':''}`} aria-label="通过键盘探索作品">
         <div className="skills-stage"><div className="skills-stage-inner">
-          <div className="section-title skills-heading"><h2><ElasticText text={activeWork?workById(activeWork)?.word||'Made.':reading?'Words.':playful?'Hello.':selected?workById(selected.name.replace(/^work-/,''))?.word||'Tap.':'Play.'}/></h2><p>{focusKey?'正在探索':'3D 练习 · Blender'}</p></div>
-          <div className="skill-readout"><div aria-live="polite"><strong>{playful?'Hello, little friend.':selected?.label||'按一颗看看。'}</strong><p>{showFallback?'点击 / Tab + Enter':playful?'轻触小猫 · 移动鼠标':'拖拽旋转 · 点按键帽'}</p></div><div className="skill-controls">{!showFallback&&<><button className="text-link" aria-pressed={playful} onClick={()=>setPlayful(!playful)}>{playful?'键盘':'小猫'}</button>{playful?<button className="text-link" onClick={()=>setPetSignal(v=>v+1)}>摸摸它</button>:<button className="text-link" onClick={()=>setRotationSignal(v=>v+1)}>旋转</button>}</>}<button className="editorial-link" onClick={()=>setOverlay('directory')}><span>键位</span><Icon name="arrow-right-up-linear"/></button></div></div>
-          <nav className="skills-key-index" aria-label="打开作品与文章">{works.map(work=><button key={work.id} onClick={()=>selectWork(work.id)} style={{'--swatch':work.color} as React.CSSProperties}>{work.keyLabel}</button>)}<button onClick={()=>onOpen(writingKey)} style={{'--swatch':writingKey.color} as React.CSSProperties}>文章</button></nav>
+          <div className="section-title skills-heading"><h2>{activeWork?workById(activeWork)?.title:reading?'笔记':playful?'摸摸它。':'按一颗。'}</h2><p>{focusKey?'':'我的练习，放在这些键里。'}</p></div>
+          {showFallback&&<img className="stage-keyboard-poster" src={asset('assets/keyboard/keyboard-comic-poster.webp')} alt="彩色机械键盘；使用下方键位目录探索作品"/>}
+          <div className="skill-readout"><div aria-live="polite"><strong>{selected?.label||'选一颗键，打开一件作品。'}</strong><p>{showFallback?'点击 / Tab + Enter':playful?'轻触小猫':'拖拽旋转 · 点按键帽'}</p></div><div className="skill-controls">
+            {!showFallback&&<><button className="text-link" aria-pressed={playful} onClick={()=>setPlayful(!playful)}>{playful?'回到键盘':'小猫'}</button>{playful?<button className="text-link" onClick={()=>setPetSignal(v=>v+1)}>摸摸它</button>:<button className="text-link" onClick={()=>setRotationSignal(v=>v+1)}>旋转</button>}</>}
+            <button className="editorial-link" onClick={()=>setOverlay('directory')}>键位目录<Icon name="arrow-right-up-linear" size={18}/></button>
+          </div></div>
         </div>{(activeWork||reading)&&<WorkStage key={activeWork||'writing'} work={workById(activeWork)} reading={reading} collection={writing} reduced={reduced} onClose={closeFocus} onWork={selectWork}/>}</div>
-        {showFallback&&<div className="skill-static-grid">{skills.map((skill,i)=><button key={skill.name} onClick={()=>onOpen(skill)} style={{'--key-color':skill.color} as React.CSSProperties}>{skill.icon?<img src={skill.icon} alt=""/>:<Icon name="widget-2-linear"/>}<span>{skill.label}</span><kbd>{shortcuts[i]?.replace(/^(Key|Digit)/,'')||'点击'}</kbd></button>)}</div>}
+        {showFallback&&<div className="skill-static-grid">{directorySkills.map(({skill,index:i})=><button key={skill.name} onClick={()=>onOpen(skill)} style={{'--key-color':skill.color} as React.CSSProperties}><span>{skill.label}</span><kbd>{shortcuts[i]?.replace(/^(Key|Digit)/,'')||'点击'}</kbd></button>)}</div>}
       </section>
-      <div className="editorial-world"><FieldBackdrop disabled={reduced}/>
-      <section id="experience" className="experience-section">
-        <SeamTransition reduced={reduced}/>
-        <PersonalPortrait reduced={reduced} onOpenWork={openWorkFromGallery} onReadArticle={readArticle}/>
-        {experiences.length>0&&<><h3 className="experience-records-heading">走过的路</h3><div className="experience-stack">{experiences.map(entry=><details key={entry.id} className="experience-row" onToggle={()=>ScrollTrigger.refresh()}><summary><ElasticLine/><span className="experience-category">{categories[entry.category]}{profile.isDemo?' · 待确认':''}</span><div><h3><ElasticText text={entry.title}/></h3></div><span className="row-toggle"><Icon name="arrow-right-up-linear"/></span></summary><div className="experience-story"><p>{entry.detail}</p><div className="tags">{entry.tags.map(tag=><span key={tag}>{tag}</span>)}</div></div></details>)}</div></>}
-
-      </section>
-      <section id="projects" className="projects-section"><ElasticLine/><div className="section-title"><h2><ElasticText text="Made."/></h2><p>Blender 练习</p></div><PortfolioGallery onOpen={openWorkFromGallery} reduced={reduced}/><div id="writing" className="portfolio-writing"><WeChatShelf collection={writing} compact reduced={reduced} openArticle={articleRequest}/></div>{publicEntries.length>0&&<><div className="project-tools"><div className="filters" role="group" aria-label="筛选档案">{[['all','全部'],...Object.entries(categories)].map(([value,label])=><button key={value} aria-pressed={filter===value} onClick={()=>setFilter(value)}>{label}</button>)}</div><label className="search-box"><Icon name="magnifier-linear"/><input aria-label="搜索档案" placeholder="搜索档案" value={query} onChange={e=>setQuery(e.target.value)}/></label></div><div className="projects-grid">{entries.map((entry,i)=><button key={entry.id} className={`project-card project-${entry.category}`} onClick={()=>setDetail(entry)}><div className="project-preview"><ElasticFrame variant={i+2} disabled={reduced}>{entry.image&&safeUrl(entry.image,true)?<img src={safeUrl(entry.image,true)} alt={entry.title}/>:<div className="project-art"><KineticArtwork variant={i}/><span className="project-art-note">{profile.isDemo?'内容示意':entry.label}</span></div>}</ElasticFrame></div><div className="project-caption"><h3>{entry.title}</h3><span>{categories[entry.category]}{profile.isDemo?' / 示意':''}</span></div><span className="project-open"><Icon name="arrow-right-up-linear"/></span></button>)}</div>{!entries.length&&<div className="empty-state"><p>没有匹配的档案。</p><button className="button secondary" onClick={()=>{setFilter('all');setQuery('');}}>清除筛选</button></div>}<p className="project-count" aria-live="polite">{entries.length} 条{profile.isDemo?'待确认档案':'档案'}</p></>}</section>
+      <div className="editorial-world">
+        <section id="projects" className="projects-section" aria-labelledby="made-title">
+          <div className="section-title art-section-title"><h2 id="made-title">做着玩。</h2><p>Blender 里的几次尝试。</p></div>
+          <PortfolioGallery onOpen={openWorkFromGallery} reduced={reduced} featured={!showAllWorks}/>
+          <button className="all-works-button" aria-expanded={showAllWorks} onClick={()=>setShowAllWorks(v=>!v)}>{showAllWorks?'收起其他练习':`还有 ${Math.max(0,works.length-2)} 件练习`}<Icon name={showAllWorks?'arrow-up-linear':'arrow-down-linear'} size={18}/></button>
+          {publicEntries.length>0&&<div className="additional-records"><div className="project-tools"><div className="filters" role="group" aria-label="筛选档案">{[['all','全部'],...Object.entries(categories)].map(([value,label])=><button key={value} aria-pressed={filter===value} onClick={()=>setFilter(value)}>{label}</button>)}</div><label className="search-box"><Icon name="magnifier-linear"/><input aria-label="搜索档案" placeholder="搜索档案" value={query} onChange={e=>setQuery(e.target.value)}/></label></div><div className="projects-grid">{entries.map((entry,i)=><button key={entry.id} className={`project-card project-${entry.category}`} onClick={()=>setDetail(entry)}><div className="project-preview"><ElasticFrame variant={i+2} disabled={reduced}>{entry.image&&safeUrl(entry.image,true)?<img src={safeUrl(entry.image,true)} alt={entry.title}/>:<div className="project-art"><KineticArtwork variant={i}/></div>}</ElasticFrame></div><div className="project-caption"><h3>{entry.title}</h3><span>{categories[entry.category]}</span></div></button>)}</div></div>}
+        </section>
+        <section id="writing" className="art-writing" aria-label="学习笔记与观察"><WeChatShelf collection={writing} compact reduced={reduced} openArticle={articleRequest}/></section>
+        <AuthorNote name={displayName} bio={identity.bio} onContact={()=>go('contact')}/>
       </div>
       <ContactFinale name={displayName} collection={writing} email={profile.email} reduced={reduced} onRead={()=>go('writing')}/>
     </main>
     <footer className="site-colophon"><span>© {new Date().getFullYear()} {displayName}</span><button className="text-link" onClick={()=>setOverlay('editor')}>编辑资料</button><a href="https://github.com/Naresh-Khatri/3d-portfolio" target="_blank" rel="noreferrer">Based on Naresh Khatri · MIT</a><button className="icon-button bare" aria-label="回到顶部" onClick={()=>go('hero')}><Icon name="arrow-up-linear"/></button></footer>
-    {sceneStatus==='loading'&&!reduced&&<div className="scene-loading" role="status"><span/>正在组装键盘</div>}
+    {sceneStatus==='loading'&&section==='skills'&&!reduced&&<div className="scene-loading" role="status"><span/>正在组装键盘</div>}
     {room.peers.filter(p=>p.x!==undefined).map(peer=><div className="remote-cursor" key={peer.id} style={{left:`${(peer.x||0)*100}%`,top:`${(peer.y||0)*100}%`,color:peer.color}}><Icon name="cursor-bold"/><span style={{background:peer.color}}>{peer.name}</span></div>)}
     <AnimatePresence>{toast&&<motion.div className="toast" role="status" initial={{y:20,opacity:0}} animate={{y:0,opacity:1}} exit={{y:10,opacity:0}}>{toast}<button aria-label="关闭提示" onClick={()=>setToast('')}><Icon name="close-circle-linear" size={16}/></button></motion.div>}</AnimatePresence>
-    {overlay==='menu'&&<Modal title="Explore" onClose={close} wide className="nav-modal"><nav className="expanded-nav" aria-label="主要导航">{sections.map(([id,label,en],i)=><motion.button key={id} initial={reduced?false:{y:30,opacity:0}} animate={{y:0,opacity:1}} transition={{delay:i*.06}} onClick={()=>go(id)}><span>{en}</span><small>{label}</small></motion.button>)}</nav><div className="menu-bottom"><button className="text-link" onClick={()=>{setOverlay(null);go('hero');setReplayKey(k=>k+1);}}>重播开场</button><button className="text-link" onClick={()=>setOverlay('editor')}>编辑个人资料</button><button className="text-link" onClick={()=>setOverlay('game')}>键盘小游戏</button><button className="text-link" aria-pressed={quiet} onClick={()=>setQuiet(!quiet)}>{quiet?'恢复动画':'减少动态效果'}</button></div></Modal>}
-    {overlay==='directory'&&<Modal title="键位" onClose={close} wide className="directory-modal"><p className="muted">点击，或用 Tab + Enter 打开内容。{!showFallback&&'关闭目录后，可使用键位旁标注的实体按键。'}</p><div className="skill-static-grid">{skills.map((skill,i)=><button key={skill.name} onClick={()=>{close();onOpen(skill);}} style={{'--key-color':skill.color} as React.CSSProperties}>{skill.icon?<img src={skill.icon} alt=""/>:<Icon name="widget-2-linear"/>}<span>{skill.label}</span><kbd>{shortcuts[i]?.replace(/^(Key|Digit)/,'')||'点击'}</kbd></button>)}</div></Modal>}
+    {overlay==='menu'&&<Modal title="去哪里？" onClose={close} wide className="nav-modal"><nav className="expanded-nav" aria-label="章节">{sections.map(([id,label,en])=><button key={id} onClick={()=>go(id)}><span>{label}</span><small>{en}</small></button>)}</nav><div className="art-menu-settings"><div role="group" aria-label="主题">{[['dark','夜间'],['light','日间'],['system','跟随系统']].map(([value,label])=><button key={value} className="text-link" aria-pressed={theme===value} onClick={()=>setTheme(value)}>{label}</button>)}</div><button className="text-link" aria-pressed={quiet} onClick={()=>setQuiet(!quiet)}>{quiet?'恢复动态':'减少动态'}</button><button className="text-link" aria-pressed={sound} onClick={()=>setSound(!sound)}>{sound?'关闭键盘声音':'开启键盘声音'}</button><button className="text-link" onClick={()=>setOverlay('chat')}>访客房间</button><button className="text-link" onClick={()=>setOverlay('editor')}>编辑资料</button><a href="https://github.com/youq790-del/personal-atlas" target="_blank" rel="noreferrer">源码</a></div></Modal>}
+    {overlay==='directory'&&<Modal title="键位" onClose={close} wide className="directory-modal"><p className="muted">点击，或用 Tab + Enter 打开内容。{!showFallback&&'关闭目录后，可使用键位旁标注的实体按键。'}</p><div className="skill-static-grid">{directorySkills.map(({skill,index:i})=><button key={skill.name} onClick={()=>{close();onOpen(skill);}} style={{'--key-color':skill.color} as React.CSSProperties}>{skill.icon?<img src={skill.icon} alt=""/>:<Icon name="widget-2-linear"/>}<span>{skill.label}</span><kbd>{shortcuts[i]?.replace(/^(Key|Digit)/,'')||'点击'}</kbd></button>)}</div></Modal>}
     {overlay==='editor'&&<Editor profile={{...profile,wechat:writing}} onSave={saveProfile} onClose={close}/>}
     {overlay==='about'&&<Modal title={displayName} onClose={close} wide><p className="about-role">{identity.role}</p><p className="about-bio">{identity.bio}</p><div className="about-facets">{['skills','interests','traits'].map(key=><div key={key}><h3>{identity.facets[key].caption}</h3><p className="muted">{identity.facets[key].description}</p><div className="tags">{identity.facets[key].tags.map(tag=><span key={tag}>{tag}</span>)}</div></div>)}</div><div className="about-leads"><button className="editorial-link" onClick={()=>go('experience')}><span>最近在做</span><Icon name="arrow-right-up-linear"/></button><button className="editorial-link" onClick={()=>go('writing')}><span>读笔记</span><Icon name="arrow-right-up-linear"/></button></div></Modal>}
 
-    {overlay==='game'&&<Modal title="键盘反应挑战" onClose={close}><MiniGame/></Modal>}
     {overlay==='chat'&&<Modal title="访客聊天室" onClose={close}><div className="room-status"><span className={`status-light ${room.mode==='online'?'online':''}`}/><span>{room.mode==='online'?'实时连接':room.mode==='connecting'?'正在连接 · 本地可用':'本地房间'} · {room.peers.length+1} 人</span></div><p className="muted small">{room.mode==='online'?'当前房间的访客可以实时聊天。消息仅在本次会话中保留。':'当前仅同一浏览器的标签页互通；公网聊天室尚未连接。消息不会发送给站点主人。'}</p><div className="chat-log" role="log" aria-live="polite">{!room.messages.length&&<div className="chat-empty"><Icon name="chat-round-dots-linear" size={40}/><p>还没有对话。</p><span>从一句“你好”开始吧。</span></div>}{room.messages.map(m=><div className={`chat-message ${m.id===room.me.id?'mine':''}`} key={m.messageId}><small style={{color:m.color}}>{m.id===room.me.id?'你':m.name}</small><p>{m.text}</p></div>)}<div ref={chatEnd}/></div><form className="chat-form" onSubmit={sendChat}><input aria-label="聊天消息" placeholder="说点什么…" maxLength={500} value={chatText} onChange={e=>setChatText(e.target.value)}/><button className="icon-button" type="submit" aria-label="发送消息" disabled={!chatText.trim()}><Icon name="plain-linear"/></button></form></Modal>}
     {detail&&<Modal title={'label'in detail&&'name'in detail?detail.label:('title'in detail?detail.title:'键位介绍')} onClose={()=>setDetail(null)} wide>{'color'in detail&&<div className="detail-key" style={{background:detail.color}}>{detail.icon?<img src={detail.icon} alt=""/>:<Icon name="keyboard-linear" size={42}/>}</div>}<p className="detail-copy">{detail.detail}</p>{'tags'in detail&&<div className="tags">{detail.tags.map(t=><span key={t}>{t}</span>)}</div>}{'url'in detail&&detail.url&&safeUrl(detail.url)&&<a className="button primary" href={safeUrl(detail.url)} target="_blank" rel="noreferrer">查看作品<Icon name="arrow-right-up-linear"/></a>}{(('demo'in detail&&detail.demo)||profile.isDemo)&&<p className="muted small">内容示意 · 真实个人资料待补充</p>}</Modal>}
   </div>;

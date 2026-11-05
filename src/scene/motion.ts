@@ -4,15 +4,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Color, Euler, Quaternion } from "three";
 import type { ChibiSceneApi, Vec3 } from "@chibi3d/runtime";
 import type { KeyboardScene } from "./scene";
-
-export type KeyboardSection = "hero" | "skills" | "experience" | "projects" | "contact";
-export const isReadingSection = (section: KeyboardSection): boolean => section === "experience" || section === "projects" || section === "contact";
-const SCROLL_SECTIONS = [
-  { id: "skills", threshold: 0.5 },
-  { id: "experience", threshold: 0.32 },
-  { id: "projects", threshold: 0.7 },
-  { id: "contact", threshold: 0.3 },
-] as const;
+import { isReadingSection, isSkillsSection, resolveKeyboardSection, type KeyboardSection } from "./sections";
+export { isReadingSection, isSkillsSection, resolveKeyboardSection, type KeyboardSection } from "./sections";
 
 type Vector = { x: number; y: number; z: number };
 const vector = (v: Vec3): Vector => ({ x: v[0], y: v[1], z: v[2] });
@@ -42,7 +35,13 @@ export function createKeyboardMotion(
   };
   let section: KeyboardSection = "hero";
   let disposed = false;
-  let revealed = false;
+  let started = false;
+  let keyboardRevealed = false;
+  let notifiedSection: KeyboardSection | null = null;
+  const notifySection = (next: KeyboardSection) => {
+    if(notifiedSection===next)return;
+    notifiedSection=next;onSection(next);
+  };
   let playful = false;
   let focusedKey: string | null = null;
   let hoveredKey: string | null = null;
@@ -78,7 +77,13 @@ export function createKeyboardMotion(
       setTransform(scene.catId,{rotation:[catBase.rotation[0]+interaction.py*.07,catBase.rotation[1]+interaction.px*.1,catBase.rotation[2]+interaction.px*.12],scale:[1+pulse*.22,1-pulse*.17,1],position:[catBase.position[0],catBase.position[1]+Math.abs(pulse)*.22,catBase.position[2]]});
     }
   };
-  gsap.ticker.add(touchTick);
+  let touchTickActive = false;
+  const setTouchTickActive = (active: boolean) => {
+    if (active === touchTickActive) return;
+    touchTickActive = active;
+    if (active) gsap.ticker.add(touchTick);
+    else gsap.ticker.remove(touchTick);
+  };
   const pet = () => {
     if(!playful||section!=='skills')return;
     interaction.pet=.9;interaction.petV=.13;interaction.awake=110;
@@ -101,7 +106,7 @@ export function createKeyboardMotion(
   const refreshKey = (index: number, immediate = false) => {
     const name = scene.keys[index].skill.name;
     const focused = name === focusedKey, hovered = name === hoveredKey, pressed = pressedKeys.has(name);
-    const active = !isReadingSection(section);
+    const active = isSkillsSection(section);
     const target = {
       y: active ? focused ? 0.24 : hovered ? 0.11 : 0 : 0,
       brightness: active && focusedKey && !focused ? hovered || pressed ? 0.72 : 0.32 : 1,
@@ -115,10 +120,8 @@ export function createKeyboardMotion(
   };
   const refreshAttention = (immediate = false) => scene.keys.forEach((_, index) => refreshKey(index, immediate));
   const sectionTweens: gsap.core.Tween[] = [];
-  const loops: gsap.core.Tween[] = [];
   const revealTweens: gsap.core.Tween[] = [];
   const pending: gsap.core.Tween[] = [];
-  const keyTweens: gsap.core.Tween[] = [];
   let counterWanted = false;
   let counterEnabled = false;
   let counterVisible = false;
@@ -146,11 +149,11 @@ export function createKeyboardMotion(
     const compactMobileFocus = mobile && window.innerHeight < 700;
     const fit = Math.min(1, window.innerWidth / window.innerHeight * 1.05);
     const [centerX, centerY, centerZ] = scene.document.camera.target;
-    const baseSize = fit * (section === "hero" ? 0.8 : section === "contact" ? 0.75 : section === "skills" ? (mobile ? 0.75 : 0.78) : 0.95);
-    const focused = Boolean(focusedKey) && !isReadingSection(section);
-    const size = isReadingSection(section) ? 0.001 : focused ? fit * (compactMobileFocus ? 0.30 : mobile ? 0.39 : 0.42) : mobile && section === "hero" ? Math.min(baseSize, 0.48) : baseSize;
-    const right = focused ? mobile ? 0 : 3.45 : !mobile && section === "hero" ? 2.5 : !mobile && section === "contact" ? 3.8 : 0;
-    const up = focused ? compactMobileFocus ? -2.9 : mobile ? -3.8 : -1.35 : mobile && section === "hero" ? -2.7 : section === "contact" ? -0.8 : 0;
+    const baseSize = fit * (mobile ? 0.75 : 0.78);
+    const focused = Boolean(focusedKey) && isSkillsSection(section);
+    const size = focused ? fit * (compactMobileFocus ? 0.30 : mobile ? 0.39 : 0.42) : baseSize;
+    const right = focused ? mobile ? 0 : 3.45 : 0;
+    const up = focused ? compactMobileFocus ? -2.9 : mobile ? -3.8 : -1.35 : 0;
     return {
       // The placement origin is the keyboard's geometry center, independent of its labels.
       position: {
@@ -158,9 +161,9 @@ export function createKeyboardMotion(
         y: centerY + up * Math.sqrt(2 / 3),
         z: centerZ + right / Math.sqrt(2) - up / Math.sqrt(6),
       },
-      rotation: !focused && ((section === "skills" && playful) || (mobile && section === "contact"))
+      rotation: !focused && isSkillsSection(section) && playful
         ? { x: Math.PI, y: Math.PI / 3, z: Math.PI }
-        : { x: 0, y: section === "skills" ? (mobile ? Math.PI / 6 : Math.PI / 12) : 0, z: 0 },
+        : { x: 0, y: isSkillsSection(section) ? (mobile ? Math.PI / 6 : Math.PI / 12) : 0, z: 0 },
       scale: { x: size, y: size, z: size },
     };
   };
@@ -169,18 +172,37 @@ export function createKeyboardMotion(
   };
   const applySection = (next: KeyboardSection, immediate = false) => {
     if (disposed) return;
+    const entering = !isSkillsSection(section) && isSkillsSection(next);
     section = next;
     hoveredKey = null;
-    if (isReadingSection(next) || next === 'contact') focusedKey = null;
+    if (!isSkillsSection(next)) {
+      petReset?.kill();
+      interaction.targetX=0;interaction.targetY=0;interaction.dragging=false;interaction.awake=0;interaction.scroll=0;
+      notifySection(next);
+      setTouchTickActive(false);
+      kill(sectionTweens);kill(pending);kill(revealTweens);
+      attentionTweens.forEach(tween=>tween?.kill());
+      focusedKey=null;
+      api.setNodeVisible(scene.boardId,false);
+      api.setNodeVisible(scene.counterId,false);
+      counterVisible=false;
+      counterWanted=false;
+      api.setNodeVisible(scene.catId,false);
+      api.setNodeVisible(scene.labelsId,false);
+      scene.keys.forEach(key=>api.setNodeVisible(key.motionId,false));
+      scene.frameIds.forEach(id=>api.setNodeVisible(id,false));
+      api.setPaused(true);
+      return;
+    }
     petReset?.kill();
     interaction.targetX=0;interaction.targetY=0;interaction.dragging=false;interaction.awake=100;
-    onSection(next);
+    notifySection(next);
+    setTouchTickActive(!document.hidden);
+    api.setPaused(document.hidden);
     kill(sectionTweens);
-    kill(loops);
     kill(pending);
-    kill(keyTweens);
     kill(revealTweens);
-    // A section change can interrupt the opening assembly or the contact teardown.
+    // A section change can interrupt the first assembly.
     // Restore every cap now, rather than waiting for a delayed previous animation.
     revealScale.value = 1;
     setTransform(scene.revealId, { scale: [1, 1, 1] });
@@ -193,16 +215,12 @@ export function createKeyboardMotion(
     api.setNodeVisible(scene.labelsId, false);
     api.setNodeVisible(scene.catId, false);
     scene.frameIds.forEach(id => api.setNodeVisible(id, false));
-    api.setNodeVisible(scene.boardId, !isReadingSection(next));
-    refreshAttention(immediate || isReadingSection(next));
+    api.setNodeVisible(scene.boardId, true);
+    refreshAttention(immediate);
     showCounter(next === "skills" && inSkills());
     const target = pose();
     for (const [value, destination] of [[position, target.position], [rotation, target.rotation], [scale, target.scale]] as const) {
-      sectionTweens.push(gsap.to(value, { ...destination, duration: immediate || isReadingSection(next) ? 0 : 0.9, ease: "power2.out", overwrite: true, onUpdate: applyPose }));
-    }
-    if (isReadingSection(next)) {
-      onVisibility();
-      return;
+      sectionTweens.push(gsap.to(value, { ...destination, duration: immediate ? 0 : 0.9, ease: "power2.out", overwrite: true, onUpdate: applyPose }));
     }
     // The visitor now owns rotation. No automatic loop fights a drag gesture.
     if (next === "skills" && playful && !focusedKey) {
@@ -224,70 +242,84 @@ export function createKeyboardMotion(
         onVisibility();
       }));
     }
-    // Let the board arrive before starting the contact teardown.
-    pending.push(gsap.delayedCall(0.8, () => {
-      if (disposed || section !== next) return;
-      if (next === "contact") {
-        // The normalized mesh is already upright; retain only the teardown yaw.
-        sectionTweens[1]?.kill();
-        loops.push(gsap.fromTo(rotation, { x: 0, y: 0, z: 0 }, {
-          y: -Math.PI / 2, duration: 5, repeat: -1, yoyo: true,
-          yoyoEase: true, ease: "power1.out", onUpdate: applyPose,
-        }));
-      }
-      const keys = next === "contact" ? scene.keys.map((key, index) => ({ key, index, offset: keyOffsets[index] })).sort(() => Math.random() - 0.5) : [];
-      keys.forEach(({ index: keyIndex, offset }, index) => {
-        // Spline animates the skill group by 200–400 units; one cap is 296.7413.
-        keyTweens.push(gsap.to(offset, {
-          y: (200 + Math.random() * 200) / 296.741333,
-          duration: 2 + Math.random() * 2, delay: index * 0.6,
-          repeat: -1, yoyo: true, yoyoEase: "none", ease: "elastic.out(1,0.3)",
-          onUpdate: () => { applyKey(keyIndex); },
-        }));
-      });
-      onVisibility();
-    }));
+    // Begin the assembly only after the keyboard enters its dedicated stage.
+    if(entering&&!keyboardRevealed)revealKeyboard();
     onVisibility();
+  };
+  const revealKeyboard = () => {
+    if(keyboardRevealed||!isSkillsSection(section)||disposed)return;
+    keyboardRevealed=true;
+    revealScale.value=0.001;
+    setTransform(scene.revealId,{scale:[revealScale.value,revealScale.value,revealScale.value]});
+    revealTweens.push(gsap.to(revealScale,{value:1,duration:1.5,ease:'elastic.out(1,0.6)',onUpdate:()=>setTransform(scene.revealId,{scale:[revealScale.value,revealScale.value,revealScale.value]})}));
+    scene.keys.forEach((key,index)=>{
+      const offset=keyRevealOffsets[index];
+      offset.y=(200-50)/296.741333;
+      api.setNodeVisible(key.motionId,false);
+      applyKey(index);
+      revealTweens.push(gsap.delayedCall(.9+index*.07,()=>{if(isSkillsSection(section))api.setNodeVisible(key.motionId,true);}));
+      revealTweens.push(gsap.to(offset,{y:0,delay:1+index*.07,duration:.5,ease:'bounce.out',onUpdate:()=>applyKey(index)}));
+    });
   };
   const onVisibility = () => {
     const hidden = document.hidden;
     petReset?.paused(hidden);
-    api.setPaused(hidden || isReadingSection(section));
-    [...loops, ...sectionTweens, ...revealTweens, ...pending, ...keyTweens, ...attentionTweens].forEach((t) => t?.paused(hidden));
+    setTouchTickActive(isSkillsSection(section)&&!hidden);
+    api.setPaused(hidden||!isSkillsSection(section));
+    [...sectionTweens, ...revealTweens, ...pending, ...attentionTweens].forEach((t) => t?.paused(hidden||!isSkillsSection(section)));
   };
   const syncSection = () => {
-    let next: KeyboardSection = "hero";
-    for (const { id, threshold } of SCROLL_SECTIONS) {
-      if ((document.getElementById(id)?.getBoundingClientRect().top ?? Infinity) <= window.innerHeight * threshold) next = id;
-    }
-    return next;
+    const ids: KeyboardSection[]=['hero','discovery','skills','projects','writing','experience','contact'];
+    const anchors=ids.map(id=>document.getElementById(id)).filter((node):node is HTMLElement=>Boolean(node))
+      .sort((left,right)=>left.compareDocumentPosition(right)&Node.DOCUMENT_POSITION_FOLLOWING?-1:1)
+      .map(element=>({id:element.id as KeyboardSection,top:element.getBoundingClientRect().top}));
+    const skillBounds=document.getElementById('skills')?.getBoundingClientRect();
+    return resolveKeyboardSection(anchors,window.innerHeight,skillBounds?{top:skillBounds.top,bottom:skillBounds.bottom}:undefined);
   };
   const reconcile = (immediate = false) => {
-    if (!revealed || disposed) return;
+    if (!started || disposed) return;
     const next = syncSection();
     if (next !== section || immediate) applySection(next, immediate);
-    else showCounter(section === "skills" && inSkills());
+    else showCounter(isSkillsSection(section) && inSkills());
   };
-  // One resolver reads the final scroll position. Jumping across several sections
-  // or scrolling backwards cannot leave a stale onEnter/onLeaveBack state behind.
+  let refreshFrame=0;
+  let refreshing=false;
+  let refreshPose=false;
+  const reconcileAfterRefresh=(immediate=false)=>{
+    refreshPose ||= immediate;
+    if(refreshFrame||disposed)return;
+    refreshFrame=requestAnimationFrame(()=>{
+      refreshFrame=0;
+      if(refreshing){reconcileAfterRefresh();return;}
+      const updatePose=refreshPose;refreshPose=false;
+      reconcile(updatePose);
+    });
+  };
+  const refreshStart=()=>{refreshing=true;};
+  const refreshEnd=()=>{refreshing=false;reconcileAfterRefresh();};
+  ScrollTrigger.addEventListener('refreshInit',refreshStart);
+  ScrollTrigger.addEventListener('refresh',refreshEnd);
+  // Read live element order so rearranging the author chapters cannot stale the scene state.
   const triggers = [ScrollTrigger.create({
     start: 0,
     end: "max",
-    onUpdate: () => reconcile(),
-    onRefresh: () => reconcile(true),
+    onUpdate: () => {if(refreshing||refreshFrame)reconcileAfterRefresh();else reconcile();},
+    onRefresh: () => reconcileAfterRefresh(),
   })];
-  const resize = () => reconcile(true);
+  const resize = () => reconcileAfterRefresh(true);
   window.addEventListener("resize", resize);
   document.addEventListener("visibilitychange", onVisibility);
   api.setNodeVisible(scene.boardId, false);
+  api.setNodeVisible(scene.catId,false);
+  api.setNodeVisible(scene.counterId,false);
+  api.setPaused(true);
   return {
     setFocusKey(name: string | null) {
       const next = name && scene.keys.some(key => key.skill.name === name) ? name : null;
-      if (disposed || next === focusedKey || (next && isReadingSection(section))) return;
+      if (disposed || next === focusedKey) return;
       focusedKey = next;
-      if (!revealed) return;
-      // Stop previous presentation loops before moving the board.
-      kill(revealTweens); kill(loops); kill(pending); kill(keyTweens);
+      if (!isSkillsSection(section)) return;
+      kill(revealTweens); kill(pending);
       revealScale.value = 1;
       setTransform(scene.revealId, { scale: [1, 1, 1] });
       scene.keys.forEach((key, index) => {
@@ -295,9 +327,9 @@ export function createKeyboardMotion(
         keyRevealOffsets[index].y = 0;
         api.setNodeVisible(key.motionId, true);
       });
-      if ((playful && section === 'skills') || (!next && section === 'contact')) { applySection(section); return; }
+      if (playful && !next) { applySection(section); return; }
       refreshAttention();
-      showCounter(section === 'skills' && inSkills());
+      showCounter(isSkillsSection(section) && inSkills());
       interaction.targetX = 0; interaction.targetY = 0; interaction.awake = 100;
       const target = pose();
       kill(sectionTweens);
@@ -307,7 +339,7 @@ export function createKeyboardMotion(
       onVisibility();
     },
     setHoveredKey(name: string | null) {
-      if (disposed || name === hoveredKey || isReadingSection(section)) return;
+      if (disposed || !isSkillsSection(section) || name === hoveredKey) return;
       const previous = hoveredKey; hoveredKey = name;
       scene.keys.forEach((key, index) => {
         if (key.skill.name === previous || key.skill.name === name) refreshKey(index);
@@ -317,61 +349,44 @@ export function createKeyboardMotion(
       if (disposed) return;
       if (pressed) pressedKeys.add(name); else pressedKeys.delete(name);
       const index = scene.keys.findIndex(key => key.skill.name === name);
-      if (index !== -1) refreshKey(index);
+      if (index !== -1 && isSkillsSection(section)) refreshKey(index);
     },
-    setPointer(x:number,y:number){interaction.px=x;interaction.py=y;interaction.awake=90;},
-    setScroll(value:number){interaction.scroll=Math.max(-1,Math.min(1,value));interaction.awake=90;},
-    beginDrag(){interaction.dragging=true;interaction.awake=90;},
+    setPointer(x:number,y:number){if(!isSkillsSection(section))return;interaction.px=x;interaction.py=y;interaction.awake=90;},
+    setScroll(value:number){if(!isSkillsSection(section))return;interaction.scroll=Math.max(-1,Math.min(1,value));interaction.awake=90;},
+    beginDrag(){if(!isSkillsSection(section))return;interaction.dragging=true;interaction.awake=90;},
     drag(dx:number,dy:number){
-      if(isReadingSection(section))return;
+      if(!isSkillsSection(section))return;
       interaction.targetY+=dx*.008;interaction.targetX=Math.max(-.9,Math.min(.9,interaction.targetX+dy*.006));interaction.awake=100;
     },
-    endDrag(){interaction.dragging=false;interaction.awake=110;},
-    rotateBy(amount:number){interaction.targetY+=amount;interaction.awake=120;},
+    endDrag(){if(!isSkillsSection(section))return;interaction.dragging=false;interaction.awake=110;},
+    rotateBy(amount:number){if(!isSkillsSection(section))return;interaction.targetY+=amount;interaction.awake=120;},
     pet,
     setPlayful(enabled: boolean) {
       if (disposed || playful === enabled) return;
       playful = enabled;
-      if (revealed && section === "skills") applySection(section);
+      if (isSkillsSection(section)) applySection(section);
     },
-    // hide until socket connected + counts received
     setCounterEnabled(enabled: boolean) {
       if (disposed || enabled === counterEnabled) return;
       counterEnabled = enabled;
       showCounter(counterWanted);
     },
     reveal() {
-      if (revealed || disposed) return;
-      revealed = true;
-      applySection(syncSection(), true);
-      if (isReadingSection(section)) return;
-      revealScale.value = 0.001;
-      setTransform(scene.revealId, { scale: [0.001, 0.001, 0.001] });
-      revealTweens.push(gsap.to(revealScale, { value: 1, duration: 1.5, ease: "elastic.out(1,0.6)",
-        onUpdate: () => { setTransform(scene.revealId, { scale: [revealScale.value, revealScale.value, revealScale.value] }); },
-      }));
-      if (section !== "contact") scene.keys.forEach((key, index) => {
-        const offset = keyRevealOffsets[index];
-        // Original reveal: 900ms wait, 70ms per key, then a 100ms hold before dropping.
-        offset.y = (200 - 50) / 296.741333;
-        api.setNodeVisible(key.motionId, false);
-        applyKey(index);
-        revealTweens.push(gsap.delayedCall(0.9 + index * 0.07, () => {
-          api.setNodeVisible(key.motionId, true);
-        }));
-        revealTweens.push(gsap.to(offset, { y: 0, delay: 1 + index * 0.07,
-          duration: 0.5, ease: "bounce.out", onUpdate: () => { applyKey(index); } }));
-      });
-      onVisibility();
+      if (started || disposed) return;
+      started = true;
+      reconcile(true);
     },
     dispose() {
       disposed = true;
       petReset?.kill();
-      gsap.ticker.remove(touchTick);
-      kill(loops); kill(sectionTweens); kill(revealTweens); kill(pending); kill(keyTweens);
+      setTouchTickActive(false);
+      if(refreshFrame)cancelAnimationFrame(refreshFrame);
+      kill(sectionTweens); kill(revealTweens); kill(pending);
       attentionTweens.forEach(tween => tween?.kill());
       scene.keys.forEach(key => api.setMaterial(key.materialId, { color: scene.document.materials[key.materialId].color, emissiveIntensity: 0 }));
       triggers.forEach((t) => t.kill());
+      ScrollTrigger.removeEventListener('refreshInit',refreshStart);
+      ScrollTrigger.removeEventListener('refresh',refreshEnd);
       window.removeEventListener("resize", resize);
       document.removeEventListener("visibilitychange", onVisibility);
       [scene.boardId, scene.spinId, scene.revealId, ...scene.keys.map((key) => key.motionId), ...scene.frameIds, scene.labelsId].forEach((id) => api.clearNodeOverrides(id));

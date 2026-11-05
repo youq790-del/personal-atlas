@@ -1,5 +1,7 @@
 # Typeface roles and web delivery
 
+The interactive-sculpture release expands the WenKai subset to 1,139 codepoints and 254,640 bytes while retaining every prior character. The four custom font files now total 349,944 bytes. `qa/art-font-subset.json` is the current checksum record; the counts below document the preceding typography release. Chinese sculpture/section titles use `--font-personal`, with Noto Sans SC retained for controls and long reading.
+
 Updated 2026-11-04. Typography now has three roles, defined in `src/typography.css`.
 
 | Role | Typeface | Use |

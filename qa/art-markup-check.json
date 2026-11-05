@@ -1,0 +1,17 @@
+{
+  "checkedAt": "2026-11-05T07:59:45.741Z",
+  "method": "React server rendering and local asset resolution; not browser interaction testing",
+  "chapters": [
+    "hero",
+    "discovery",
+    "skills",
+    "projects",
+    "writing",
+    "experience",
+    "contact"
+  ],
+  "featuredFilms": 2,
+  "checkedAssets": 3,
+  "articleDestination": "content/articles/writing-a04/index.html",
+  "result": "pass"
+}

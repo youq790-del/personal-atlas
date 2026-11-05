@@ -119,3 +119,8 @@ The supplied scenes, materials and timeline logic are the sources. Particle Logo
 Export-only adjustments are documented in `BLENDER-MOTION.md`: the tutorial cube is hidden in grass; organic receives temporary lights and an equivalent numeric value for an inspected static height driver; cloud receives a presentation camera. The organic `frame / 110` driver is preserved. Particle and cloud web previews use Eevee instead of the saved Cycles engine; liquid retains Cycles to show refraction. Cloud receives mild FFmpeg denoising without interpolation. All source files remain untouched and source script auto-execution stays disabled.
 
 `scripts/render-blender-motion.py` accepts explicit local source and output directories. Blender binaries, original source files, temporary frames and font-conversion tools are not public website assets. Motion verification and current release limitations are recorded separately in `MOTION-RELEASE.md`.
+# Interactive sculpture, 2026-11-04
+
+- `src/sculpture/SurfaceCanvas.tsx`: original Three.js shader and parameterised saddle model; no reference-site asset or shader copied. The static `public/assets/surface/saddle.svg` is generated from the same mathematical model by `scripts/generate-surface-poster.mjs`.
+- `DiscoveryBridge`: uses the author's existing archived photograph at `content/articles/writing-a04/images/image-001-d72362ebc0.jpg` with its watermark intact, and a verbatim question from the public article *breaking bad* (2026-10-19). The equation is an idealised shape, not a fitted explanation of the experiment.
+- The existing six Blender videos and credited keyboard model are retained. Custom WenKai font update retains OFL notices and the renamed `Yo7 WenKai` family; current checksum in `qa/art-font-subset.json`.
