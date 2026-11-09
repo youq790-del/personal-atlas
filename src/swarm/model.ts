@@ -33,10 +33,10 @@ export function revealProgress(state:BuildState) {
   return clamp01((state.elapsed-.3)/Math.max(.1,state.duration-.55));
 }
 export function visibleBox(box:Box,width:number,height:number) {
-  return box.width>1&&box.height>1&&box.x<width&&box.x+box.width>0&&box.y<height-90&&box.y+box.height>40;
+  return box.width>1&&box.height>1&&box.x<width&&box.x+box.width>0&&box.y<height&&box.y+box.height>24;
 }
 export function fitCursor(x:number,y:number,width:number,height:number) {
-  return {x:Math.max(8,Math.min(width-84,x)),y:Math.max(25,Math.min(height-105,y))};
+  return {x:Math.max(8,Math.min(width-84,x)),y:Math.max(25,Math.min(height-52,y))};
 }
 /** UTF-16 offsets for Range, without splitting emoji or combining glyphs. */
 export function graphemeOffsets(text:string):{start:number;end:number}[] {

@@ -6,7 +6,7 @@ import { useGSAP } from '@gsap/react';
 import Lenis from 'lenis';
 import { Icon } from './Icon';
 import { BrandMark } from './Brand';
-import { OpeningSequence } from './OpeningSequence';
+import SwarmRebuild from './SwarmRebuild';
 import { SeamTransition } from './SeamTransition';
 import { ElasticText, ElasticLine, KineticArtwork, ParticleField, useKineticSurface } from './KineticSurface';
 import { resolveShortcuts } from './scene/input';
@@ -26,7 +26,6 @@ import { workById, works, type WorkId } from './portfolio';
 import './swarm-rebuild.css';
 gsap.registerPlugin(ScrollTrigger,useGSAP);
 const KeyboardScene=lazy(()=>import('./scene/KeyboardScene'));
-const SwarmRebuild=lazy(()=>import('./SwarmRebuild'));
 const sections=[['hero','首页','Home'],['skills','键盘','Play'],['experience','认识我','About'],['projects','作品与文字','Works'],['writing','读笔记','Read'],['contact','找到我','Find me']];
 const stars=Array.from({length:88},(_,i)=>({left:`${(i*37.17+7)%100}%`,top:`${(i*19.67+11)%100}%`,opacity:0.16+(i%5)*0.1,width:i%4?1.5:2.5,height:i%4?1.5:2.5}));
 type Overlay='menu'|'about'|'editor'|'chat'|'game'|'directory'|null;
@@ -35,7 +34,8 @@ class SceneBoundary extends React.Component<{children:React.ReactNode;onFail:()=
 }
 class SwarmBoundary extends React.Component<{children:React.ReactNode;onClose:()=>void},{failed:boolean}> {
   state={failed:false};static getDerivedStateFromError(){return {failed:true};}
-  render(){return this.state.failed?<Modal title="演示暂未加载" onClose={this.props.onClose}><p className="muted">可以先浏览网页，网络恢复后刷新再试。</p></Modal>:this.props.children;}
+  componentDidCatch(){this.props.onClose();}
+  render(){return this.state.failed?null:this.props.children;}
 }
 function MiniGame(){
   const [playing,setPlaying]=useState(false),[target,setTarget]=useState(0),[score,setScore]=useState(0),[time,setTime]=useState(20);
@@ -62,8 +62,8 @@ export default function App(){
   const [themeMenu,setThemeMenu]=useState(false),[sound,setSound]=useState(true),[quiet,setQuiet]=useState(false);
   const reduced=!!useReducedMotion()||quiet;
   const [filter,setFilter]=useState('all'),[query,setQuery]=useState('');
-  const [replayKey,setReplayKey]=useState(0);
-  const [swarmOpen,setSwarmOpen]=useState(false);
+  const [swarmOpen,setSwarmOpen]=useState(()=>!window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  const closeSwarm=useCallback(()=>setSwarmOpen(false),[]);
   const [playful,setPlayful]=useState(false);
   const [petSignal,setPetSignal]=useState(0),[rotationSignal,setRotationSignal]=useState(0);
   const [paperHeader,setPaperHeader]=useState(false),[finaleHeader,setFinaleHeader]=useState(false);
@@ -172,8 +172,10 @@ export default function App(){
   useEffect(()=>{if(overlay||detail)lenis.current?.stop();else lenis.current?.start();},[overlay,detail]);
   useGSAP(()=>{
     if(reduced)return;
-    gsap.from('.hero-copy > *',{y:24,filter:'blur(8px)',opacity:0,duration:1.05,stagger:0.13,ease:'expo.out',clearProps:'all'});
-    gsap.from('.site-header',{y:-60,duration:0.9,ease:'expo.out',clearProps:'transform'});
+    if(!swarmOpen){
+      gsap.from('.hero-copy > *',{y:24,filter:'blur(8px)',opacity:0,duration:1.05,stagger:0.13,ease:'expo.out',clearProps:'all'});
+      gsap.from('.site-header',{y:-60,duration:0.9,ease:'expo.out',clearProps:'transform'});
+    }
     gsap.utils.toArray<HTMLElement>('.section-title').forEach(el=>gsap.from(el,{filter:'blur(10px)',opacity:0.2,duration:0.8,ease:'expo.out',scrollTrigger:{trigger:el,start:'top 85%',once:true},clearProps:'filter,opacity'}));
     gsap.to('.hero-copy,.hero-bottom',{y:-45,autoAlpha:0,ease:'none',scrollTrigger:{trigger:'#hero',start:'55% top',end:'bottom 18%',scrub:true}});
     gsap.to('.skills-stage-inner',{autoAlpha:0,y:-30,ease:'none',scrollTrigger:{trigger:'#skills',start:'bottom 92%',end:'bottom 48%',scrub:true}});
@@ -182,7 +184,7 @@ export default function App(){
   },{scope:root,dependencies:[reduced],revertOnUpdate:true});
   useEffect(()=>{
     let sequence='';
-    const key=(e:KeyboardEvent)=>{if((e.target as HTMLElement)?.closest('input,textarea,[contenteditable]'))return;sequence=(sequence+e.key.toLowerCase()).slice(-12);if(sequence.endsWith('curiosity')){setParty(true);notify('被你发现了。');setTimeout(()=>setParty(false),5000);}};
+    const key=(e:KeyboardEvent)=>{if(document.querySelector('[data-swarm-active]')||(e.target as HTMLElement)?.closest('input,textarea,[contenteditable]'))return;sequence=(sequence+e.key.toLowerCase()).slice(-12);if(sequence.endsWith('curiosity')){setParty(true);notify('被你发现了。');setTimeout(()=>setParty(false),5000);}};
     window.addEventListener('keydown',key);return()=>{window.removeEventListener('keydown',key);if(toastTimer.current)clearTimeout(toastTimer.current);};
   },[notify]);
   useEffect(()=>{if(overlay==='chat')chatEnd.current?.scrollIntoView({block:'nearest'});},[room.messages,overlay]);
@@ -205,9 +207,8 @@ export default function App(){
   const words=displayName.split(/\s+/);
   const showFallback=reduced||sceneStatus==='failed';
   useKineticSurface(root,reduced||swarmOpen,`${displayName}:${filter}:${query}:${profile.entries.length}:${sceneStatus}:${playful}`);
-  const openSwarm=()=>{setOverlay(null);setDetail(null);setThemeMenu(false);closeFocus();setSwarmOpen(true);};
+  const openSwarm=()=>{if(reduced){notify('减少动态效果已开启。');return;}setOverlay(null);setDetail(null);setThemeMenu(false);closeFocus();setSwarmOpen(true);};
   return <div ref={root} className={`space-app kinetic-app ${showFallback?'static-scene':''} ${party?'easter-active':''}`}>
-    <OpeningSequence reduced={reduced} replayKey={replayKey} name={displayName}/>
     <a href="#main" className="skip-link">跳到主要内容</a><div className="reading-progress" aria-hidden="true"/>
     <div className="cosmos" aria-hidden="true">{stars.map((style,i)=><i key={i} style={style}/>)}</div>
     <ParticleField disabled={reduced}/>
@@ -251,11 +252,11 @@ export default function App(){
       <ContactFinale name={displayName} collection={writing} email={profile.email} reduced={reduced} onRead={()=>go('writing')}/>
     </main>
     <footer className="site-colophon"><span>© {new Date().getFullYear()} {displayName}</span><button className="text-link" onClick={()=>setOverlay('editor')}>编辑资料</button><a href="https://github.com/Naresh-Khatri/3d-portfolio" target="_blank" rel="noreferrer">Based on Naresh Khatri · MIT</a><button className="icon-button bare" aria-label="回到顶部" onClick={()=>go('hero')}><Icon name="arrow-up-linear"/></button></footer>
-    {swarmOpen&&<SwarmBoundary onClose={()=>setSwarmOpen(false)}><Suspense fallback={null}><SwarmRebuild reduced={reduced} onClose={()=>setSwarmOpen(false)}/></Suspense></SwarmBoundary>}
+    {swarmOpen&&<SwarmBoundary onClose={closeSwarm}><SwarmRebuild reduced={reduced} onClose={closeSwarm}/></SwarmBoundary>}
     {sceneStatus==='loading'&&!reduced&&<div className="scene-loading" role="status"><span/>正在组装键盘</div>}
     {room.peers.filter(p=>p.x!==undefined).map(peer=><div className="remote-cursor" key={peer.id} style={{left:`${(peer.x||0)*100}%`,top:`${(peer.y||0)*100}%`,color:peer.color}}><Icon name="cursor-bold"/><span style={{background:peer.color}}>{peer.name}</span></div>)}
     <AnimatePresence>{toast&&<motion.div className="toast" role="status" initial={{y:20,opacity:0}} animate={{y:0,opacity:1}} exit={{y:10,opacity:0}}>{toast}<button aria-label="关闭提示" onClick={()=>setToast('')}><Icon name="close-circle-linear" size={16}/></button></motion.div>}</AnimatePresence>
-    {overlay==='menu'&&<Modal title="Explore" onClose={close} wide className="nav-modal"><nav className="expanded-nav" aria-label="主要导航">{sections.map(([id,label,en],i)=><motion.button key={id} initial={reduced?false:{y:30,opacity:0}} animate={{y:0,opacity:1}} transition={{delay:i*.06}} onClick={()=>go(id)}><span>{en}</span><small>{label}</small></motion.button>)}</nav><div className="menu-bottom"><button className="text-link" onClick={openSwarm}>光标接管</button><button className="text-link" onClick={()=>{setOverlay(null);go('hero');setReplayKey(k=>k+1);}}>重播开场</button><button className="text-link" onClick={()=>setOverlay('editor')}>编辑个人资料</button><button className="text-link" onClick={()=>setOverlay('game')}>键盘小游戏</button><button className="text-link" aria-pressed={quiet} onClick={()=>setQuiet(!quiet)}>{quiet?'恢复动画':'减少动态效果'}</button></div></Modal>}
+    {overlay==='menu'&&<Modal title="Explore" onClose={close} wide className="nav-modal"><nav className="expanded-nav" aria-label="主要导航">{sections.map(([id,label,en],i)=><motion.button key={id} initial={reduced?false:{y:30,opacity:0}} animate={{y:0,opacity:1}} transition={{delay:i*.06}} onClick={()=>go(id)}><span>{en}</span><small>{label}</small></motion.button>)}</nav><div className="menu-bottom"><button className="text-link" onClick={openSwarm}>光标接管 · 重播</button><button className="text-link" onClick={()=>setOverlay('editor')}>编辑个人资料</button><button className="text-link" onClick={()=>setOverlay('game')}>键盘小游戏</button><button className="text-link" aria-pressed={quiet} onClick={()=>setQuiet(!quiet)}>{quiet?'恢复动画':'减少动态效果'}</button></div><p className="swarm-credit">开场灵感 <a href="https://github.com/DhvanilPatel/swarm-cursors" target="_blank" rel="noreferrer">Swarm Rebuild</a><span> / </span><a href="https://califa.github.io/swarm-site/" target="_blank" rel="noreferrer">Joel Califa</a></p></Modal>}
     {overlay==='directory'&&<Modal title="键位" onClose={close} wide className="directory-modal"><p className="muted">点击，或用 Tab + Enter 打开内容。{!showFallback&&'关闭目录后，可使用键位旁标注的实体按键。'}</p><div className="skill-static-grid">{skills.map((skill,i)=><button key={skill.name} onClick={()=>{close();onOpen(skill);}} style={{'--key-color':skill.color} as React.CSSProperties}>{skill.icon?<img src={skill.icon} alt=""/>:<Icon name="widget-2-linear"/>}<span>{skill.label}</span><kbd>{shortcuts[i]?.replace(/^(Key|Digit)/,'')||'点击'}</kbd></button>)}</div></Modal>}
     {overlay==='editor'&&<Editor profile={{...profile,wechat:writing}} onSave={saveProfile} onClose={close}/>}
     {overlay==='about'&&<Modal title={displayName} onClose={close} wide><p className="about-role">{identity.role}</p><p className="about-bio">{identity.bio}</p><div className="about-facets">{['skills','interests','traits'].map(key=><div key={key}><h3>{identity.facets[key].caption}</h3><p className="muted">{identity.facets[key].description}</p><div className="tags">{identity.facets[key].tags.map(tag=><span key={tag}>{tag}</span>)}</div></div>)}</div><div className="about-leads"><button className="editorial-link" onClick={()=>go('experience')}><span>最近在做</span><Icon name="arrow-right-up-linear"/></button><button className="editorial-link" onClick={()=>go('writing')}><span>读笔记</span><Icon name="arrow-right-up-linear"/></button></div></Modal>}

@@ -1,39 +1,40 @@
-# Optional cursor takeover — 2026-11-09
+# Automatic cursor opening — 2026-11-09
 
-This change adds a lazy-loaded visual demonstration to the restored comic-keyboard
-site. It does not replace the homepage. Navigation/menu launch it explicitly.
+The restored comic-keyboard site now opens with its cursor reconstruction. The
+previous bottom toolbar is removed completely. An Esc keycap and a short drawn
+arrow accompany the transient exit cue; its timeline ends at 5.45 seconds. It is
+decorative and independent from the persistent keyboard/touch exit control.
 
-Reference README inspected: https://github.com/DhvanilPatel/swarm-cursors. Its
-License section says no reuse license is currently provided. Our code, cursor
-rendering, scheduler and live masking implementation are independently written;
-no upstream source or artwork is shipped. The demonstration credits the concept
-and Joel Califa's original Swarm.
+Reference README: https://github.com/DhvanilPatel/swarm-cursors. No reuse license
+is provided there. Our overlay and rendering are independently implemented;
+reference credit links now live in the navigation menu.
 
 ## Verification
 
-- TypeScript and production build pass.
-- Five new scheduler/Unicode/viewport tests pass: cursor lane exclusivity,
-  offscreen playhead preservation, paused time and capped background deltas,
-  grapheme-safe ranges, and screen/dock bounds.
-- Existing keyboard, published-writing, WeChat ingestion and realtime tests pass
-  (34 tests with the five new tests included; five separate profile-identity
-  tests are not rerun locally because profile code is unchanged and esbuild's
-  ancestor scan is blocked on this machine). GitHub's deployment runs the entire
-  normal suite.
-- Default page retains original markup apart from the header/menu launcher and
-  lazy overlay mount. No original content/media changed. Existing WebGL shortcut
-  and pointer handlers explicitly ignore active takeover; ordinary keyboard
-  operation resumes when its portal unmounts.
-- Modal focus is contained during the visual demo; original page uses reversible
-  inert state. Exit removes listeners/ticker, clears its canvas and restores the
-  triggering control. Scrolling continues through the one existing Lenis instance.
-- Reduced-motion shows the completed page, not a shortened animation. Background
-  tabs stop the demo; offscreen tasks release cursor lanes; quiet completed views
-  stop repainting. Canvas density capped at 1.5, painting at at most 40fps.
-- Source selectors are an explicit allowlist. Chat, editable profile, inputs and
-  article iframe contents are not read or serialized. Rendered media stays live;
-  a temporary drag image uses already-decoded page media without exporting pixels.
+- TypeScript and the production build pass.
+- 34 tests pass, including all five swarm tests. The viewport regression now
+  admits content at the bottom edge without reserving room for the deleted dock.
+- The full test invocation still encounters the existing local esbuild ancestor
+  directory access error before the five profile-identity tests can execute.
+  Those tests and the ordinary full build remain required by the Pages workflow.
+- No original content or media changed. The separate logo opening no longer
+  mounts, preventing competing focus and entrance animations. The overlay is
+  imported with the application rather than delayed behind a lazy boundary.
+- Source review: Escape and skip unmount the overlay, restore prior inert state
+  and useful focus, and remove the ticker, layout/theme observers and event listeners.
+  Complete reconstruction, missing canvas, rendering failure and a change to
+  reduced-motion all return control; reduced-motion initially bypasses opening.
+- The hint never receives focus. Desktop Tab reveals a separate exit button;
+  touch keeps that compact 44px-tall control visible. The existing Lenis remains
+  the only scroll engine and the overlay does not lock vertical scrolling.
+- Model, paint labels and rulers no longer reserve a bottom control area. Fonts
+  and host size changes trigger fresh measurements. Saved light/dark themes are
+  observed after initial mounting and update the mask palette. Hidden tabs suspend work;
+  quiet completed viewports stop painting; density is capped at 1.5 and 40fps.
+- WebGL shortcut and pointer guards continue to ignore active takeover. The
+  global typed easter egg also ignores it. The existing page is interactive on
+  exit, with the same original scroll position.
 
-Browser preview is disabled in the app's Work settings. No real desktop/mobile
-visual or interaction inspection is claimed; responsive rules and lifecycle were
-reviewed in source. Deployment/public asset results are reported separately.
+Browser preview is disabled in the app's Work settings. No desktop/mobile visual
+or live interaction inspection is claimed. Build and public release verification
+are reported separately; source/model checks do not substitute for visual QA.

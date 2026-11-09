@@ -37,10 +37,12 @@ test('text ranges keep emoji, Chinese and combining characters intact',()=>{
   const result=graphemeOffsets(text).map(({start,end})=>text.slice(start,end));
   assert.deepEqual(result,['y','o','7','好','👩‍🔬','é']);
 });
-test('viewport admission excludes zero-sized, offscreen and toolbar-obscured pieces',()=>{
+test('viewport admission reaches the bottom edge without an obsolete toolbar exclusion',()=>{
   assert.equal(visibleBox({x:0,y:720,width:200,height:40},390,844),true);
-  assert.equal(visibleBox({x:0,y:800,width:200,height:40},390,844),false);
+  assert.equal(visibleBox({x:0,y:800,width:200,height:40},390,844),true);
+  assert.equal(visibleBox({x:0,y:843,width:200,height:40},390,844),true);
+  assert.equal(visibleBox({x:0,y:844,width:200,height:40},390,844),false);
   assert.equal(visibleBox({x:0,y:-50,width:200,height:40},390,844),false);
   assert.equal(visibleBox({x:0,y:100,width:0,height:40},390,844),false);
-  assert.deepEqual(fitCursor(1000,1000,390,844),{x:306,y:739});
+  assert.deepEqual(fitCursor(1000,1000,390,844),{x:306,y:792});
 });
