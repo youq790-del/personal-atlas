@@ -39,7 +39,7 @@ export function WeChatShelf({collection,compact=false,reduced=false,openArticle}
   </section>;
 }
 
-export function ArticleReader({article,onClose}:{article:WeChatArticle;onClose:()=>void}) {
+function ArticleReader({article,onClose}:{article:WeChatArticle;onClose:()=>void}) {
   const path=wechatReader(article.readerPath),url=wechatLink(article.url);
   const [loaded,setLoaded]=useState(false);
   return <Modal title={article.title} onClose={onClose} wide className="article-reader">

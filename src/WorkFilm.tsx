@@ -6,7 +6,7 @@ import './work-film.css';
 type DataConnection = EventTarget & { saveData?: boolean };
 type Props = {
   src: string; poster: string; title: string; reduced: boolean; frameVariant: number;
-  preview?: boolean; expanded?: boolean; rectangular?: boolean; suspended?: boolean; onOpen?: () => void; onExpand?: () => void;
+  preview?: boolean; expanded?: boolean; onOpen?: () => void; onExpand?: () => void;
 };
 const timeLabel = (value: number) => {
   const seconds = Number.isFinite(value) ? Math.max(0, Math.floor(value)) : 0;
@@ -14,7 +14,7 @@ const timeLabel = (value: number) => {
 };
 
 /** Real rendered footage. A poster is the entire network cost until playback is allowed. */
-export function WorkFilm({ src, poster, title, reduced, frameVariant, preview = false, expanded = false, rectangular = false, suspended = false, onOpen, onExpand }: Props) {
+export function WorkFilm({ src, poster, title, reduced, frameVariant, preview = false, expanded = false, onOpen, onExpand }: Props) {
   const root = useRef<HTMLDivElement>(null), video = useRef<HTMLVideoElement>(null);
   const [visible, setVisible] = useState(false), [pageVisible, setPageVisible] = useState(false);
   const [autoAllowed, setAutoAllowed] = useState(false);
@@ -25,7 +25,7 @@ export function WorkFilm({ src, poster, title, reduced, frameVariant, preview = 
   const [duration, setDuration] = useState(0), [time, setTime] = useState(0);
   const [scrubbing, setScrubbing] = useState(false), [attempt, setAttempt] = useState(0);
   const wantsPlayback = intent === 'play' || (intent === 'auto' && autoAllowed && !blocked);
-  const shouldPlay = visible && pageVisible && wantsPlayback && !failed && !scrubbing && !suspended;
+  const shouldPlay = visible && pageVisible && wantsPlayback && !failed && !scrubbing;
 
   useEffect(() => {
     const media = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -124,7 +124,7 @@ export function WorkFilm({ src, poster, title, reduced, frameVariant, preview = 
 
   return <div ref={root} className={'work-film ' + (preview ? 'work-film-preview' : 'work-film-player') + (playing ? ' is-playing' : '') + (failed ? ' has-error' : '')} role="group" aria-label={title + '短片'}>
     <div className="work-film-image">
-      <FilmFrame rectangular={rectangular} frameVariant={frameVariant} reduced={reduced} expanded={expanded} preview={preview}>
+      <ElasticFrame variant={frameVariant} disabled={reduced || expanded} className={preview ? 'film-preview-frame' : 'work-art-frame'} preserveContent={!preview}>
         <div className="work-film-screen">
           <video key={attempt} ref={video} src={loaded ? src : undefined} poster={poster} muted loop playsInline preload="none"
             className={ready && !failed ? 'has-frame' : ''} aria-label={title}
@@ -137,7 +137,7 @@ export function WorkFilm({ src, poster, title, reduced, frameVariant, preview = 
           {(!ready || failed) && posterFailed && <span className="work-film-empty">{title}</span>}
           {preview && onOpen && <button type="button" className="work-film-open" onClick={onOpen} aria-label={'打开' + title + '短片'} />}
         </div>
-      </FilmFrame>
+      </ElasticFrame>
     </div>
     {preview && onOpen && <button type="button" className="work-film-open-caption" onClick={onOpen} aria-label={'查看' + title + '短片'}>看短片<Icon name="arrow-right-up-linear" size={18} /></button>}
     {status && <p className="work-film-status" role="status">{status}</p>}
@@ -157,9 +157,4 @@ export function WorkFilm({ src, poster, title, reduced, frameVariant, preview = 
       </>}
     </div>
   </div>;
-}
-
-function FilmFrame({ rectangular, frameVariant, reduced, expanded, preview, children }: Pick<Props, 'rectangular' | 'frameVariant' | 'reduced' | 'expanded' | 'preview'> & {children: React.ReactNode}) {
-  if (rectangular) return <div className="film-rectangle" style={{width:'100%',height:'100%'}}>{children}</div>;
-  return <ElasticFrame variant={frameVariant} disabled={reduced || expanded} className={preview ? 'film-preview-frame' : 'work-art-frame'} preserveContent={!preview}>{children}</ElasticFrame>;
 }
