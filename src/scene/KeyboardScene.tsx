@@ -67,7 +67,7 @@ export default function KeyboardScene({skills,sound,playful,petSignal,rotationSi
     const scroll=()=>{const now=performance.now();controller.current?.setScroll((window.scrollY-lastScroll)/Math.max(16,now-lastScrollTime)/2.5);lastScroll=window.scrollY;lastScrollTime=now;};
     const down=(e:PointerEvent)=>{const g=gesture.current;g.x=g.originX=e.clientX;g.y=g.originY=e.clientY;g.id=e.pointerId;g.moved=false;g.active=false;g.type=e.pointerType;};
     const move=(e:PointerEvent)=>{
-      if(isReadingSection(currentSection.current)||document.querySelector('dialog[open]'))return;
+      if(isReadingSection(currentSection.current)||document.querySelector('dialog[open],[data-swarm-active]'))return;
       const g=gesture.current;
       if(!g.active&&!e.buttons)g.moved=false;
       controller.current?.setPointer((e.clientX/innerWidth-.5)*2,(e.clientY/innerHeight-.5)*2);
@@ -97,7 +97,7 @@ export default function KeyboardScene({skills,sound,playful,petSignal,rotationSi
   }),[input,scene,play,markActive,syncSelection]);
   useEffect(()=>{
     const down=(event:KeyboardEvent)=>{
-      if(!ready||isReadingSection(currentSection.current)||event.defaultPrevented||event.repeat||event.ctrlKey||event.metaKey||event.altKey||isTypingTarget(event.target)||document.querySelector('dialog[open]'))return;
+      if(!ready||isReadingSection(currentSection.current)||event.defaultPrevented||event.repeat||event.ctrlKey||event.metaKey||event.altKey||isTypingTarget(event.target)||document.querySelector('dialog[open],[data-swarm-active]'))return;
       const key=input.shortcuts.get(event.code);
       if(key)input.press(`key:${event.code}`,key.nodeId);
       if(event.key==='Enter'&&held.current.length)callbacks.current.onOpen(held.current.at(-1)!.skill as Skill);
@@ -114,7 +114,7 @@ export default function KeyboardScene({skills,sound,playful,petSignal,rotationSi
     return ()=>clearTimeout(id);
   },[ready]);
   const onPointerEvent=useCallback((event:ScenePointerEvent)=>{
-    if(isReadingSection(currentSection.current)||document.querySelector('dialog[open]'))return;
+    if(isReadingSection(currentSection.current)||document.querySelector('dialog[open],[data-swarm-active]'))return;
     const source=`pointer:${event.pointerId}`;
     const cat=scene.frameIds.includes(event.nodeId);
     if(cat){
